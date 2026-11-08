@@ -20,6 +20,7 @@ export const EVIDENCE_STATUSES = ['supported', 'insufficient_evidence'] as const
 export type EvidenceStatus = (typeof EVIDENCE_STATUSES)[number];
 
 export const ENTITY_TYPES = [
+  'party',
   'personal_data',
   'third_party',
   'payment',

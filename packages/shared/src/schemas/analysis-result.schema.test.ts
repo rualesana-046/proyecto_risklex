@@ -28,6 +28,16 @@ describe('clauseSchema', () => {
     expect(clauseSchema.safeParse(buildClause()).success).toBe(true);
   });
 
+  it('accepts party entities for the company and the user', () => {
+    const clause = buildClause({
+      entities: [
+        { type: 'party', text: 'the Company' },
+        { type: 'party', text: 'the user' },
+      ],
+    });
+    expect(clauseSchema.safeParse(clause).success).toBe(true);
+  });
+
   it('accepts an ambiguous clause with a reason', () => {
     const clause = buildClause({
       isAmbiguous: true,
