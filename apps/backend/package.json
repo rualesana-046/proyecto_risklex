@@ -7,7 +7,7 @@
     "dev": "wrangler dev",
     "types": "wrangler types",
     "deploy": "wrangler deploy",
-    "typecheck": "wrangler types && tsc -p tsconfig.json",
+    "typecheck": "wrangler types && tsc -p tsconfig.json && tsc -p scripts/tsconfig.json",
     "test": "vitest run"
   },
   "dependencies": {
