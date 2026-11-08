@@ -7,6 +7,7 @@ function buildResponse(metaOverrides: Record<string, unknown> = {}): Record<stri
     meta: {
       promptVersion: '2026-11-07.1',
       model: 'model-id',
+      language: 'es',
       moreClausesLikely: false,
       usage: { inputTokens: 1200, outputTokens: 800 },
       ...metaOverrides,
@@ -44,6 +45,8 @@ describe('analysisResponseSchema', () => {
     ['negative token usage', { usage: { inputTokens: -1, outputTokens: 0 } }],
     ['fractional token usage', { usage: { inputTokens: 1.5, outputTokens: 0 } }],
     ['an empty model', { model: '' }],
+    ['a missing language', { language: undefined }],
+    ['an unsupported language', { language: 'fr' }],
     ['an empty prompt version', { promptVersion: '' }],
   ])('rejects %s', (_label, metaOverrides) => {
     expect(analysisResponseSchema.safeParse(buildResponse(metaOverrides)).success).toBe(false);
