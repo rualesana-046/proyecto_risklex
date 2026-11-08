@@ -1,0 +1,6 @@
+export const MAX_DOCUMENT_CHARACTERS = 150_000;
+export const MAX_REQUEST_BYTES = 700_000;
+export const MAX_CLAUSES = 12;
+export const MIN_QUOTE_CHARACTERS = 20;
+export const MAX_QUOTE_CHARACTERS = 600;
+export const MAX_DISCARDED_CLAUSE_RATIO = 0.3;
