@@ -84,6 +84,18 @@ describe('normalizeText', () => {
     expect(originalSliceOf(source, 'we keep your data')).toBe('we keep your data');
   });
 
+  it('maps NFKC expansions back to the single original character', () => {
+    const source = 'El ﬁchero se borra… al cancelar la suscripción';
+    const result = normalizeText(source);
+    expect(result.text).toBe('el fichero se borra... al cancelar la suscripción');
+    expect(result.sourceStart).toHaveLength(result.text.length);
+    expect(originalSliceOf(source, 'fichero')).toBe('ﬁchero');
+    expect(originalSliceOf(source, '...')).toBe('…');
+    expect(originalSliceOf(source, 'fichero se borra... al cancelar')).toBe(
+      'ﬁchero se borra… al cancelar',
+    );
+  });
+
   it('maps decomposed characters to their whole original cluster', () => {
     const source = 'información';
     expect(originalSliceOf(source, 'información')).toBe(source);
