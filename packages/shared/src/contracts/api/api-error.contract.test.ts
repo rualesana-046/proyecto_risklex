@@ -23,6 +23,10 @@ describe('apiErrorResponseSchema', () => {
 
   it.each([
     ['an unknown code', { error: { code: 'teapot', retryAfterSeconds: null } }],
+    [
+      'the client side low reliability code',
+      { error: { code: 'low_reliability', retryAfterSeconds: null } },
+    ],
     ['a missing retry delay', { error: { code: 'provider_error' } }],
     ['a zero retry delay', { error: { code: 'rate_limited', retryAfterSeconds: 0 } }],
     ['a missing error object', { code: 'provider_error' }],

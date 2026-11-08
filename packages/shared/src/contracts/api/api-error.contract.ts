@@ -7,7 +7,6 @@ export const API_ERROR_CODES = [
   'provider_error',
   'provider_refusal',
   'output_truncated',
-  'low_reliability',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];
 
@@ -18,7 +17,6 @@ export const API_ERROR_HTTP_STATUS = {
   provider_error: 502,
   provider_refusal: 422,
   output_truncated: 502,
-  low_reliability: 422,
 } as const satisfies Record<ApiErrorCode, number>;
 
 export const apiErrorResponseSchema = z.object({

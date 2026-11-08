@@ -7,9 +7,7 @@ function buildResponse(metaOverrides: Record<string, unknown> = {}): Record<stri
     meta: {
       promptVersion: '2026-11-07.1',
       model: 'model-id',
-      language: 'es',
       moreClausesLikely: false,
-      verification: { totalClauses: 0, discardedClauses: 0, reliability: 'normal' },
       usage: { inputTokens: 1200, outputTokens: 800 },
       ...metaOverrides,
     },
@@ -21,12 +19,16 @@ describe('analysisResponseSchema', () => {
     expect(analysisResponseSchema.safeParse(buildResponse()).success).toBe(true);
   });
 
-  it('accepts a low reliability response that may have more clauses', () => {
+  it('accepts a response that may have more clauses', () => {
+    const response = buildResponse({ moreClausesLikely: true });
+    expect(analysisResponseSchema.parse(response).meta.moreClausesLikely).toBe(true);
+  });
+
+  it('does not carry quote verification results', () => {
     const response = buildResponse({
-      moreClausesLikely: true,
       verification: { totalClauses: 10, discardedClauses: 4, reliability: 'low' },
     });
-    expect(analysisResponseSchema.safeParse(response).success).toBe(true);
+    expect(analysisResponseSchema.parse(response).meta).not.toHaveProperty('verification');
   });
 
   it('tolerates fields added by newer servers', () => {
@@ -38,13 +40,10 @@ describe('analysisResponseSchema', () => {
 
   it.each([
     ['a missing moreClausesLikely flag', { moreClausesLikely: undefined }],
-    [
-      'an unknown reliability',
-      { verification: { totalClauses: 1, discardedClauses: 0, reliability: 'medium' } },
-    ],
+    ['missing token usage', { usage: undefined }],
     ['negative token usage', { usage: { inputTokens: -1, outputTokens: 0 } }],
     ['fractional token usage', { usage: { inputTokens: 1.5, outputTokens: 0 } }],
-    ['an unsupported language', { language: 'fr' }],
+    ['an empty model', { model: '' }],
     ['an empty prompt version', { promptVersion: '' }],
   ])('rejects %s', (_label, metaOverrides) => {
     expect(analysisResponseSchema.safeParse(buildResponse(metaOverrides)).success).toBe(false);
