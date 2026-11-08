@@ -1,13 +1,19 @@
 import { healthResponseSchema } from '@risklex/shared';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../../app.ts';
+import type { BurstLimiter } from '../../common/burst-limiter.ts';
 import type { LogEntry } from '../../common/logger.ts';
+
+const allowAll: BurstLimiter = { tryConsume: () => Promise.resolve(true) };
 
 function buildApp(): ReturnType<typeof createApp> {
   const entries: LogEntry[] = [];
   return createApp({
     logger: { log: (entry) => entries.push(entry) },
     serviceVersion: '9.9.9',
+    retryAfterSeconds: 60,
+    resolveLimiters: () => ({ install: allowAll, ip: allowAll }),
+    createAnalyzer: () => null,
   });
 }
 
