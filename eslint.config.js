@@ -15,6 +15,7 @@ export default defineConfig(
       '**/release/**',
       '**/coverage/**',
       '**/.wrangler/**',
+      '**/worker-configuration.d.ts',
       'docs/**',
     ],
   },
