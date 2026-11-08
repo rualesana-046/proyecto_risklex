@@ -1,1 +1,1 @@
-export { healthResponseSchema, type HealthResponse } from './contracts/api/health.contract';
+export { healthResponseSchema, type HealthResponse } from './contracts/api/health.contract.ts';
