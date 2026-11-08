@@ -1,0 +1,154 @@
+{
+  "type": "object",
+  "properties": {
+    "clauses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["privacy", "tracking", "hidden_costs", "cancellation", "content_license"]
+          },
+          "title": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          },
+          "evidenceStatus": {
+            "type": "string",
+            "enum": ["supported", "insufficient_evidence"]
+          },
+          "isAmbiguous": {
+            "type": "boolean"
+          },
+          "ambiguityReason": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "party",
+                    "personal_data",
+                    "third_party",
+                    "payment",
+                    "time_period",
+                    "user_right",
+                    "user_obligation",
+                    "other"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "text"],
+              "additionalProperties": false
+            }
+          },
+          "profiles": {
+            "type": "object",
+            "properties": {
+              "free_user": {
+                "type": "object",
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "enum": ["high_risk", "warning", "neutral"]
+                  },
+                  "meaning": {
+                    "type": "string"
+                  },
+                  "consequence": {
+                    "type": "string"
+                  }
+                },
+                "required": ["severity", "meaning", "consequence"],
+                "additionalProperties": false
+              },
+              "subscriber": {
+                "type": "object",
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "enum": ["high_risk", "warning", "neutral"]
+                  },
+                  "meaning": {
+                    "type": "string"
+                  },
+                  "consequence": {
+                    "type": "string"
+                  }
+                },
+                "required": ["severity", "meaning", "consequence"],
+                "additionalProperties": false
+              },
+              "professional": {
+                "type": "object",
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "enum": ["high_risk", "warning", "neutral"]
+                  },
+                  "meaning": {
+                    "type": "string"
+                  },
+                  "consequence": {
+                    "type": "string"
+                  }
+                },
+                "required": ["severity", "meaning", "consequence"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["free_user", "subscriber", "professional"],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "category",
+          "title",
+          "quote",
+          "evidenceStatus",
+          "isAmbiguous",
+          "ambiguityReason",
+          "confidence",
+          "entities",
+          "profiles"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "glossary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": ["term", "explanation"],
+        "additionalProperties": false
+      }
+    },
+    "moreClausesLikely": {
+      "type": "boolean"
+    }
+  },
+  "required": ["clauses", "glossary", "moreClausesLikely"],
+  "additionalProperties": false
+}
