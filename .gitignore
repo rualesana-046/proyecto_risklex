@@ -4,6 +4,7 @@ out/
 release/
 coverage/
 .wrangler/
+worker-configuration.d.ts
 .dev.vars
 .dev.vars.*
 .env
