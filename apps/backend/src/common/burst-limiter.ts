@@ -15,14 +15,17 @@ export function isRateLimitBinding(value: unknown): value is RateLimitBinding {
   );
 }
 
-export function createBindingBurstLimiter(binding: RateLimitBinding): BurstLimiter {
+export function createBindingBurstLimiter(
+  binding: RateLimitBinding,
+  fallback: BurstLimiter,
+): BurstLimiter {
   return {
     async tryConsume(key) {
       try {
         const outcome = await binding.limit({ key });
         return outcome.success;
       } catch {
-        return true;
+        return fallback.tryConsume(key);
       }
     },
   };
@@ -37,5 +40,5 @@ export function resolveBurstLimiter(
     return fallback;
   }
   const candidate: unknown = (env as Record<string, unknown>)[bindingName];
-  return isRateLimitBinding(candidate) ? createBindingBurstLimiter(candidate) : fallback;
+  return isRateLimitBinding(candidate) ? createBindingBurstLimiter(candidate, fallback) : fallback;
 }

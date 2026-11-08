@@ -87,8 +87,11 @@ describe('resolveBurstLimiter', () => {
     expect(await limiter.tryConsume('blocked')).toBe(false);
   });
 
-  it('lets requests through when the binding fails', async () => {
+  it('falls back to the in-memory limiter when the binding fails', async () => {
     const failing: RateLimitBinding = { limit: () => Promise.reject(new Error('unavailable')) };
-    expect(await createBindingBurstLimiter(failing).tryConsume('any')).toBe(true);
+    const backup = createInMemoryBurstLimiter(1, 60, clock().now);
+    const limiter = createBindingBurstLimiter(failing, backup);
+    expect(await limiter.tryConsume('install:a')).toBe(true);
+    expect(await limiter.tryConsume('install:a')).toBe(false);
   });
 });
