@@ -3,6 +3,7 @@
   "name": "risklex-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-07",
+  "send_metrics": false,
   "observability": {
     "enabled": false,
   },
