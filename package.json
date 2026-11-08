@@ -14,7 +14,8 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run format:check"
+    "test": "vitest run",
+    "validate": "npm run format:check && npm run test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
