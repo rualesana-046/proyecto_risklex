@@ -4,23 +4,27 @@ Estados posibles: **pendiente**, **en curso**, **bloqueada**, **en revisión** y
 
 ## B1 Cimientos
 
-| ID    | Tarea                                                                                          | Requisitos | Estado     |
-| ----- | ---------------------------------------------------------------------------------------------- | ---------- | ---------- |
-| B1-01 | Convenciones de editor, finales de línea y archivos ignorados                                  | R26        | completada |
-| B1-02 | Workspaces de npm, TypeScript estricto y Prettier                                              | R26        | completada |
-| B1-03 | Vitest y escáner de comentarios en CSS, HTML y YAML                                            | R26        | completada |
-| B1-04 | Regla local de ESLint que prohíbe comentarios                                                  | R26        | completada |
-| B1-05 | ESLint estricto con límites de importación entre paquetes                                      | R26        | completada |
-| B1-06 | Documentación mínima: README, guía de trabajo, tareas, deuda, decisiones 0001–0003 y prototipo | R26        | en curso   |
-| B1-07 | Paquete `shared` con el contrato de salud y su prueba                                          | R01        | pendiente  |
-| B1-08 | Configuración de electron-vite, empaquetando `@risklex/shared` dentro del proceso principal    | R21        | pendiente  |
-| B1-09 | Proceso principal y seguridad de Electron, con CSP estricta en producción                      | R21        | pendiente  |
-| B1-10 | Preload mínimo y tipado                                                                        | R21        | pendiente  |
-| B1-11 | Tokens de diseño, estilos, temas y prueba de contraste WCAG AA                                 | R13, R25   | pendiente  |
-| B1-12 | i18n en español e inglés con prueba de claves idénticas                                        | R12        | pendiente  |
-| B1-13 | Proveedores de tema, tamaño de texto e idioma                                                  | R13        | pendiente  |
-| B1-14 | Shell y barra lateral                                                                          | R13, R25   | pendiente  |
-| B1-15 | Pantallas mínimas de Analizar, Historial y Ajustes                                             | R07, R11   | pendiente  |
+Una tarea marcada como completada indica en la columna Entrega los commits que la contienen. Si no hay commit, la tarea no está completada.
+
+| ID    | Tarea                                                                                          | Requisitos | Estado     | Entrega           |
+| ----- | ---------------------------------------------------------------------------------------------- | ---------- | ---------- | ----------------- |
+| B1-01 | Convenciones de editor, finales de línea y archivos ignorados                                  | R26        | completada | 2f09a91           |
+| B1-02 | Workspaces de npm, TypeScript estricto y Prettier                                              | R26        | completada | 5b1dfca           |
+| B1-03 | Vitest y escáner de comentarios en CSS, HTML y YAML                                            | R26        | completada | b89f762           |
+| B1-04 | Regla local de ESLint que prohíbe comentarios                                                  | R26        | completada | 15fc623           |
+| B1-05 | ESLint estricto con límites de importación entre paquetes                                      | R26        | completada | 25318ad           |
+| B1-06 | Documentación mínima: README, guía de trabajo, tareas, deuda, decisiones 0001–0003 y prototipo | R26        | completada | 431f6f7 a 127559f |
+| B1-07 | Paquete `shared` con el contrato de salud, su prueba y su integración en los scripts raíz      | R01        | completada | b3c5b92 a 349f1c3 |
+| B1-08 | Configuración de electron-vite, empaquetando `@risklex/shared` dentro del proceso principal    | R21        | pendiente  |                   |
+| B1-09 | Proceso principal y seguridad de Electron, con CSP estricta en producción                      | R21        | pendiente  |                   |
+| B1-10 | Preload mínimo y tipado                                                                        | R21        | pendiente  |                   |
+| B1-11 | Tokens de diseño, estilos, temas y prueba de contraste WCAG AA                                 | R13, R25   | pendiente  |                   |
+| B1-12 | i18n en español e inglés con prueba de claves idénticas                                        | R12        | pendiente  |                   |
+| B1-13 | Proveedores de tema, tamaño de texto e idioma                                                  | R13        | pendiente  |                   |
+| B1-14 | Shell y barra lateral                                                                          | R13, R25   | pendiente  |                   |
+| B1-15 | Pantallas mínimas de Analizar, Historial y Ajustes                                             | R07, R11   | pendiente  |                   |
+
+R01 solo está cubierto en parte: falta el contrato del análisis, que corresponde a B2-01.
 
 ## B2 IA y backend
 
@@ -63,9 +67,14 @@ Estados posibles: **pendiente**, **en curso**, **bloqueada**, **en revisión** y
 | B5-04 | Publicación en GitHub Releases e instalación limpia verificada en Mac y Windows | R22, R23   | pendiente |
 | B5-05 | Documentación final, `npm audit` y revisión de licencias                        | R26        | pendiente |
 
+## Decisiones tomadas
+
+| Tema                                  | Decisión                    | Motivo                | Consecuencias                                                                                                                                                                                        |
+| ------------------------------------- | --------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Visibilidad del repositorio en GitHub | El repositorio será público | Exigencia del docente | Todo el historial de Git, incluidos los autores de los commits, será visible. Los ejecutores estándar de GitHub Actions son gratuitos en repositorios públicos. Ningún secreto entra al repositorio. |
+
 ## Decisiones pendientes
 
-| Tema                                  | Cuándo                        | Estado    |
-| ------------------------------------- | ----------------------------- | --------- |
-| Visibilidad del repositorio en GitHub | B5, antes de configurar la CI | pendiente |
-| Licencia del proyecto                 | B5, antes de publicar         | pendiente |
+| Tema                  | Cuándo                | Estado    |
+| --------------------- | --------------------- | --------- |
+| Licencia del proyecto | B5, antes de publicar | pendiente |
