@@ -46,6 +46,10 @@ export default defineConfig(
     rules: { 'max-lines-per-function': 'off' },
   },
   {
+    files: ['apps/backend/src/common/logger.ts', 'apps/backend/scripts/**'],
+    rules: { 'no-console': 'off' },
+  },
+  {
     files: ['**/*.js'],
     extends: [tseslint.configs.disableTypeChecked],
   },
