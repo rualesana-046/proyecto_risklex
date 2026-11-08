@@ -1,0 +1,19 @@
+{
+  "name": "@risklex/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "types": "wrangler types",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@risklex/shared": "0.1.0",
+    "hono": "^4.13.17",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.158.0"
+  }
+}
