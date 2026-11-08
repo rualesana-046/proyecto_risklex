@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "types": "wrangler types",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "typecheck": "wrangler types && tsc -p tsconfig.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "@risklex/shared": "0.1.0",
