@@ -6,6 +6,7 @@ const commentPatterns: Record<string, RegExp> = {
   '.html': /<!--/u,
   '.yml': /(^|\s)#(\s|$)/mu,
   '.yaml': /(^|\s)#(\s|$)/mu,
+  '.jsonc': /(^|[\s,{[])\/[/*]/mu,
 };
 
 const ignoredDirectories = new Set([
