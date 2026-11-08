@@ -17,6 +17,13 @@ export default defineConfig({
           environment: 'node',
         },
       },
+      {
+        test: {
+          name: 'backend',
+          include: ['apps/backend/{src,test,scripts}/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
     ],
   },
 });
