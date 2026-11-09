@@ -1,0 +1,66 @@
+{
+  "language": "es",
+  "clauses": [
+    {
+      "category": "privacy",
+      "keyPhrase": "con socios comerciales y anunciantes",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "high_risk",
+        "subscriber": "warning",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "privacy",
+      "keyPhrase": "durante el tiempo que sea necesario para fines legítimos",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "tracking",
+      "keyPhrase": "en sitios web de terceros",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "hidden_costs",
+      "keyPhrase": "se renovará automáticamente cada año",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "high_risk",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "treinta (30) días de antelación",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "high_risk",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "content_license",
+      "keyPhrase": "licencia mundial, gratuita, perpetua y sublicenciable",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
+        "professional": "high_risk"
+      }
+    }
+  ],
+  "forbiddenPhrases": []
+}
