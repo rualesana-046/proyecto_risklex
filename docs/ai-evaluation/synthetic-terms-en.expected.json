@@ -1,0 +1,66 @@
+{
+  "language": "en",
+  "clauses": [
+    {
+      "category": "privacy",
+      "keyPhrase": "with advertising partners and data brokers",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "high_risk",
+        "subscriber": "high_risk",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "privacy",
+      "keyPhrase": "for as long as we consider appropriate for our business purposes",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "tracking",
+      "keyPhrase": "follow your activity across other apps and websites",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "high_risk",
+        "subscriber": "warning",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "hidden_costs",
+      "keyPhrase": "automatically convert into a paid Premium subscription",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "high_risk",
+        "subscriber": "warning",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "only by calling our support line during business hours",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "high_risk",
+        "professional": "warning"
+      }
+    },
+    {
+      "category": "content_license",
+      "keyPhrase": "irrevocable, worldwide, royalty-free license",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
+        "professional": "high_risk"
+      }
+    }
+  ],
+  "forbiddenPhrases": []
+}
