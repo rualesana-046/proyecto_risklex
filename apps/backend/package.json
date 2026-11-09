@@ -8,7 +8,8 @@
     "types": "wrangler types",
     "deploy": "wrangler deploy",
     "typecheck": "wrangler types && tsc -p tsconfig.json && tsc -p scripts/tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:ai-live": "node scripts/ai-live-check.ts"
   },
   "dependencies": {
     "@risklex/shared": "0.1.0",
