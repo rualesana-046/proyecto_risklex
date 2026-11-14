@@ -109,6 +109,17 @@ En el adversarial se detectaron 7 de 8 cláusulas plantadas: faltó la cláusula
 - La severidad del adversarial es informativa, porque su reparto esperado tiene un 54 % de alto riesgo.
 - No se midió ningún documento grande: el tiempo y el costo con 150.000 caracteres no están medidos.
 
+## Costo estimado para documentos grandes
+
+> **ESTIMACIÓN, no medida.** No se ha analizado ningún documento grande.
+
+Para un documento de 150.000 caracteres, el costo esperado es de **0,17 a 0,22 USD por análisis**, con un **peor caso de 0,30 USD**:
+
+- **Entrada:** unos 3.100 tokens fijos de prompt y esquema, más unos 45.500 tokens del documento (unos 3,3 caracteres por token, según lo observado en español), unos 48.600 tokens en total, es decir 0,097 USD.
+- **Salida:** no crece con el tamaño del documento, porque `MAX_CLAUSES` es 12. Con unos 520 tokens por cláusula más el razonamiento, se esperan de 7.000 a 12.000 tokens, de 0,07 a 0,12 USD. El peor caso es agotar los 20.000 `max_tokens`, 0,20 USD.
+
+Para documentos de 150.000 caracteres, esta estimación supera el rango de 135 a 510 COP previsto en la especificación (unos 560 a 730 COP a 3.300 COP por dólar, y unos 990 COP en el peor caso). Hay que confirmarlo con una medición real antes de darlo por definitivo.
+
 ## Observaciones
 
 Se registran sin cambiar el prompt, la rúbrica, los archivos esperados ni los documentos: ajustarlos a lo que respondió el modelo sesgaría la evaluación.
