@@ -75,8 +75,27 @@ La calibración completa tiene un tope de 1,00 USD. Se detiene al llegar a 0,80 
 
 ## Resultados registrados
 
-| Fecha      | Prompt         | Documento            | Severidad                              | Ambigüedad                            | Costo      |
-| ---------- | -------------- | -------------------- | -------------------------------------- | ------------------------------------- | ---------- |
-| 2026-11-14 | `2026-11-08.1` | `synthetic-terms-es` | 10 de 18, igual que "todo advertencia" | 1 de 1 encontrada, 4 falsos positivos | 0,0392 USD |
+| Fecha      | Prompt         | Documento                          | Severidad                                            | Ambigüedad                             | Costo      |
+| ---------- | -------------- | ---------------------------------- | ---------------------------------------------------- | -------------------------------------- | ---------- |
+| 2026-11-14 | `2026-11-08.1` | `synthetic-terms-es`               | 10 de 18, igual que "todo advertencia"               | 1 de 1 encontrada, 4 falsos positivos  | 0,0392 USD |
+| 2026-11-14 | `2026-11-14.1` | `synthetic-terms-es` (ejecución 1) | 23 de 27 (85 %), +44 puntos sobre "todo alto" (41 %) | 3 de 3 encontradas, 0 falsos positivos | 0,0599 USD |
 
-Ese resultado corresponde a la versión anterior del prompt y del documento, que no tenían reglas de severidad ni de ambigüedad. Gasto acumulado de la calibración antes de las nuevas llamadas: 0,08 USD.
+La primera fila corresponde a la versión anterior del prompt y del documento, que no tenían reglas de severidad ni de ambigüedad. La segunda cumple los tres criterios: 9 de 9 cláusulas plantadas detectadas, 10 de 10 citas verificadas, 0 frases prohibidas, 31,7 s, 3.757 tokens de entrada y 5.238 de salida. Gasto acumulado de la calibración tras esa llamada: 0,14 USD.
+
+## Observaciones de la ejecución 1 del español (prompt `2026-11-14.1`)
+
+Se registran sin cambiar el prompt, la rúbrica, los archivos esperados ni los documentos: ajustarlos a lo que respondió el modelo sesgaría la evaluación.
+
+| Cláusula                                                   | Perfil         | Esperado | Modelo    | Diagnóstico                                                                                                                                                                                                                                    |
+| ---------------------------------------------------------- | -------------- | -------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Suspensión si la empresa considera que hay uso profesional | `free_user`    | neutral  | warning   | Probable error del archivo esperado: el texto incluye el plan gratuito entre los planes personales, así que la decisión discrecional también le aplica, igual que al suscriptor.                                                               |
+| Suspensión si la empresa considera que hay uso profesional | `subscriber`   | warning  | high_risk | Instrucción poco clara: una decisión discrecional cumple a la vez la definición de alto riesgo (no hay forma sencilla de evitarla) y la de advertencia (no se sabe hasta dónde llega). El modelo valoró que tendría que pagar el plan Empresa. |
+| Suspensión sin aviso por uso inadecuado                    | `subscriber`   | warning  | high_risk | Instrucción poco clara, por el mismo solapamiento. El modelo supuso que perdería el servicio pagado sin reembolso, aunque el texto no habla de reembolsos.                                                                                     |
+| Suspensión sin aviso por uso inadecuado                    | `professional` | warning  | high_risk | Igual que la fila anterior, por la pérdida de acceso a material de trabajo.                                                                                                                                                                    |
+
+**Hallazgo en una cláusula no plantada.** El modelo marcó como advertencia la cláusula de cambios en los términos, que se había incluido como relleno sin riesgo. Su razonamiento visible es correcto: el aviso de 15 días es menor que los 30 días de antelación que exige la cancelación, así que un cambio puede aplicarse antes de que la persona pueda cancelar a tiempo. El relleno no es neutro en este documento.
+
+**Mejoras pendientes, a decidir después (no aplicadas):**
+
+- una regla de precedencia para las decisiones discrecionales de la empresa, que diga cuándo prevalece la advertencia y cuándo el alto riesgo;
+- revisar el relleno de cambios en los términos de los documentos de evaluación, por la interacción con el plazo de cancelación.
