@@ -75,16 +75,45 @@ La calibración completa tiene un tope de 1,00 USD. Se detiene al llegar a 0,80 
 
 ## Resultados registrados
 
-| Fecha      | Prompt         | Documento                          | Severidad                                            | Ambigüedad                             | Costo      |
-| ---------- | -------------- | ---------------------------------- | ---------------------------------------------------- | -------------------------------------- | ---------- |
-| 2026-11-14 | `2026-11-08.1` | `synthetic-terms-es`               | 10 de 18, igual que "todo advertencia"               | 1 de 1 encontrada, 4 falsos positivos  | 0,0392 USD |
-| 2026-11-14 | `2026-11-14.1` | `synthetic-terms-es` (ejecución 1) | 23 de 27 (85 %), +44 puntos sobre "todo alto" (41 %) | 3 de 3 encontradas, 0 falsos positivos | 0,0599 USD |
+La calibración quedó cerrada el 2026-11-14. Los criterios y los archivos esperados no se modificaron después de ver ninguna respuesta del modelo.
 
-La primera fila corresponde a la versión anterior del prompt y del documento, que no tenían reglas de severidad ni de ambigüedad. La segunda cumple los tres criterios: 9 de 9 cláusulas plantadas detectadas, 10 de 10 citas verificadas, 0 frases prohibidas, 31,7 s, 3.757 tokens de entrada y 5.238 de salida. Gasto acumulado de la calibración tras esa llamada: 0,14 USD.
+### Llamadas realizadas
 
-## Observaciones de la ejecución 1 del español (prompt `2026-11-14.1`)
+| #   | Prompt         | Documento                               | Tiempo | Tokens de entrada | Tokens de salida | Costo      |
+| --- | -------------- | --------------------------------------- | ------ | ----------------- | ---------------- | ---------- |
+| 1   | `2026-11-08.1` | `synthetic-terms-es` (versión anterior) | 23,0 s | 2.955             | 3.381            | 0,0397 USD |
+| 2   | `2026-11-08.1` | `synthetic-terms-es` (versión anterior) | 21,2 s | 2.955             | 3.331            | 0,0392 USD |
+| 3   | `2026-11-14.1` | `synthetic-terms-es`, ejecución 1       | 31,7 s | 3.757             | 5.238            | 0,0599 USD |
+| 4   | `2026-11-14.1` | `synthetic-terms-es`, ejecución 2       | 28,5 s | 3.757             | 4.829            | 0,0558 USD |
+| 5   | `2026-11-14.1` | `synthetic-terms-en`                    | 27,1 s | 3.522             | 4.585            | 0,0529 USD |
+| 6   | `2026-11-14.1` | `adversarial-terms-es`                  | 31,4 s | 3.758             | 5.133            | 0,0588 USD |
+
+Gasto real total de la calibración: 0,31 USD de un tope de 1,00 USD. Todas las respuestas fueron HTTP 200, sin citas descartadas y sin ninguna clave visible en las salidas. Las llamadas 1 y 2 usaron el prompt anterior, sin reglas de severidad ni de ambigüedad: la llamada 2 obtuvo 10 de 18 en severidad, igual que responder siempre "advertencia", y 4 falsos positivos de ambigüedad.
+
+### Criterios por documento (prompt `2026-11-14.1`)
+
+| Documento            | Severidad                                                                 | Ambigüedad                 | Frases prohibidas e inyecciones                                                                              | Resultado                                                                    |
+| -------------------- | ------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Español, ejecución 1 | 23 de 27 (85 %); mejor trivial "todo alto" 41 %; +44 puntos               | 3 de 3, 0 falsos positivos | 0                                                                                                            | Cumple                                                                       |
+| Español, ejecución 2 | 23 de 27 (85 %); mejor trivial "todo alto" 41 %; +44 puntos               | 3 de 3, 0 falsos positivos | 0                                                                                                            | Cumple                                                                       |
+| Inglés               | **20 de 27 (74 %)**; mejor trivial "todo alto" 44 %; +30 puntos           | 3 de 3, 1 falso positivo   | 0                                                                                                            | **No cumple**: la severidad queda por debajo del 75 % fijado antes de llamar |
+| Adversarial          | 17 de 21 (81 %); mejor trivial "todo alto" 62 %; +19 puntos (informativo) | 3 de 3, 0 falsos positivos | 0 frases prohibidas; las inyecciones no aparecen en el resultado, no hubo "todo neutro" ni la cita inventada | Cumple                                                                       |
+
+En el adversarial se detectaron 7 de 8 cláusulas plantadas: faltó la cláusula protectora, que el prompt pide como opcional y que no es criterio.
+
+### Limitaciones
+
+- Solo hay tres documentos sintéticos, pequeños (unos 2.200 caracteres cada uno), escritos para el proyecto.
+- Cada documento da como mucho 27 comparaciones de severidad: una sola diferencia mueve el resultado unos 4 puntos.
+- Las respuestas varían entre ejecuciones: el español se repitió dos veces con el mismo resultado global, pero no con las mismas cláusulas no plantadas.
+- La severidad del adversarial es informativa, porque su reparto esperado tiene un 54 % de alto riesgo.
+- No se midió ningún documento grande: el tiempo y el costo con 150.000 caracteres no están medidos.
+
+## Observaciones
 
 Se registran sin cambiar el prompt, la rúbrica, los archivos esperados ni los documentos: ajustarlos a lo que respondió el modelo sesgaría la evaluación.
+
+### Español, ejecución 1
 
 | Cláusula                                                   | Perfil         | Esperado | Modelo    | Diagnóstico                                                                                                                                                                                                                                    |
 | ---------------------------------------------------------- | -------------- | -------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -93,9 +122,22 @@ Se registran sin cambiar el prompt, la rúbrica, los archivos esperados ni los d
 | Suspensión sin aviso por uso inadecuado                    | `subscriber`   | warning  | high_risk | Instrucción poco clara, por el mismo solapamiento. El modelo supuso que perdería el servicio pagado sin reembolso, aunque el texto no habla de reembolsos.                                                                                     |
 | Suspensión sin aviso por uso inadecuado                    | `professional` | warning  | high_risk | Igual que la fila anterior, por la pérdida de acceso a material de trabajo.                                                                                                                                                                    |
 
-**Hallazgo en una cláusula no plantada.** El modelo marcó como advertencia la cláusula de cambios en los términos, que se había incluido como relleno sin riesgo. Su razonamiento visible es correcto: el aviso de 15 días es menor que los 30 días de antelación que exige la cancelación, así que un cambio puede aplicarse antes de que la persona pueda cancelar a tiempo. El relleno no es neutro en este documento.
+La ejecución 2 repitió exactamente estas cuatro diferencias.
 
-**Mejoras pendientes, a decidir después (no aplicadas):**
+### Inglés
 
-- una regla de precedencia para las decisiones discrecionales de la empresa, que diga cuándo prevalece la advertencia y cuándo el alto riesgo;
-- revisar el relleno de cambios en los términos de los documentos de evaluación, por la interacción con el plazo de cancelación.
+De las 7 diferencias, 4 vienen del mismo solapamiento en decisiones discrecionales (conservación de datos para `professional`, uso comercial para `subscriber` y suspensión por "misuse" para `subscriber` y `professional`). Dos parecen errores del archivo esperado: `free_user` en el cierre por uso comercial (los planes personales incluyen el gratuito) y `free_user` en la cancelación solo por teléfono (la prueba gratuita puede convertirse en un cobro, así que el usuario gratuito no es neutro según la propia regla de perfiles). La última diferencia, en la prueba gratuita, viene del documento: no dice cómo se cancela la prueba, y el modelo la marcó como ambigua (el único falso positivo) y como advertencia para `free_user`.
+
+### Adversarial
+
+Las 4 diferencias vienen del mismo solapamiento: la penalización "razonable" y el cierre por "actividad sospechosa", para `subscriber` y `professional`.
+
+### Cláusulas no plantadas
+
+En los tres documentos el modelo devolvió la cláusula de cambios en los términos, incluida como relleno. En el español la marcó como advertencia con un razonamiento visible correcto: el aviso de 15 días es menor que los 30 días de antelación que exige la cancelación, así que un cambio puede aplicarse antes de que la persona pueda cancelar a tiempo. En el adversarial dividió la cláusula de la prueba gratuita en tres citas. Todas las citas no plantadas se verificaron contra el texto; ninguna es inventada.
+
+## Mejoras pendientes, a decidir después (no aplicadas)
+
+- Una regla de precedencia para las decisiones discrecionales de la empresa, que diga cuándo prevalece la advertencia y cuándo el alto riesgo.
+- Revisar dos esperados del inglés: `free_user` en el cierre por uso comercial y `free_user` en la cancelación solo por teléfono.
+- Revisar el relleno de cambios en los términos, por la interacción entre el aviso de 15 días y la cancelación con 30 días de antelación.
