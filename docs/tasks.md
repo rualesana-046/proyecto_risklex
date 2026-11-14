@@ -47,6 +47,11 @@ R01 solo está cubierto en parte: falta el contrato del análisis, que correspon
 | B3-04 | Persistencia de ajustes: idioma, tema, tamaño de texto e identificador anónimo | R13           | pendiente |
 | B3-05 | Cliente de análisis, IPC validado y consentimiento                             | R06, R19, R21 | pendiente |
 
+### Tiempos límite del análisis
+
+- `PROVIDER_TIMEOUT_SECONDS` (backend) se mantiene en **120 s, provisional**, hasta medir un documento grande. Las latencias medidas con documentos de unos 2.200 caracteres (21 a 32 s) no representan uno de 150.000.
+- El reintento por baja confiabilidad lo hace el cliente, no el backend. Por eso el tiempo límite del cliente **por intento** debe ser al menos `PROVIDER_TIMEOUT_SECONDS + 15 s`, y el reintento es una petición aparte con su propio tiempo límite. Sustituye a la regla anterior del plan, que pedía `2 × PROVIDER_TIMEOUT_SECONDS + 15 s` porque suponía que el backend reintentaba.
+
 ## B4 Interfaz
 
 | ID    | Tarea                                                                                   | Requisitos    | Estado    |
