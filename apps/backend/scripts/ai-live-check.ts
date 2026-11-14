@@ -7,18 +7,16 @@ import {
   apiErrorResponseSchema,
   APP_VERSION_HEADER,
   INSTALL_ID_HEADER,
-  USER_PROFILES,
 } from '@risklex/shared';
 import { z } from 'zod';
 import { AI_PROVIDER_CONFIG } from '../src/config/ai-provider.config.ts';
+import { expectedSchema, type Expected } from './live-check-evaluation.ts';
 import {
-  describeClauses,
-  evaluate,
-  expectedSchema,
-  type ClauseDetail,
-  type Expected,
-  type LiveEvaluation,
-} from './live-check-evaluation.ts';
+  loadSavedResponse,
+  reportResponse,
+  RESULTS_DIRECTORY,
+  saveResponse,
+} from './live-check-results.ts';
 
 const PER_RUN_CAP_USD = 0.5;
 const SESSION_CAP_USD = 3;
@@ -37,6 +35,8 @@ interface Options {
   readonly baseUrl: string;
   readonly confirm: boolean;
   readonly details: boolean;
+  readonly saveResponse: boolean;
+  readonly fromResponse: string | undefined;
 }
 
 function readOptions(): Options {
@@ -47,6 +47,8 @@ function readOptions(): Options {
       confirm: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
       details: { type: 'boolean', default: false },
+      'save-response': { type: 'boolean', default: false },
+      'from-response': { type: 'string' },
     },
   });
   if (!/^[a-z0-9-]+$/u.test(values.document)) {
@@ -57,6 +59,8 @@ function readOptions(): Options {
     baseUrl: values['base-url'],
     confirm: values.confirm && !values['dry-run'],
     details: values.details,
+    saveResponse: values['save-response'],
+    fromResponse: values['from-response'],
   };
 }
 
@@ -104,47 +108,6 @@ async function callWorker(baseUrl: string, text: string, language: string) {
   };
 }
 
-function printEvaluation(result: LiveEvaluation, moreClausesLikely: boolean): void {
-  const ellipsis = result.reasons.filter((reason) => reason === 'ellipsis').length;
-  const lowReliability = result.reasons.length / Math.max(result.returned, 1) > 0.3;
-  console.log(
-    [
-      `Clauses returned: ${String(result.returned)} · verified: ${String(result.verified)} · discarded: ${String(result.reasons.length)}`,
-      `Discard reasons: ${result.reasons.length === 0 ? 'none' : result.reasons.join(', ')}`,
-      `Discarded by ellipsis: ${String(ellipsis)}`,
-      `Low reliability (more than 30 % discarded): ${String(lowReliability)}`,
-      `Planted clauses detected: ${String(result.detected)} of ${String(result.planted)}`,
-      `Severity matches: ${String(result.severityHits)} of ${String(result.detected * 3)}`,
-      `Ambiguity matches: ${String(result.ambiguityHits)} of ${String(result.detected)}`,
-      `Clauses built from forbidden phrases: ${String(result.forbidden)}`,
-      `moreClausesLikely: ${String(moreClausesLikely)}`,
-    ].join('\n'),
-  );
-}
-
-function mark(expected: unknown, obtained: unknown): string {
-  if (expected === null) {
-    return 'not planted';
-  }
-  return expected === obtained ? 'match' : 'MISMATCH';
-}
-
-function printDetails(details: readonly ClauseDetail[]): void {
-  details.forEach((detail, index) => {
-    const lines = [
-      `[${String(index + 1)}] ${detail.category} · planted phrase: ${detail.keyPhrase ?? 'none'} · quote verified: ${String(detail.verified)}`,
-      ...USER_PROFILES.map((profile) => {
-        const expected = detail.expectedSeverity?.[profile] ?? null;
-        const obtained = detail.obtainedSeverity[profile];
-        return `    ${profile}: expected ${expected ?? '-'} · obtained ${obtained} · ${mark(expected, obtained)}`;
-      }),
-      `    ambiguous: expected ${String(detail.expectedAmbiguous ?? '-')} · obtained ${String(detail.obtainedAmbiguous)} · ${mark(detail.expectedAmbiguous, detail.obtainedAmbiguous)}`,
-      `    evidenceStatus ${detail.evidenceStatus} · confidence ${detail.confidence}`,
-    ];
-    console.log(lines.join('\n'));
-  });
-}
-
 function loadDocument(name: string): { text: string; expected: Expected } {
   const base = new URL(`docs/ai-evaluation/${name}`, REPOSITORY_ROOT);
   const text = readFileSync(`${base.pathname}.md`, 'utf8');
@@ -185,17 +148,29 @@ async function runConfirmed(
   console.log(
     `Tokens: input ${String(inputTokens)} · output ${String(outputTokens)} · estimated cost ${costUsd.toFixed(4)} USD`,
   );
-  printEvaluation(
-    evaluate(response, document.text, document.expected),
-    response.meta.moreClausesLikely,
-  );
-  if (options.details) {
-    printDetails(describeClauses(response, document.text, document.expected));
+  if (options.saveResponse) {
+    console.log(`Response saved to ${saveResponse(RESULTS_DIRECTORY, options.name, response)}`);
   }
+  reportResponse(response, document, options.details);
+}
+
+function reevaluateSaved(path: string, details: boolean): void {
+  const saved = loadSavedResponse(path);
+  console.log(
+    `Offline re-evaluation of ${saved.document} saved at ${saved.savedAt}. No request was sent.`,
+  );
+  console.log(
+    `Prompt version ${saved.response.meta.promptVersion} · model ${saved.response.meta.model}`,
+  );
+  reportResponse(saved.response, loadDocument(saved.document), details);
 }
 
 async function main(): Promise<void> {
   const options = readOptions();
+  if (options.fromResponse !== undefined) {
+    reevaluateSaved(options.fromResponse, options.details);
+    return;
+  }
   const document = loadDocument(options.name);
   const capUsd = estimateCapUsd(document.text);
   const spentUsd = readLedgerUsd();

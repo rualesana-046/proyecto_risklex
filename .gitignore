@@ -5,6 +5,7 @@ release/
 coverage/
 .wrangler/
 worker-configuration.d.ts
+.live-results/
 .dev.vars
 .dev.vars.*
 .env
