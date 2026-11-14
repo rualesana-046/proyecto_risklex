@@ -95,6 +95,21 @@ function printDetails(details: readonly ClauseDetail[]): void {
   });
 }
 
+function printUnplanted(details: readonly ClauseDetail[]): void {
+  const unplanted = details.filter((detail) => detail.keyPhrase === null);
+  console.log(
+    `Clauses not matching any planted clause (review manually): ${String(unplanted.length)}`,
+  );
+  for (const detail of unplanted) {
+    const severities = USER_PROFILES.map(
+      (profile) => `${profile} ${detail.obtainedSeverity[profile]}`,
+    ).join(', ');
+    console.log(
+      `    ${detail.category} · ${severities} · quote verified: ${String(detail.verified)} · ambiguous: ${String(detail.obtainedAmbiguous)}`,
+    );
+  }
+}
+
 export function reportResponse(
   response: AnalysisResponse,
   document: { readonly text: string; readonly expected: Expected },
@@ -104,7 +119,9 @@ export function reportResponse(
     evaluate(response, document.text, document.expected),
     response.meta.moreClausesLikely,
   );
+  const clauseDetails = describeClauses(response, document.text, document.expected);
+  printUnplanted(clauseDetails);
   if (details) {
-    printDetails(describeClauses(response, document.text, document.expected));
+    printDetails(clauseDetails);
   }
 }
