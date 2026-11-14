@@ -5,7 +5,23 @@ import {
   type AnalysisLanguage,
 } from '@risklex/shared';
 
-export const PROMPT_VERSION = '2026-11-08.1';
+export const PROMPT_VERSION = '2026-11-14.1';
+
+const SIMPLE_ACTION_EXAMPLES = [
+  'turning off a setting in the app',
+  'changing a browser privacy option',
+] as const;
+const AMBIGUOUS_EXAMPLES = [
+  'Storage is included within fair use.',
+  'Bandwidth may be reduced at peak times at our discretion.',
+] as const;
+const CLEAR_EXAMPLES = ['Inactive profiles are erased after twenty-four months.'] as const;
+
+export const PROMPT_EXAMPLES: readonly string[] = [
+  ...SIMPLE_ACTION_EXAMPLES,
+  ...AMBIGUOUS_EXAMPLES,
+  ...CLEAR_EXAMPLES,
+];
 
 const LANGUAGE_NAMES: Record<AnalysisLanguage, string> = {
   es: 'Spanish',
@@ -13,6 +29,10 @@ const LANGUAGE_NAMES: Record<AnalysisLanguage, string> = {
 };
 
 const DOCUMENT_TAG = /<\s*\/?\s*document\b[^>]*>/giu;
+
+function quoted(examples: readonly string[]): string {
+  return examples.map((example) => `"${example}"`).join(' and ');
+}
 
 function roleSection(): string[] {
   return [
@@ -34,8 +54,9 @@ function clauseSection(): string[] {
     '- privacy: collection, use, sharing or sale of personal data.',
     '- tracking: cookies, pixels, device or activity tracking, including outside the service.',
     '- hidden_costs: automatic renewals, price changes, fees, charges that are easy to miss.',
-    '- cancellation: how to cancel or close the account, refunds, penalties, notice periods.',
+    '- cancellation: how to cancel or close the account, refunds, penalties, notice periods, suspension.',
     '- content_license: rights the company gets over content the user creates or uploads.',
+    'Also include up to 2 clauses that protect the reader, rated neutral for every profile, only if the document really contains them. They count toward the limit.',
     `Set moreClausesLikely to true when the document has more relevant clauses than the ${String(MAX_CLAUSES)} you return.`,
   ];
 }
@@ -45,16 +66,38 @@ function quoteSection(): string[] {
     'Every clause needs one quote copied word for word from the document: one contiguous passage, no paraphrasing, no merged sentences, no ellipsis and no added words.',
     `Each quote must be between ${String(MIN_QUOTE_CHARACTERS)} and ${String(MAX_QUOTE_CHARACTERS)} characters. Never invent a clause or a quote.`,
     'Set evidenceStatus to insufficient_evidence when the quote does not clearly support the risk you describe, and to supported otherwise.',
-    'Set isAmbiguous to true when the wording is vague or open to more than one reading, and explain why in ambiguityReason. Otherwise set ambiguityReason to an empty string.',
     'Set confidence to low, medium or high according to how clearly the quote supports your explanation.',
+  ];
+}
+
+function severitySection(): string[] {
+  return [
+    'Rate severity for each profile with these rules, judging each clause with the whole document in context:',
+    '- high_risk: the person can lose money, control over their personal data or rights over their content, and there is no simple way to avoid it.',
+    '- warning: it affects the person, but they can avoid or reduce it with a simple action, or the text does not make clear how far it goes.',
+    '- neutral: it does not apply to that profile, or it protects or only informs the person.',
+    `A simple action is one anyone can take without contacting the company, without paying and without losing the service, and that the document does not restrict with conditions such as a written request, a deadline or a penalty. Examples: ${quoted(SIMPLE_ACTION_EXAMPLES)}.`,
+    'When avoiding one clause depends on the conditions of another clause, apply those conditions.',
   ];
 }
 
 function profileSection(): string[] {
   return [
-    'For each clause, assess three profiles: free_user (only uses the free version), subscriber (pays a subscription) and professional (uses it for work or a business).',
-    'For each profile give severity (high_risk, warning or neutral), meaning (what the clause means for that person) and consequence (what could happen to them).',
+    'Assess three profiles: free_user (only uses the free version), subscriber (pays a subscription) and professional (uses it for work or a business).',
+    '- free_user: payments, renewals and refunds are neutral unless the free use can turn into a charge.',
+    '- subscriber and professional both pay, so payment clauses apply to them in the same way.',
+    '- professional: assume they upload work, client or business material. Content licenses, data use and limits on commercial use never weigh less for them than for subscriber.',
+    'Rate each profile on its own; profiles may share the same severity.',
+    'For each profile give severity, meaning (what the clause means for that person) and consequence (what could happen to them).',
     'List entities found in the quote: party (the company or the user), personal_data, third_party, payment, time_period, user_right, user_obligation or other.',
+  ];
+}
+
+function ambiguitySection(): string[] {
+  return [
+    "Set isAmbiguous to true only when a term that decides the extent of a right or obligation is undefined or left to the company's discretion, so the reader cannot tell what will actually happen. Explain why in ambiguityReason.",
+    'Broad wording with a clear effect is not ambiguous. When isAmbiguous is false, set ambiguityReason to an empty string.',
+    `Ambiguous: ${quoted(AMBIGUOUS_EXAMPLES)}. Not ambiguous: ${quoted(CLEAR_EXAMPLES)}.`,
   ];
 }
 
@@ -72,7 +115,9 @@ export function buildSystemPrompt(language: AnalysisLanguage): string {
     ...securitySection(),
     ...clauseSection(),
     ...quoteSection(),
+    ...severitySection(),
     ...profileSection(),
+    ...ambiguitySection(),
     ...styleSection(language),
   ].join('\n');
 }

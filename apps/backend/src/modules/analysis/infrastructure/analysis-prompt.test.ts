@@ -1,6 +1,11 @@
 import { CLAUSE_CATEGORIES, ENTITY_TYPES, MAX_CLAUSES, USER_PROFILES } from '@risklex/shared';
 import { describe, expect, it } from 'vitest';
-import { buildDocumentMessage, buildSystemPrompt, PROMPT_VERSION } from './analysis-prompt.ts';
+import {
+  buildDocumentMessage,
+  buildSystemPrompt,
+  PROMPT_EXAMPLES,
+  PROMPT_VERSION,
+} from './analysis-prompt.ts';
 
 describe('PROMPT_VERSION', () => {
   it('follows the date and revision format', () => {
@@ -37,6 +42,41 @@ describe('buildSystemPrompt', () => {
     const prompt = buildSystemPrompt('en');
     for (const value of [...CLAUSE_CATEGORIES, ...USER_PROFILES, ...ENTITY_TYPES]) {
       expect(prompt).toContain(value);
+    }
+  });
+
+  it('defines every severity level with the simple action rule', () => {
+    const prompt = buildSystemPrompt('en');
+    expect(prompt).toContain('- high_risk: the person can lose money');
+    expect(prompt).toContain('there is no simple way to avoid it');
+    expect(prompt).toContain('- warning: it affects the person');
+    expect(prompt).toContain('- neutral: it does not apply to that profile');
+    expect(prompt).toContain('a written request, a deadline or a penalty');
+    expect(prompt).toContain('apply those conditions');
+  });
+
+  it('states the profile rules', () => {
+    const prompt = buildSystemPrompt('en');
+    expect(prompt).toContain('payments, renewals and refunds are neutral unless');
+    expect(prompt).toContain('payment clauses apply to them in the same way');
+    expect(prompt).toContain('never weigh less for them than for subscriber');
+  });
+
+  it('limits ambiguity to undefined or discretionary terms', () => {
+    const prompt = buildSystemPrompt('en');
+    expect(prompt).toContain('Set isAmbiguous to true only when a term that decides the extent');
+    expect(prompt).toContain('Broad wording with a clear effect is not ambiguous');
+  });
+
+  it('asks for at most two real protective clauses rated neutral', () => {
+    expect(buildSystemPrompt('es')).toContain('up to 2 clauses that protect the reader');
+  });
+
+  it('includes every exported example', () => {
+    const prompt = buildSystemPrompt('en');
+    expect(PROMPT_EXAMPLES.length).toBeGreaterThan(0);
+    for (const example of PROMPT_EXAMPLES) {
+      expect(prompt).toContain(`"${example}"`);
     }
   });
 
