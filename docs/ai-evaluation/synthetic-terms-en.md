@@ -16,7 +16,7 @@ You can request a copy of your playlists at any time from your account settings.
 
 ## 3. Tracking
 
-We use cookies, device identifiers and similar technologies to follow your activity across other apps and websites, even when you are not using Brightloop.
+We use cookies, device identifiers and similar technologies to follow your activity across other apps and websites, even when you are not using Brightloop. You can block this tracking from your device preferences without losing access to Brightloop.
 
 ## 4. Plans and payments
 
@@ -26,10 +26,24 @@ Premium is billed every month in advance. Your free trial will automatically con
 
 You may cancel Premium only by calling our support line during business hours. Cancellation takes effect at the end of the current billing period and no refunds are given for unused time.
 
-## 6. Your content
+## 6. Permitted use
+
+Personal plans may not be played in shops, gyms, restaurants or other business premises. If we decide that an account is used for business purposes, we may close it without a refund.
+
+We may suspend any account that we believe is being misused, without prior notice.
+
+## 7. Your content
 
 You grant Brightloop an irrevocable, worldwide, royalty-free license to use, copy, adapt and commercially exploit any playlists, reviews and recordings you upload, including after you delete your account.
 
-## 7. Contact
+## 8. Changes to these terms
+
+We will tell you about changes to these terms fifteen days in advance through an in-product notice.
+
+## 9. Governing law
+
+These terms are governed by the laws of the country where you live.
+
+## 10. Contact
 
 You can reach us through the contact form inside the app.

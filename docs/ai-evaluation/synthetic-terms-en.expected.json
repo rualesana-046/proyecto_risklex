@@ -26,7 +26,7 @@
       "keyPhrase": "follow your activity across other apps and websites",
       "isAmbiguous": false,
       "expectedSeverity": {
-        "free_user": "high_risk",
+        "free_user": "warning",
         "subscriber": "warning",
         "professional": "warning"
       }
@@ -37,8 +37,8 @@
       "isAmbiguous": false,
       "expectedSeverity": {
         "free_user": "high_risk",
-        "subscriber": "warning",
-        "professional": "warning"
+        "subscriber": "high_risk",
+        "professional": "high_risk"
       }
     },
     {
@@ -48,6 +48,26 @@
       "expectedSeverity": {
         "free_user": "neutral",
         "subscriber": "high_risk",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "an account is used for business purposes",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "neutral",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "we believe is being misused",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
         "professional": "warning"
       }
     },
@@ -56,9 +76,19 @@
       "keyPhrase": "irrevocable, worldwide, royalty-free license",
       "isAmbiguous": false,
       "expectedSeverity": {
-        "free_user": "warning",
-        "subscriber": "warning",
+        "free_user": "high_risk",
+        "subscriber": "high_risk",
         "professional": "high_risk"
+      }
+    },
+    {
+      "category": "privacy",
+      "keyPhrase": "request a copy of your playlists",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "neutral",
+        "professional": "neutral"
       }
     }
   ],
