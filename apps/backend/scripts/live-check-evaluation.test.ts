@@ -119,15 +119,27 @@ describe('evaluate', () => {
     expect(result.detected).toBe(0);
   });
 
-  it('checks the ambiguity flag of detected clauses', () => {
-    const ambiguous = clause({
+  it('reports how many severities each trivial answer would match', () => {
+    const result = evaluate(response([clause({})]), TEXT, expected);
+    expect(result.severityTotal).toBe(3);
+    expect(result.baselines).toEqual({ high_risk: 2, warning: 1, neutral: 0 });
+  });
+
+  it('separates ambiguity coverage from false positives', () => {
+    const realFound = clause({
       quote: 'Conservaremos sus datos durante el tiempo que sea necesario',
       isAmbiguous: true,
       ambiguityReason: 'Vague period.',
     });
-    const notFlagged = clause({ quote: ambiguous.quote });
-    expect(evaluate(response([ambiguous]), TEXT, expected).ambiguityHits).toBe(1);
-    expect(evaluate(response([notFlagged]), TEXT, expected).ambiguityHits).toBe(0);
+    const falsePositive = clause({ isAmbiguous: true, ambiguityReason: 'Who are partners?' });
+    const missed = clause({ quote: realFound.quote });
+    expect(evaluate(response([missed]), TEXT, expected).ambiguousFound).toBe(0);
+    const result = evaluate(response([realFound, falsePositive]), TEXT, expected);
+    expect(result).toMatchObject({
+      ambiguousReal: 1,
+      ambiguousFound: 1,
+      ambiguousFalsePositives: 1,
+    });
   });
 
   it('discards invented quotes and reports the reasons', () => {
@@ -167,6 +179,8 @@ describe('describeClauses', () => {
       evidenceStatus: 'supported',
       confidence: 'high',
     });
+    expect(JSON.stringify(detail)).not.toContain('Comparte datos');
+    expect(JSON.stringify(detail)).not.toContain('Meaning.');
   });
 
   it('reports a clause that matches no planted clause', () => {
@@ -188,13 +202,6 @@ describe('describeClauses', () => {
   it('marks invented quotes as not verified', () => {
     const invented = clause({ quote: 'Vendemos sus datos a cualquier empresa interesada.' });
     expect(describeClauses(response([invented]), TEXT, expected)[0]?.verified).toBe(false);
-  });
-
-  it('never exposes quotes, titles or explanations', () => {
-    const [detail] = describeClauses(response([clause({})]), TEXT, expected);
-    const serialized = JSON.stringify(detail);
-    expect(serialized).not.toContain('Comparte datos');
-    expect(serialized).not.toContain('Meaning.');
   });
 });
 

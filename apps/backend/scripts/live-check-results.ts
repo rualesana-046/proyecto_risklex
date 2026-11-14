@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analysisResponseSchema, USER_PROFILES, type AnalysisResponse } from '@risklex/shared';
 import { z } from 'zod';
+import { checkCriteria } from './live-check-criteria.ts';
 import {
   describeClauses,
   evaluate,
@@ -40,20 +41,33 @@ export function loadSavedResponse(path: string): SavedResponse {
   return savedResponseSchema.parse(raw);
 }
 
+function percent(rate: number): string {
+  return `${(rate * 100).toFixed(0)} %`;
+}
+
+function passFail(pass: boolean): string {
+  return pass ? 'PASS' : 'FAIL';
+}
+
 function printEvaluation(result: LiveEvaluation, moreClausesLikely: boolean): void {
   const ellipsis = result.reasons.filter((reason) => reason === 'ellipsis').length;
   const lowReliability = result.reasons.length / Math.max(result.returned, 1) > 0.3;
+  const criteria = checkCriteria(result);
+  const total = String(result.severityTotal);
   console.log(
     [
       `Clauses returned: ${String(result.returned)} · verified: ${String(result.verified)} · discarded: ${String(result.reasons.length)}`,
-      `Discard reasons: ${result.reasons.length === 0 ? 'none' : result.reasons.join(', ')}`,
-      `Discarded by ellipsis: ${String(ellipsis)}`,
+      `Discard reasons: ${result.reasons.length === 0 ? 'none' : result.reasons.join(', ')} · by ellipsis: ${String(ellipsis)}`,
       `Low reliability (more than 30 % discarded): ${String(lowReliability)}`,
       `Planted clauses detected: ${String(result.detected)} of ${String(result.planted)}`,
-      `Severity matches: ${String(result.severityHits)} of ${String(result.detected * 3)}`,
-      `Ambiguity matches: ${String(result.ambiguityHits)} of ${String(result.detected)}`,
-      `Clauses built from forbidden phrases: ${String(result.forbidden)}`,
-      `moreClausesLikely: ${String(moreClausesLikely)}`,
+      `Severity matches: ${String(result.severityHits)} of ${total} (${percent(criteria.severityRate)})`,
+      `Trivial baselines over the same clauses: all high_risk ${String(result.baselines.high_risk)}, all warning ${String(result.baselines.warning)}, all neutral ${String(result.baselines.neutral)} of ${total}`,
+      `Best trivial baseline: all ${criteria.bestBaseline} (${percent(criteria.bestBaselineRate)}) · margin ${((criteria.severityRate - criteria.bestBaselineRate) * 100).toFixed(0)} points`,
+      `Ambiguity coverage: ${String(result.ambiguousFound)} of ${String(result.ambiguousReal)} real ambiguous found · false positives: ${String(result.ambiguousFalsePositives)}`,
+      `Clauses built from forbidden phrases: ${String(result.forbidden)} · moreClausesLikely: ${String(moreClausesLikely)}`,
+      `Criteria · severity >= 75 % and >= 25 points over best baseline: ${passFail(criteria.severityPass)}`,
+      `Criteria · all real ambiguous found and at most 1 false positive: ${passFail(criteria.ambiguityPass)}`,
+      `Criteria · no clause built from forbidden phrases: ${passFail(criteria.forbiddenPass)}`,
     ].join('\n'),
   );
 }

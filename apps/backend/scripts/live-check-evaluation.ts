@@ -6,6 +6,7 @@ import {
   USER_PROFILES,
   verifyQuote,
   type AnalysisResponse,
+  type Clause,
   type ConfidenceLevel,
   type EvidenceStatus,
   type QuoteRejectionReason,
@@ -28,6 +29,7 @@ export const expectedSchema = z.strictObject({
 });
 
 export type Expected = z.infer<typeof expectedSchema>;
+type Plant = Expected['clauses'][number];
 
 export interface LiveEvaluation {
   readonly returned: number;
@@ -36,12 +38,41 @@ export interface LiveEvaluation {
   readonly planted: number;
   readonly detected: number;
   readonly severityHits: number;
-  readonly ambiguityHits: number;
+  readonly severityTotal: number;
+  readonly baselines: Readonly<Record<Severity, number>>;
+  readonly ambiguousReal: number;
+  readonly ambiguousFound: number;
+  readonly ambiguousFalsePositives: number;
   readonly forbidden: number;
 }
 
 export function contains(haystack: string, needle: string): boolean {
   return normalizeText(haystack).text.includes(normalizeText(needle).text);
+}
+
+function findPlant(expected: Expected, clause: Clause): Plant | undefined {
+  return expected.clauses.find(
+    (plant) => plant.category === clause.category && contains(clause.quote, plant.keyPhrase),
+  );
+}
+
+function severityStats(matches: readonly { plant: Plant; match: Clause }[]) {
+  const pairs = matches.flatMap(({ plant, match }) =>
+    USER_PROFILES.map((profile) => ({
+      expected: plant.expectedSeverity[profile],
+      obtained: match.profiles[profile].severity,
+    })),
+  );
+  const count = (level: Severity): number => pairs.filter((pair) => pair.expected === level).length;
+  return {
+    severityHits: pairs.filter((pair) => pair.expected === pair.obtained).length,
+    severityTotal: pairs.length,
+    baselines: {
+      high_risk: count('high_risk'),
+      warning: count('warning'),
+      neutral: count('neutral'),
+    },
+  };
 }
 
 export function evaluate(
@@ -54,9 +85,7 @@ export function evaluate(
   const checks = clauses.map((clause) => ({ clause, check: verifyQuote(document, clause.quote) }));
   const verified = checks.filter((item) => item.check.verified).map((item) => item.clause);
   const matches = expected.clauses.flatMap((plant) => {
-    const match = verified.find(
-      (clause) => clause.category === plant.category && contains(clause.quote, plant.keyPhrase),
-    );
+    const match = verified.find((clause) => findPlant(expected, clause) === plant);
     return match ? [{ plant, match }] : [];
   });
   return {
@@ -65,13 +94,13 @@ export function evaluate(
     reasons: checks.flatMap((item) => (item.check.verified ? [] : [item.check.reason])),
     planted: expected.clauses.length,
     detected: matches.length,
-    severityHits: matches.flatMap(({ plant, match }) =>
-      USER_PROFILES.filter(
-        (profile) => match.profiles[profile].severity === plant.expectedSeverity[profile],
-      ),
-    ).length,
-    ambiguityHits: matches.filter(({ plant, match }) => match.isAmbiguous === plant.isAmbiguous)
+    ...severityStats(matches),
+    ambiguousReal: expected.clauses.filter((plant) => plant.isAmbiguous).length,
+    ambiguousFound: matches.filter(({ plant, match }) => plant.isAmbiguous && match.isAmbiguous)
       .length,
+    ambiguousFalsePositives: verified.filter(
+      (clause) => clause.isAmbiguous && findPlant(expected, clause)?.isAmbiguous !== true,
+    ).length,
     forbidden: clauses.filter((clause) =>
       expected.forbiddenPhrases.some(
         (phrase) => contains(clause.quote, phrase) || contains(clause.title, phrase),
@@ -99,10 +128,7 @@ export function describeClauses(
 ): ClauseDetail[] {
   const document = normalizeText(text);
   return response.result.clauses.map((clause) => {
-    const plant = expected.clauses.find(
-      (candidate) =>
-        candidate.category === clause.category && contains(clause.quote, candidate.keyPhrase),
-    );
+    const plant = findPlant(expected, clause);
     return {
       category: clause.category,
       keyPhrase: plant?.keyPhrase ?? null,
