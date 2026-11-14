@@ -7,7 +7,7 @@
       "isAmbiguous": false,
       "expectedSeverity": {
         "free_user": "high_risk",
-        "subscriber": "warning",
+        "subscriber": "high_risk",
         "professional": "high_risk"
       }
     },
@@ -48,6 +48,26 @@
       "expectedSeverity": {
         "free_user": "neutral",
         "subscriber": "high_risk",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "se usa con fines profesionales",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "neutral",
+        "professional": "high_risk"
+      }
+    },
+    {
+      "category": "cancellation",
+      "keyPhrase": "un uso inadecuado del servicio",
+      "isAmbiguous": true,
+      "expectedSeverity": {
+        "free_user": "warning",
+        "subscriber": "warning",
         "professional": "warning"
       }
     },
@@ -56,9 +76,19 @@
       "keyPhrase": "licencia mundial, gratuita, perpetua y sublicenciable",
       "isAmbiguous": false,
       "expectedSeverity": {
-        "free_user": "warning",
-        "subscriber": "warning",
+        "free_user": "high_risk",
+        "subscriber": "high_risk",
         "professional": "high_risk"
+      }
+    },
+    {
+      "category": "privacy",
+      "keyPhrase": "descargar una copia de sus fotos",
+      "isAmbiguous": false,
+      "expectedSeverity": {
+        "free_user": "neutral",
+        "subscriber": "neutral",
+        "professional": "neutral"
       }
     }
   ],
