@@ -57,7 +57,7 @@
       "isAmbiguous": true,
       "expectedSeverity": {
         "free_user": "neutral",
-        "subscriber": "neutral",
+        "subscriber": "warning",
         "professional": "high_risk"
       }
     },
