@@ -7,12 +7,15 @@ import {
   apiErrorResponseSchema,
   APP_VERSION_HEADER,
   INSTALL_ID_HEADER,
+  USER_PROFILES,
 } from '@risklex/shared';
 import { z } from 'zod';
 import { AI_PROVIDER_CONFIG } from '../src/config/ai-provider.config.ts';
 import {
+  describeClauses,
   evaluate,
   expectedSchema,
+  type ClauseDetail,
   type Expected,
   type LiveEvaluation,
 } from './live-check-evaluation.ts';
@@ -29,13 +32,21 @@ const SCHEMA_FILE = new URL(
 );
 const LEDGER_FILE = join(tmpdir(), `risklex-ai-live-${new Date().toISOString().slice(0, 10)}.json`);
 
-function readOptions(): { name: string; baseUrl: string; confirm: boolean } {
+interface Options {
+  readonly name: string;
+  readonly baseUrl: string;
+  readonly confirm: boolean;
+  readonly details: boolean;
+}
+
+function readOptions(): Options {
   const { values } = parseArgs({
     options: {
       document: { type: 'string', default: 'synthetic-terms-es' },
       'base-url': { type: 'string', default: 'http://localhost:8787' },
       confirm: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
+      details: { type: 'boolean', default: false },
     },
   });
   if (!/^[a-z0-9-]+$/u.test(values.document)) {
@@ -45,6 +56,7 @@ function readOptions(): { name: string; baseUrl: string; confirm: boolean } {
     name: values.document,
     baseUrl: values['base-url'],
     confirm: values.confirm && !values['dry-run'],
+    details: values.details,
   };
 }
 
@@ -110,6 +122,29 @@ function printEvaluation(result: LiveEvaluation, moreClausesLikely: boolean): vo
   );
 }
 
+function mark(expected: unknown, obtained: unknown): string {
+  if (expected === null) {
+    return 'not planted';
+  }
+  return expected === obtained ? 'match' : 'MISMATCH';
+}
+
+function printDetails(details: readonly ClauseDetail[]): void {
+  details.forEach((detail, index) => {
+    const lines = [
+      `[${String(index + 1)}] ${detail.category} · planted phrase: ${detail.keyPhrase ?? 'none'} · quote verified: ${String(detail.verified)}`,
+      ...USER_PROFILES.map((profile) => {
+        const expected = detail.expectedSeverity?.[profile] ?? null;
+        const obtained = detail.obtainedSeverity[profile];
+        return `    ${profile}: expected ${expected ?? '-'} · obtained ${obtained} · ${mark(expected, obtained)}`;
+      }),
+      `    ambiguous: expected ${String(detail.expectedAmbiguous ?? '-')} · obtained ${String(detail.obtainedAmbiguous)} · ${mark(detail.expectedAmbiguous, detail.obtainedAmbiguous)}`,
+      `    evidenceStatus ${detail.evidenceStatus} · confidence ${detail.confidence}`,
+    ];
+    console.log(lines.join('\n'));
+  });
+}
+
 function loadDocument(name: string): { text: string; expected: Expected } {
   const base = new URL(`docs/ai-evaluation/${name}`, REPOSITORY_ROOT);
   const text = readFileSync(`${base.pathname}.md`, 'utf8');
@@ -129,12 +164,12 @@ function printPlan(name: string, text: string, capUsd: number, spentUsd: number)
 }
 
 async function runConfirmed(
-  baseUrl: string,
+  options: Options,
   document: { text: string; expected: Expected },
   capUsd: number,
   spentUsd: number,
 ): Promise<void> {
-  const result = await callWorker(baseUrl, document.text, document.expected.language);
+  const result = await callWorker(options.baseUrl, document.text, document.expected.language);
   console.log(`HTTP ${String(result.status)} in ${(result.latencyMs / 1000).toFixed(1)} s`);
   if (!result.ok) {
     writeLedgerUsd(spentUsd + capUsd);
@@ -154,6 +189,9 @@ async function runConfirmed(
     evaluate(response, document.text, document.expected),
     response.meta.moreClausesLikely,
   );
+  if (options.details) {
+    printDetails(describeClauses(response, document.text, document.expected));
+  }
 }
 
 async function main(): Promise<void> {
@@ -171,7 +209,7 @@ async function main(): Promise<void> {
     console.log('Dry run: no request was sent. Add --confirm to call the local Worker.');
     return;
   }
-  await runConfirmed(options.baseUrl, document, capUsd, spentUsd);
+  await runConfirmed(options, document, capUsd, spentUsd);
 }
 
 await main();

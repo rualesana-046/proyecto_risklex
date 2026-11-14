@@ -1,6 +1,12 @@
 import type { AnalysisResponse, Clause } from '@risklex/shared';
 import { describe, expect, it } from 'vitest';
-import { contains, evaluate, expectedSchema, type Expected } from './live-check-evaluation.ts';
+import {
+  contains,
+  describeClauses,
+  evaluate,
+  expectedSchema,
+  type Expected,
+} from './live-check-evaluation.ts';
 
 const TEXT = [
   'Podremos compartir sus datos personales con socios comerciales y anunciantes.',
@@ -136,6 +142,59 @@ describe('evaluate', () => {
     const inQuote = clause({ quote: 'El usuario puede cancelar gratis en cualquier momento.' });
     const inTitle = clause({ title: 'Puede cancelar gratis en cualquier momento' });
     expect(evaluate(response([inQuote, inTitle]), TEXT, expected).forbidden).toBe(2);
+  });
+});
+
+describe('describeClauses', () => {
+  it('pairs a planted clause with the obtained severities and ambiguity', () => {
+    const [detail] = describeClauses(response([clause({})]), TEXT, expected);
+    expect(detail).toEqual({
+      category: 'privacy',
+      keyPhrase: 'socios comerciales y anunciantes',
+      verified: true,
+      expectedSeverity: {
+        free_user: 'high_risk',
+        subscriber: 'warning',
+        professional: 'high_risk',
+      },
+      obtainedSeverity: {
+        free_user: 'high_risk',
+        subscriber: 'warning',
+        professional: 'high_risk',
+      },
+      expectedAmbiguous: false,
+      obtainedAmbiguous: false,
+      evidenceStatus: 'supported',
+      confidence: 'high',
+    });
+  });
+
+  it('reports a clause that matches no planted clause', () => {
+    const extra = clause({
+      category: 'tracking',
+      confidence: 'low',
+      evidenceStatus: 'insufficient_evidence',
+    });
+    const [detail] = describeClauses(response([extra]), TEXT, expected);
+    expect(detail).toMatchObject({
+      keyPhrase: null,
+      expectedSeverity: null,
+      expectedAmbiguous: null,
+      confidence: 'low',
+      evidenceStatus: 'insufficient_evidence',
+    });
+  });
+
+  it('marks invented quotes as not verified', () => {
+    const invented = clause({ quote: 'Vendemos sus datos a cualquier empresa interesada.' });
+    expect(describeClauses(response([invented]), TEXT, expected)[0]?.verified).toBe(false);
+  });
+
+  it('never exposes quotes, titles or explanations', () => {
+    const [detail] = describeClauses(response([clause({})]), TEXT, expected);
+    const serialized = JSON.stringify(detail);
+    expect(serialized).not.toContain('Comparte datos');
+    expect(serialized).not.toContain('Meaning.');
   });
 });
 

@@ -6,7 +6,11 @@ import {
   USER_PROFILES,
   verifyQuote,
   type AnalysisResponse,
+  type ConfidenceLevel,
+  type EvidenceStatus,
   type QuoteRejectionReason,
+  type Severity,
+  type UserProfile,
 } from '@risklex/shared';
 import { z } from 'zod';
 
@@ -74,4 +78,45 @@ export function evaluate(
       ),
     ).length,
   };
+}
+
+export interface ClauseDetail {
+  readonly category: string;
+  readonly keyPhrase: string | null;
+  readonly verified: boolean;
+  readonly expectedSeverity: Readonly<Record<UserProfile, Severity>> | null;
+  readonly obtainedSeverity: Readonly<Record<UserProfile, Severity>>;
+  readonly expectedAmbiguous: boolean | null;
+  readonly obtainedAmbiguous: boolean;
+  readonly evidenceStatus: EvidenceStatus;
+  readonly confidence: ConfidenceLevel;
+}
+
+export function describeClauses(
+  response: AnalysisResponse,
+  text: string,
+  expected: Expected,
+): ClauseDetail[] {
+  const document = normalizeText(text);
+  return response.result.clauses.map((clause) => {
+    const plant = expected.clauses.find(
+      (candidate) =>
+        candidate.category === clause.category && contains(clause.quote, candidate.keyPhrase),
+    );
+    return {
+      category: clause.category,
+      keyPhrase: plant?.keyPhrase ?? null,
+      verified: verifyQuote(document, clause.quote).verified,
+      expectedSeverity: plant?.expectedSeverity ?? null,
+      obtainedSeverity: {
+        free_user: clause.profiles.free_user.severity,
+        subscriber: clause.profiles.subscriber.severity,
+        professional: clause.profiles.professional.severity,
+      },
+      expectedAmbiguous: plant?.isAmbiguous ?? null,
+      obtainedAmbiguous: clause.isAmbiguous,
+      evidenceStatus: clause.evidenceStatus,
+      confidence: clause.confidence,
+    };
+  });
 }
