@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 import { ANALYSIS_LANGUAGES } from '../../constants/analysis.constants.ts';
 import { analysisResultSchema } from '../../schemas/analysis-result.schema.ts';
 

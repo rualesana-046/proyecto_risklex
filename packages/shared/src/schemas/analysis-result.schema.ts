@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 import {
   CLAUSE_CATEGORIES,
   CONFIDENCE_LEVELS,

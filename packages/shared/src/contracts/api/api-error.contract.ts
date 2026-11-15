@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const API_ERROR_CODES = [
   'invalid_request',

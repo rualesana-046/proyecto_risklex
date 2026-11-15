@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 import { AnalysisError } from '../domain/analysis-error.ts';
 import type { ModelAnalysis } from '../domain/language-model.port.ts';
 import { modelOutputSchema } from './model-output.schema.ts';

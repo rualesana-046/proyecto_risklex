@@ -5,7 +5,7 @@ import {
   EVIDENCE_STATUSES,
   SEVERITIES,
 } from '@risklex/shared';
-import { z } from 'zod';
+import * as z from 'zod';
 
 const modelAssessmentSchema = z.strictObject({
   severity: z.enum(SEVERITIES),
