@@ -36,11 +36,3 @@ export const modelOutputSchema = z.strictObject({
 });
 
 export type ModelOutput = z.infer<typeof modelOutputSchema>;
-
-export function buildModelJsonSchema(): Record<string, unknown> {
-  const schema: Record<string, unknown> = {
-    ...z.toJSONSchema(modelOutputSchema, { target: 'draft-2020-12' }),
-  };
-  delete schema.$schema;
-  return schema;
-}

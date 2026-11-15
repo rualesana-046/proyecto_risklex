@@ -1,5 +1,5 @@
 import { writeFileSync } from 'node:fs';
-import { buildModelJsonSchema } from '../src/modules/analysis/infrastructure/model-output.schema.ts';
+import { buildModelJsonSchema } from './model-json-schema.ts';
 
 const target = new URL(
   '../src/modules/analysis/infrastructure/model-output.schema.json',

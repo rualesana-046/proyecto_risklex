@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import generatedSchema from './model-output.schema.json';
-import { buildModelJsonSchema, modelOutputSchema } from './model-output.schema.ts';
+import generatedSchema from '../src/modules/analysis/infrastructure/model-output.schema.json';
+import { modelOutputSchema } from '../src/modules/analysis/infrastructure/model-output.schema.ts';
+import { buildModelJsonSchema } from './model-json-schema.ts';
 
 type JsonNode = Record<string, unknown>;
 
