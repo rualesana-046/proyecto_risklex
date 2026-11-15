@@ -24,6 +24,23 @@ export default defineConfig({
           environment: 'node',
         },
       },
+      {
+        test: {
+          name: 'frontend-node',
+          include: [
+            'apps/frontend/{build,test}/**/*.test.ts',
+            'apps/frontend/src/{main,preload,common}/**/*.test.ts',
+          ],
+          environment: 'node',
+        },
+      },
+      {
+        test: {
+          name: 'frontend-renderer',
+          include: ['apps/frontend/src/renderer/**/*.test.{ts,tsx}'],
+          environment: 'jsdom',
+        },
+      },
     ],
   },
 });

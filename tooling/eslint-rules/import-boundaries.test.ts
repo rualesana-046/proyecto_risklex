@@ -15,6 +15,9 @@ async function restrictedImportCount(filePath: string, code: string): Promise<nu
 const sharedFile = 'packages/shared/src/sample.ts';
 const frontendFile = 'apps/frontend/src/main/sample.ts';
 const backendFile = 'apps/backend/src/sample.ts';
+const rendererFile = 'apps/frontend/src/renderer/src/sample.tsx';
+const preloadFile = 'apps/frontend/src/preload/sample.ts';
+const commonFile = 'apps/frontend/src/common/sample.ts';
 
 describe('import boundaries', () => {
   it.each([
@@ -55,5 +58,53 @@ describe('import boundaries', () => {
     "import { useState } from 'react';",
   ])('blocks %s in the backend', async (code) => {
     expect(await restrictedImportCount(backendFile, code)).toBe(1);
+  });
+
+  it.each([
+    "import { ipcRenderer } from 'electron';",
+    "import { readFile } from 'node:fs';",
+    "import { readFile } from 'fs';",
+    "import { x } from '@risklex/backend';",
+    "import { x } from '../../main/app/create-window.ts';",
+    "import { x } from '../../preload/index.ts';",
+  ])('blocks %s in the renderer', async (code) => {
+    expect(await restrictedImportCount(rendererFile, code)).toBe(1);
+  });
+
+  it.each([
+    "import { useState } from 'react';",
+    "import { x } from '@risklex/shared';",
+    "import { CHANNELS } from '../../common/ipc-channels.ts';",
+  ])('allows %s in the renderer', async (code) => {
+    expect(await restrictedImportCount(rendererFile, code)).toBe(0);
+  });
+
+  it.each([
+    "import * as z from 'zod';",
+    "import { readFile } from 'node:fs';",
+    "import { schema } from '../common/ipc-schemas.ts';",
+    "import { x } from '../main/composition-root.ts';",
+  ])('blocks %s in the preload', async (code) => {
+    expect(await restrictedImportCount(preloadFile, code)).toBe(1);
+  });
+
+  it.each([
+    "import { contextBridge, ipcRenderer } from 'electron';",
+    "import { CHANNELS } from '../common/ipc-channels.ts';",
+  ])('allows %s in the preload', async (code) => {
+    expect(await restrictedImportCount(preloadFile, code)).toBe(0);
+  });
+
+  it.each([
+    "import { app } from 'electron';",
+    "import { readFile } from 'node:fs';",
+    "import { useState } from 'react';",
+    "import { x } from '../main/composition-root.ts';",
+  ])('blocks %s in frontend common code', async (code) => {
+    expect(await restrictedImportCount(commonFile, code)).toBe(1);
+  });
+
+  it('allows zod in frontend common code', async () => {
+    expect(await restrictedImportCount(commonFile, "import * as z from 'zod';")).toBe(0);
   });
 });

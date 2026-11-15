@@ -54,6 +54,10 @@ export default defineConfig(
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
+    files: ['apps/frontend/src/renderer/**'],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
     files: ['**/*.tsx'],
     extends: [reactHooks.configs.flat.recommended],
   },
