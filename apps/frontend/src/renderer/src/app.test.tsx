@@ -3,10 +3,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from './app.tsx';
 import './i18n/i18n.ts';
 
+const analyze = vi.fn();
+
 beforeEach(() => {
+  analyze.mockReset();
   Object.defineProperty(window, 'risklex', {
     configurable: true,
-    value: { analyze: vi.fn(), onProgress: vi.fn(() => () => undefined), cancel: vi.fn() },
+    value: { analyze, onProgress: vi.fn(() => () => undefined), cancel: vi.fn() },
   });
 });
 
@@ -28,6 +31,6 @@ describe('App (simulated preload bridge)', () => {
 
   it('never calls the backend just by opening', () => {
     render(<App />);
-    expect(window.risklex.analyze).not.toHaveBeenCalled();
+    expect(analyze).not.toHaveBeenCalled();
   });
 });
