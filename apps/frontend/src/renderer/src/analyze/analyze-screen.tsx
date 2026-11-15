@@ -7,6 +7,7 @@ import { useConsent } from '../consent/use-consent.ts';
 import { AnalysisErrorMessage } from './analysis-error-message.tsx';
 import { AnalysisProgress } from './analysis-progress.tsx';
 import { DocumentInput, isAnalyzable } from './document-input.tsx';
+import { SampleDocumentButton } from './sample-document-button.tsx';
 import { useAnalysis, type RisklexBridge } from './use-analysis.ts';
 import './analyze.css';
 
@@ -104,6 +105,7 @@ export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
         <p className="analyze-lead">{t('analyze.lead')}</p>
       </section>
       <section className="analyze-panel">
+        <SampleDocumentButton disabled={running} onUse={setText} />
         <DocumentInput value={text} disabled={running} onChange={setText} />
         <AnalyzeActions
           buttonRef={buttonRef}

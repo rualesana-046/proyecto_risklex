@@ -44,7 +44,11 @@
     "lead": "Pega el texto de los términos o de la política de privacidad. Te contamos, en palabras simples, qué podría pasar si aceptas.",
     "submit": "Analizar documento",
     "cancel": "Cancelar análisis",
-    "emptyHint": "Pega el texto del documento para poder analizarlo."
+    "emptyHint": "Pega el texto del documento para poder analizarlo.",
+    "sample": {
+      "label": "Usar texto de ejemplo",
+      "note": "Es un documento ficticio, escrito para probar RiskLex."
+    }
   },
   "errors": {
     "invalid_request": {

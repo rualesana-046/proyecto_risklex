@@ -119,3 +119,14 @@ describe('AnalyzeScreen (simulated preload bridge and native dialog)', () => {
     expect(document.activeElement).toBe(analyzeButton);
   });
 });
+
+describe('sample text button (simulated preload bridge)', () => {
+  it('fills the text area with the bundled sample and never sends it', async () => {
+    const { textArea, analyzeButton, bridge, user } = setup();
+    await user.click(screen.getByRole('button', { name: 'Usar texto de ejemplo' }));
+    expect((textArea as HTMLTextAreaElement).value).toContain('socios comerciales y anunciantes');
+    expect(analyzeButton.disabled).toBe(false);
+    expect(bridge.analyze).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});
