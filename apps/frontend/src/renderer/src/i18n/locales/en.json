@@ -104,5 +104,10 @@
       "message": "Something went wrong.",
       "next": "Try again. If it happens again, close and reopen RiskLex."
     }
+  },
+  "severity": {
+    "high_risk": "High risk",
+    "warning": "Warning",
+    "neutral": "Neutral"
   }
 }

@@ -104,5 +104,10 @@
       "message": "Algo salió mal.",
       "next": "Vuelve a intentarlo. Si se repite, cierra y abre RiskLex."
     }
+  },
+  "severity": {
+    "high_risk": "Alto riesgo",
+    "warning": "Advertencia",
+    "neutral": "Neutro"
   }
 }
