@@ -2,8 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { appVersionSchema } from '@risklex/shared';
 import { app, ipcMain } from 'electron';
 import { readApiConfig } from './app/api-config.ts';
+import { createFixtureAnalysisClient } from './dev/fixture-analysis.client.ts';
 import { registerAnalysisIpc } from './ipc/analysis.ipc.ts';
-import { createAnalysisHttpClient } from './modules/analysis/infrastructure/analysis-http.client.ts';
+import {
+  createAnalysisHttpClient,
+  type AnalysisClient,
+} from './modules/analysis/infrastructure/analysis-http.client.ts';
 
 const FALLBACK_APP_VERSION = '0.0.0';
 
@@ -12,15 +16,21 @@ function appVersion(): string {
   return appVersionSchema.safeParse(version).success ? version : FALLBACK_APP_VERSION;
 }
 
-export function composeApplication(appUrl: string): void {
+function createClient(): AnalysisClient | null {
+  if (import.meta.env.DEV && import.meta.env.MAIN_VITE_RISKLEX_FIXTURE === 'sample') {
+    return createFixtureAnalysisClient();
+  }
   const config = readApiConfig(app.isPackaged);
-  const client =
-    config.status === 'ready'
-      ? createAnalysisHttpClient({
-          baseUrl: config.baseUrl,
-          installId: randomUUID(),
-          appVersion: appVersion(),
-        })
-      : null;
-  registerAnalysisIpc({ ipc: ipcMain, appUrl, client });
+  if (config.status !== 'ready') {
+    return null;
+  }
+  return createAnalysisHttpClient({
+    baseUrl: config.baseUrl,
+    installId: randomUUID(),
+    appVersion: appVersion(),
+  });
+}
+
+export function composeApplication(appUrl: string): void {
+  registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient() });
 }
