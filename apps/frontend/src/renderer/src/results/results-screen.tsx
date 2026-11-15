@@ -2,6 +2,7 @@ import type { UserProfile } from '@risklex/shared';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { VerifiedAnalysis } from '../../../common/analysis-vocabulary.ts';
+import { AnalysisNotices } from './analysis-notices.tsx';
 import { CategoryFilter } from './category-filter.tsx';
 import { ClauseCard } from './clause-card.tsx';
 import { Essentials } from './essentials.tsx';
@@ -52,6 +53,7 @@ export function ResultsScreen({ analysis }: { readonly analysis: VerifiedAnalysi
         <p>{t('results.summary', { total: analysis.clauses.length })}</p>
         <ProfileSelector value={profile} onChange={setProfile} />
       </section>
+      <AnalysisNotices analysis={analysis} />
       <Essentials clauses={analysis.clauses} profile={profile} />
       <ClauseList analysis={analysis} profile={profile} />
     </>

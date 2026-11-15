@@ -150,6 +150,10 @@
       "title": "Review each point",
       "empty": "There are no points in this category.",
       "none": "We found no relevant clauses in this document."
+    },
+    "notices": {
+      "lowReliability": "We removed {{discarded}} of {{total}} points because their quote did not appear in your document. Review the remaining points more carefully and compare them with the original text.",
+      "truncated": "The document has more relevant points than we show here. This analysis is not complete: read the original document too."
     }
   },
   "categories": {

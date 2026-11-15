@@ -150,6 +150,10 @@
       "title": "Revisa cada punto",
       "empty": "No hay puntos en esta categoría.",
       "none": "No encontramos cláusulas relevantes en este documento."
+    },
+    "notices": {
+      "lowReliability": "Quitamos {{discarded}} de {{total}} puntos porque su cita no aparecía en tu documento. Revisa con más cuidado los puntos que quedan y compáralos con el texto original.",
+      "truncated": "El documento tiene más puntos relevantes de los que mostramos aquí. Este análisis no es completo: lee también el documento original."
     }
   },
   "categories": {
