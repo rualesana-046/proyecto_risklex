@@ -71,6 +71,19 @@ Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se apl
 | DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera. | pendiente |
 | DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                  | pendiente |
 
+## Retoques de texto pendientes
+
+Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de la entrega, no antes.
+
+| ID    | Observación                                                                                                                                                                                              | Estado    |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                      | pendiente |
+| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                   | pendiente |
+| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                               | pendiente |
+| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                    | pendiente |
+| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla. | pendiente |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de la entrega.                                                                                                      | pendiente |
+
 ## B5 Cierre
 
 | ID    | Tarea                                                                           | Requisitos | Estado    |
