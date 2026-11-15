@@ -1,4 +1,11 @@
-import { API_ERROR_CODES } from '@risklex/shared';
+import {
+  API_ERROR_CODES,
+  type AnalysisMeta,
+  type Clause,
+  type GlossaryTerm,
+  type QuoteSpan,
+  type ReliabilityLevel,
+} from '@risklex/shared';
 
 export const CLIENT_ONLY_ERROR_CODES = [
   'network_unavailable',
@@ -21,3 +28,29 @@ export const ANALYSIS_STAGES = [
   'done',
 ] as const;
 export type AnalysisStage = (typeof ANALYSIS_STAGES)[number];
+
+export interface VerifiedClauseResult {
+  readonly clause: Clause;
+  readonly span: QuoteSpan;
+  readonly originalText: string;
+}
+
+export interface VerifiedAnalysis {
+  readonly clauses: readonly VerifiedClauseResult[];
+  readonly glossary: readonly GlossaryTerm[];
+  readonly meta: AnalysisMeta;
+  readonly reliability: ReliabilityLevel;
+  readonly totalClauses: number;
+  readonly discardedClauses: number;
+  readonly attempts: number;
+}
+
+export type AnalysisOutcome =
+  | { readonly ok: true; readonly analysis: VerifiedAnalysis }
+  | {
+      readonly ok: false;
+      readonly error: {
+        readonly code: AnalysisErrorCode;
+        readonly retryAfterSeconds: number | null;
+      };
+    };
