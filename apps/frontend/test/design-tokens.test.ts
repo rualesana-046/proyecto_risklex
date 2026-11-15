@@ -1,9 +1,21 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-function readStyle(name: string): string {
-  return readFileSync(new URL(`../src/renderer/src/styles/${name}`, import.meta.url), 'utf8');
+function readRenderer(path: string): string {
+  return readFileSync(new URL(`../src/renderer/src/${path}`, import.meta.url), 'utf8');
 }
+
+function readStyle(name: string): string {
+  return readRenderer(`styles/${name}`);
+}
+
+const ALL_STYLES = [
+  'styles/tokens.css',
+  'styles/base.css',
+  'shell/shell.css',
+  'analyze/analyze.css',
+  'results/results.css',
+].map((path) => [path, readRenderer(path)] as const);
 
 const tokens = readStyle('tokens.css');
 const base = readStyle('base.css');
@@ -85,5 +97,40 @@ describe('design rules', () => {
 
   it('keeps decorative blobs out of the tokens', () => {
     expect(tokens).not.toMatch(/--blob/u);
+  });
+});
+
+describe.each(ALL_STYLES)('%s', (_path, css) => {
+  it('draws no decorative borders', () => {
+    for (const match of css.matchAll(/(?:^|[;{\s])border:\s*([^;]+);/gu)) {
+      expect(match[1]?.trim()).toBe('0');
+    }
+  });
+
+  it('draws no decorative circles', () => {
+    expect(css).not.toMatch(/border-radius:\s*50%/u);
+  });
+});
+
+describe('focus on custom controls', () => {
+  const results = readRenderer('results/results.css');
+
+  it.each(['.profile-option input:focus-visible + span', '.filter-chip:focus-visible'])(
+    'keeps a visible focus ring on %s',
+    (selector) => {
+      expect(results).toContain(`${selector} {\n  outline: 3px solid var(--focus);`);
+    },
+  );
+});
+
+describe('glass with an opaque fallback', () => {
+  it.each([
+    ['shell/shell.css', '.sidebar'],
+    ['results/results.css', '.essentials'],
+  ])('%s falls back to an opaque surface for %s', (path, selector) => {
+    const css = readRenderer(path);
+    const reduced = css.lastIndexOf('@media (prefers-reduced-transparency: reduce)');
+    expect(reduced).toBeGreaterThan(css.lastIndexOf('@supports'));
+    expect(css.slice(reduced)).toContain(`${selector} {\n    background: var(--surface);`);
   });
 });

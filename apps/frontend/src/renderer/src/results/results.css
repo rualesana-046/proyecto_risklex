@@ -214,3 +214,75 @@
   background: var(--category-content-license);
   color: var(--on-category);
 }
+
+.essentials {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  box-shadow:
+    inset 0 1px 1px var(--edge),
+    0 18px 40px var(--shadow);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .essentials {
+    background: linear-gradient(135deg, var(--glass-a), var(--glass-b));
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+  }
+}
+
+.severity-counters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.severity-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.essentials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.essentials-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.essentials-list li > span:last-child {
+  flex-basis: 100%;
+  color: var(--muted);
+}
+
+.essentials-empty {
+  margin: 0;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .essentials {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

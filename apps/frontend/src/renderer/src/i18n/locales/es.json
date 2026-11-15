@@ -135,6 +135,10 @@
     "filter": {
       "label": "Filtrar por categoría",
       "all": "Todas"
+    },
+    "essentials": {
+      "title": "Lo esencial",
+      "counters": "Resumen por gravedad"
     }
   },
   "categories": {
