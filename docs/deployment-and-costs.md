@@ -29,7 +29,7 @@ Se aplicaron tres cambios, medidos en local antes y después en la misma máquin
 
 El cambio de importación eliminó casi todos los idiomas de Zod (de 364 KiB a 2,7 KiB). Las 303 pruebas siguen pasando. Frente a la mediana medida el mismo día sin cambios (20,2 ms), la mejora del arranque local es de un 19 %, y el rango se volvió mucho más estable.
 
-**La medición de CPU del panel de Cloudflare tras este despliegue está pendiente de lectura por la responsable del producto.**
+**Medición del panel de Cloudflare tras este despliegue** (versión 465d65b3, 24 h, 25 invocaciones, 2 subpeticiones, 0 errores): tiempo mediano de CPU de **1,49 ms**, frente a 19,3 ms y 37,67 ms con la versión anterior. Hubo un máximo de unos 10 ms justo después del despliegue, probablemente el primer arranque. Con tan pocas ejecuciones los percentiles no son concluyentes. TD-003 queda mitigada y en observación, sin contratar el plan de pago; se revisará de nuevo antes de la presentación.
 
 Tras el despliegue, una llamada de verificación en producción respondió 200 en 33,8 s, por 0,0618 USD. Las severidades coincidieron exactamente con la llamada anterior en producción (85 %, +44 puntos), pero la ambigüedad tuvo 3 falsos positivos. Como el prompt, el esquema y la petición enviada al modelo no cambiaron, se atribuye a la variación del modelo entre ejecuciones, no al despliegue.
 
