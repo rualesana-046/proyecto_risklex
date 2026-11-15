@@ -157,4 +157,21 @@ describe('analysis ipc (simulated electron and client)', () => {
     cancel();
     await first;
   });
+
+  it('never forwards raw backend fields or error traces to the renderer', async () => {
+    const polluted = {
+      ...EMPTY_RESPONSE,
+      rawBody: 'raw-secret-body',
+      meta: { ...EMPTY_RESPONSE.meta, debug: 'raw-secret-body' },
+    } as AnalysisResponse;
+    const success = await setup(clientReturning(polluted)).invoke(VALID_INPUT);
+    expect(success.ok).toBe(true);
+    expect(JSON.stringify(success)).not.toContain('raw-secret-body');
+
+    const crash = new Error('raw-secret-body');
+    const client = { analyze: vi.fn<AnalysisClient['analyze']>().mockRejectedValue(crash) };
+    const failed = await setup(client).invoke(VALID_INPUT);
+    expect(failed).toEqual({ ok: false, error: { code: 'unexpected', retryAfterSeconds: null } });
+    expect(JSON.stringify(failed)).not.toMatch(/raw-secret-body|stack|Error/u);
+  });
 });

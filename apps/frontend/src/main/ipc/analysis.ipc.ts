@@ -1,7 +1,7 @@
 import type { IpcMain, IpcMainInvokeEvent } from 'electron';
 import type { AnalysisErrorCode, AnalysisOutcome } from '../../common/analysis-vocabulary.ts';
 import { IPC_CHANNELS } from '../../common/ipc-channels.ts';
-import { analyzeInputSchema } from '../../common/ipc-schemas.ts';
+import { analyzeInputSchema, verifiedAnalysisSchema } from '../../common/ipc-schemas.ts';
 import { isAppUrl } from '../app/window-security.ts';
 import { runAnalysis } from '../modules/analysis/application/run-analysis.use-case.ts';
 import { ClientAnalysisError } from '../modules/analysis/domain/client-analysis-error.ts';
@@ -61,7 +61,8 @@ async function analyzeTrusted(
         }
       },
     );
-    return { ok: true, analysis };
+    const checked = verifiedAnalysisSchema.safeParse(analysis);
+    return checked.success ? { ok: true, analysis: checked.data } : failure('unexpected');
   } catch (error) {
     return toFailure(error);
   } finally {
