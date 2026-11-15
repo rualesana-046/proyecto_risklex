@@ -5,6 +5,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { importBoundaries } from './tooling/eslint-rules/import-boundaries.js';
 import { localPlugin } from './tooling/eslint-rules/no-comments.ts';
+import { unsafeHtml } from './tooling/eslint-rules/unsafe-html.js';
 
 export default defineConfig(
   {
@@ -62,4 +63,5 @@ export default defineConfig(
     extends: [reactHooks.configs.flat.recommended],
   },
   importBoundaries,
+  unsafeHtml,
 );
