@@ -18,5 +18,27 @@
     "session": "We will ask you again the next time you open RiskLex.",
     "accept": "Accept and analyze",
     "dismiss": "Cancel"
+  },
+  "analyze": {
+    "input": {
+      "label": "Document text",
+      "hint": "Paste the terms and conditions or the privacy policy here.",
+      "counter": "{{current}} of {{max}} characters",
+      "tooLong": "The text is longer than the {{max}} character limit. Shorten the document and try again."
+    },
+    "progress": {
+      "title": "Analysis progress",
+      "steps": {
+        "validating": "Checking the text",
+        "waiting_for_analysis": "Analyzing with artificial intelligence. It can take up to two minutes.",
+        "verifying_quotes": "Checking that every quote appears in your document",
+        "retrying": "Repeating the analysis to verify more quotes"
+      },
+      "status": {
+        "done": "Done:",
+        "current": "In progress:",
+        "pending": "Pending:"
+      }
+    }
   }
 }

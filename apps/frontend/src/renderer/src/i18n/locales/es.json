@@ -18,5 +18,27 @@
     "session": "Te lo volveremos a preguntar la próxima vez que abras RiskLex.",
     "accept": "Aceptar y analizar",
     "dismiss": "Cancelar"
+  },
+  "analyze": {
+    "input": {
+      "label": "Texto del documento",
+      "hint": "Pega aquí los términos y condiciones o la política de privacidad.",
+      "counter": "{{current}} de {{max}} caracteres",
+      "tooLong": "El texto supera el límite de {{max}} caracteres. Recorta el documento y vuelve a intentarlo."
+    },
+    "progress": {
+      "title": "Progreso del análisis",
+      "steps": {
+        "validating": "Revisando el texto",
+        "waiting_for_analysis": "Analizando con inteligencia artificial. Puede tardar hasta dos minutos.",
+        "verifying_quotes": "Comprobando que cada cita aparece en tu documento",
+        "retrying": "Repitiendo el análisis para verificar más citas"
+      },
+      "status": {
+        "done": "Hecho:",
+        "current": "En curso:",
+        "pending": "Pendiente:"
+      }
+    }
   }
 }
