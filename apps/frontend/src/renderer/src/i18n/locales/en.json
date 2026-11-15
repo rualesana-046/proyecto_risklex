@@ -9,5 +9,14 @@
   },
   "legal": {
     "notice": "RiskLex is informational and does not replace advice from a lawyer."
+  },
+  "consent": {
+    "title": "Before analyzing",
+    "what": "To analyze it, RiskLex will send the text of the document you pasted to the RiskLex backend, which passes it to its artificial intelligence provider.",
+    "retention": "The artificial intelligence provider may keep the data temporarily: up to 30 days, or longer if some content is flagged for review. RiskLex does not store the document or the result.",
+    "advice": "Do not paste information you do not want to share, such as passwords or health data.",
+    "session": "We will ask you again the next time you open RiskLex.",
+    "accept": "Accept and analyze",
+    "dismiss": "Cancel"
   }
 }
