@@ -45,5 +45,64 @@
     "submit": "Analizar documento",
     "cancel": "Cancelar análisis",
     "emptyHint": "Pega el texto del documento para poder analizarlo."
+  },
+  "errors": {
+    "invalid_request": {
+      "message": "No pudimos leer el texto que enviaste.",
+      "next": "Revisa que hayas pegado el documento completo y vuelve a intentarlo."
+    },
+    "document_too_large": {
+      "message": "El documento es demasiado largo para analizarlo de una vez.",
+      "next": "Recórtalo por debajo de {{max}} caracteres y vuelve a intentarlo."
+    },
+    "rate_limited": {
+      "message": "Se hicieron demasiados análisis seguidos.",
+      "next": "Espera un minuto y vuelve a intentarlo.",
+      "nextWithDelay": "Espera {{seconds}} segundos y vuelve a intentarlo."
+    },
+    "provider_error": {
+      "message": "El servicio de inteligencia artificial no respondió bien.",
+      "next": "Vuelve a intentarlo en unos minutos."
+    },
+    "provider_refusal": {
+      "message": "El servicio de inteligencia artificial no quiso analizar este texto.",
+      "next": "Comprueba que sea un documento de términos o de privacidad y vuelve a intentarlo."
+    },
+    "output_truncated": {
+      "message": "El análisis quedó incompleto porque el documento es muy extenso.",
+      "next": "Prueba con una parte más corta del documento."
+    },
+    "network_unavailable": {
+      "message": "No pudimos conectar con RiskLex.",
+      "next": "Revisa tu conexión a internet y vuelve a intentarlo."
+    },
+    "timeout": {
+      "message": "El análisis tardó demasiado.",
+      "next": "Vuelve a intentarlo. Si se repite, prueba con un documento más corto."
+    },
+    "cancelled": {
+      "message": "Cancelaste el análisis.",
+      "next": "Puedes volver a analizar el documento cuando quieras."
+    },
+    "invalid_response": {
+      "message": "Recibimos una respuesta que no pudimos entender.",
+      "next": "Vuelve a intentarlo en unos minutos."
+    },
+    "low_reliability": {
+      "message": "No pudimos comprobar ninguna cita del análisis en tu documento, así que no lo mostramos.",
+      "next": "Revisa que el texto esté completo y vuelve a intentarlo."
+    },
+    "configuration_missing": {
+      "message": "Falta configurar la dirección del servidor de RiskLex.",
+      "next": "Si desarrollas la aplicación, sigue las instrucciones del README y vuelve a abrir RiskLex."
+    },
+    "analysis_in_progress": {
+      "message": "Ya hay un análisis en curso.",
+      "next": "Espera a que termine o cancélalo antes de empezar otro."
+    },
+    "unexpected": {
+      "message": "Algo salió mal.",
+      "next": "Vuelve a intentarlo. Si se repite, cierra y abre RiskLex."
+    }
   }
 }

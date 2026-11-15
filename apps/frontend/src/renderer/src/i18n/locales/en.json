@@ -45,5 +45,64 @@
     "submit": "Analyze document",
     "cancel": "Cancel analysis",
     "emptyHint": "Paste the document text to analyze it."
+  },
+  "errors": {
+    "invalid_request": {
+      "message": "We could not read the text you sent.",
+      "next": "Check that you pasted the whole document and try again."
+    },
+    "document_too_large": {
+      "message": "The document is too long to analyze at once.",
+      "next": "Shorten it below {{max}} characters and try again."
+    },
+    "rate_limited": {
+      "message": "Too many analyses were made in a row.",
+      "next": "Wait a minute and try again.",
+      "nextWithDelay": "Wait {{seconds}} seconds and try again."
+    },
+    "provider_error": {
+      "message": "The artificial intelligence service did not respond properly.",
+      "next": "Try again in a few minutes."
+    },
+    "provider_refusal": {
+      "message": "The artificial intelligence service declined to analyze this text.",
+      "next": "Check that it is a terms or privacy document and try again."
+    },
+    "output_truncated": {
+      "message": "The analysis was incomplete because the document is very long.",
+      "next": "Try a shorter part of the document."
+    },
+    "network_unavailable": {
+      "message": "We could not connect to RiskLex.",
+      "next": "Check your internet connection and try again."
+    },
+    "timeout": {
+      "message": "The analysis took too long.",
+      "next": "Try again. If it happens again, try a shorter document."
+    },
+    "cancelled": {
+      "message": "You cancelled the analysis.",
+      "next": "You can analyze the document again whenever you want."
+    },
+    "invalid_response": {
+      "message": "We received a response we could not understand.",
+      "next": "Try again in a few minutes."
+    },
+    "low_reliability": {
+      "message": "We could not confirm any quote of the analysis in your document, so we are not showing it.",
+      "next": "Check that the text is complete and try again."
+    },
+    "configuration_missing": {
+      "message": "The RiskLex server address is not configured.",
+      "next": "If you develop the app, follow the README instructions and open RiskLex again."
+    },
+    "analysis_in_progress": {
+      "message": "An analysis is already running.",
+      "next": "Wait for it to finish or cancel it before starting another one."
+    },
+    "unexpected": {
+      "message": "Something went wrong.",
+      "next": "Try again. If it happens again, close and reopen RiskLex."
+    }
   }
 }

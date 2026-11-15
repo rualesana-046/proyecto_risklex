@@ -198,3 +198,30 @@
   gap: 12px;
   margin-top: 20px;
 }
+
+.analysis-message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: var(--radius-m);
+  background: var(--hi-bg);
+  color: var(--text);
+}
+
+.analysis-message p {
+  margin: 0;
+}
+
+.analysis-message-title {
+  color: var(--hi);
+  font-weight: 700;
+}
+
+.analysis-message-neutral {
+  background: var(--surface-alt);
+}
+
+.analysis-message-neutral .analysis-message-title {
+  color: var(--text);
+}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { VerifiedAnalysis } from '../../../common/analysis-vocabulary.ts';
 import { ConsentDialog } from '../consent/consent-dialog.tsx';
 import { useConsent } from '../consent/use-consent.ts';
+import { AnalysisErrorMessage } from './analysis-error-message.tsx';
 import { AnalysisProgress } from './analysis-progress.tsx';
 import { DocumentInput, isAnalyzable } from './document-input.tsx';
 import { useAnalysis, type RisklexBridge } from './use-analysis.ts';
@@ -114,6 +115,7 @@ export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
           onCancel={cancel}
         />
         {running ? <AnalysisProgress stage={state.stage} /> : null}
+        {state.status === 'failed' ? <AnalysisErrorMessage error={state.error} /> : null}
       </section>
       <ConsentDialog
         open={consentOpen}
