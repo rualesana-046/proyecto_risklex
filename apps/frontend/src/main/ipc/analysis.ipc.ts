@@ -46,7 +46,7 @@ async function analyzeTrusted(
     return failure('invalid_request');
   }
   if (state.running !== null) {
-    return failure('unexpected');
+    return failure('analysis_in_progress');
   }
   const controller = new AbortController();
   state.running = controller;

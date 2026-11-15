@@ -14,6 +14,7 @@ export const CLIENT_ONLY_ERROR_CODES = [
   'invalid_response',
   'low_reliability',
   'configuration_missing',
+  'analysis_in_progress',
   'unexpected',
 ] as const;
 

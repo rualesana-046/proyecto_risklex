@@ -152,7 +152,10 @@ describe('analysis ipc (simulated electron and client)', () => {
     const { invoke, cancel } = setup(client);
     const first = invoke(VALID_INPUT);
     await Promise.resolve();
-    expect(await invoke(VALID_INPUT)).toMatchObject({ ok: false, error: { code: 'unexpected' } });
+    expect(await invoke(VALID_INPUT)).toEqual({
+      ok: false,
+      error: { code: 'analysis_in_progress', retryAfterSeconds: null },
+    });
     expect(client.analyze).toHaveBeenCalledOnce();
     cancel();
     await first;
