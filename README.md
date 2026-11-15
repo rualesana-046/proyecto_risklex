@@ -51,6 +51,21 @@ npm run validate
 | `npm run test`         | Ejecuta las pruebas con Vitest.                                  |
 | `npm run validate`     | Ejecuta las cuatro comprobaciones anteriores en orden.           |
 
+## Resultado de prueba (solo desarrollo)
+
+Para revisar la pantalla de resultados sin llamar al backend ni gastar:
+
+```bash
+MAIN_VITE_RISKLEX_FIXTURE=sample npm run dev -w @risklex/frontend
+```
+
+- Solo funciona con `npm run dev`. En `build` y `preview` el simulador no se incluye, y una prueba lo comprueba compilando de verdad.
+- No hace ninguna petición de red. Construye el resultado con las frases del documento sintético de `docs/ai-evaluation/`.
+- Usa la verificación de citas real: con el texto de ejemplo todo se verifica; con otro texto, las citas se descartan como en un análisis real.
+- La pantalla muestra siempre el aviso "Resultado de prueba, no es un análisis real".
+
+Los detalles están en `docs/decisions/0004-desktop-app-security-and-ipc.md`.
+
 ## Estructura
 
 ```
