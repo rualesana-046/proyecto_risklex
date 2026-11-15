@@ -1,5 +1,13 @@
 {
   "app": {
     "name": "RiskLex"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "analyze": "Analyze",
+    "results": "Results"
+  },
+  "legal": {
+    "notice": "RiskLex is informational and does not replace advice from a lawyer."
   }
 }
