@@ -17,6 +17,7 @@ import {
   RESULTS_DIRECTORY,
   saveResponse,
 } from './live-check-results.ts';
+import { UnsafeTargetError, validateBaseUrl } from './live-check-target.ts';
 
 const PER_RUN_CAP_USD = 0.5;
 const SESSION_CAP_USD = 3;
@@ -32,7 +33,7 @@ const LEDGER_FILE = join(tmpdir(), `risklex-ai-live-${new Date().toISOString().s
 
 interface Options {
   readonly name: string;
-  readonly baseUrl: string;
+  readonly baseUrl: URL;
   readonly confirm: boolean;
   readonly details: boolean;
   readonly saveResponse: boolean;
@@ -56,7 +57,7 @@ function readOptions(): Options {
   }
   return {
     name: values.document,
-    baseUrl: values['base-url'],
+    baseUrl: validateBaseUrl(values['base-url']),
     confirm: values.confirm && !values['dry-run'],
     details: values.details,
     saveResponse: values['save-response'],
@@ -87,7 +88,7 @@ function writeLedgerUsd(spentUsd: number): void {
   writeFileSync(LEDGER_FILE, JSON.stringify({ spentUsd }));
 }
 
-async function callWorker(baseUrl: string, text: string, language: string) {
+async function callWorker(baseUrl: URL, text: string, language: string) {
   const startedAt = performance.now();
   const response = await fetch(new URL('/v1/analyses', baseUrl), {
     method: 'POST',
@@ -132,6 +133,7 @@ async function runConfirmed(
   capUsd: number,
   spentUsd: number,
 ): Promise<void> {
+  console.log(`Target: ${options.baseUrl.origin}`);
   const result = await callWorker(options.baseUrl, document.text, document.expected.language);
   console.log(`HTTP ${String(result.status)} in ${(result.latencyMs / 1000).toFixed(1)} s`);
   if (!result.ok) {
@@ -187,4 +189,12 @@ async function main(): Promise<void> {
   await runConfirmed(options, document, capUsd, spentUsd);
 }
 
-await main();
+try {
+  await main();
+} catch (error) {
+  if (!(error instanceof UnsafeTargetError)) {
+    throw error;
+  }
+  console.log(error.message);
+  process.exitCode = 1;
+}
