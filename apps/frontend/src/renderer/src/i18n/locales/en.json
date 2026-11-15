@@ -139,6 +139,13 @@
     "essentials": {
       "title": "The essentials",
       "counters": "Summary by severity"
+    },
+    "title": "Analysis results",
+    "summary": "Verified points in your document: {{total}}",
+    "clauses": {
+      "title": "Review each point",
+      "empty": "There are no points in this category.",
+      "none": "We found no relevant clauses in this document."
     }
   },
   "categories": {

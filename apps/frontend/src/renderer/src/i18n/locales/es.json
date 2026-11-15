@@ -139,6 +139,13 @@
     "essentials": {
       "title": "Lo esencial",
       "counters": "Resumen por gravedad"
+    },
+    "title": "Resultados del análisis",
+    "summary": "Puntos verificados en tu documento: {{total}}",
+    "clauses": {
+      "title": "Revisa cada punto",
+      "empty": "No hay puntos en esta categoría.",
+      "none": "No encontramos cláusulas relevantes en este documento."
     }
   },
   "categories": {

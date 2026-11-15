@@ -286,3 +286,35 @@
     backdrop-filter: none;
   }
 }
+
+.results-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.results-head h1 {
+  font-size: 2rem;
+}
+
+.results-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.clause-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clause-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clause-empty {
+  margin: 0;
+  color: var(--muted);
+}
