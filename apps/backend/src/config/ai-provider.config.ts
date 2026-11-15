@@ -1,3 +1,5 @@
+import { PROVIDER_TIMEOUT_SECONDS } from '@risklex/shared';
+
 export const AI_PROVIDER_CONFIG = {
   messagesUrl: 'https://api.anthropic.com/v1/messages',
   apiVersion: '2026-10-21',
@@ -5,7 +7,7 @@ export const AI_PROVIDER_CONFIG = {
   thinking: { type: 'adaptive' },
   effort: 'medium',
   maxTokens: 20_000,
-  timeoutSeconds: 120,
+  timeoutSeconds: PROVIDER_TIMEOUT_SECONDS,
   pricing: {
     inputUsdPerMillionTokens: 2,
     outputUsdPerMillionTokens: 10,

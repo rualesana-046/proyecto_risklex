@@ -4,3 +4,4 @@ export const MAX_CLAUSES = 12;
 export const MIN_QUOTE_CHARACTERS = 20;
 export const MAX_QUOTE_CHARACTERS = 600;
 export const MAX_DISCARDED_CLAUSE_RATIO = 0.3;
+export const PROVIDER_TIMEOUT_SECONDS = 120;
