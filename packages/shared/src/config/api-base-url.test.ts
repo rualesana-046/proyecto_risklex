@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { UnsafeTargetError, validateBaseUrl } from './live-check-target.ts';
+import { UnsafeApiBaseUrlError, validateApiBaseUrl } from './api-base-url.ts';
 
-describe('validateBaseUrl', () => {
+describe('validateApiBaseUrl', () => {
   it.each([
     'http://localhost:8787',
     'http://127.0.0.1:8787',
@@ -9,7 +9,9 @@ describe('validateBaseUrl', () => {
     'https://example-api.example-account.workers.dev',
     'https://EXAMPLE-API.EXAMPLE-ACCOUNT.WORKERS.DEV',
   ])('accepts %s', (raw) => {
-    expect(validateBaseUrl(raw)).toBeInstanceOf(URL);
+    expect(validateApiBaseUrl(raw).href).toBe(
+      raw.toLowerCase().endsWith('/') ? raw.toLowerCase() : `${raw.toLowerCase()}/`,
+    );
   });
 
   it.each([
@@ -24,14 +26,14 @@ describe('validateBaseUrl', () => {
     ['another scheme', 'ftp://localhost'],
     ['an invalid URL', 'not a url'],
   ])('rejects %s', (_label, raw) => {
-    expect(() => validateBaseUrl(raw)).toThrow(UnsafeTargetError);
+    expect(() => validateApiBaseUrl(raw)).toThrow(UnsafeApiBaseUrlError);
   });
 
   it('rejects credentials in an otherwise allowed address and explains why', () => {
-    const url = new URL('https://example-api.example-account.workers.dev');
-    url.username = 'user';
-    url.password = 'secret';
-    expect(() => validateBaseUrl(url.href)).toThrow(
+    const username = 'user';
+    const password = 'secret';
+    const raw = `https://${username}:${password}@example-api.example-account.workers.dev`;
+    expect(() => validateApiBaseUrl(raw)).toThrow(
       'Refusing to send the document: the base URL must not contain credentials.',
     );
   });

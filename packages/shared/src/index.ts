@@ -1,6 +1,7 @@
 export * from './citations/normalize-text.ts';
 export * from './citations/verify-clauses.ts';
 export * from './citations/verify-quote.ts';
+export * from './config/api-base-url.ts';
 export * from './constants/analysis.constants.ts';
 export * from './constants/limits.constants.ts';
 export * from './contracts/api/analysis-request.contract.ts';

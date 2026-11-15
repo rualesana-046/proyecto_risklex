@@ -7,6 +7,8 @@ import {
   apiErrorResponseSchema,
   APP_VERSION_HEADER,
   INSTALL_ID_HEADER,
+  UnsafeApiBaseUrlError,
+  validateApiBaseUrl,
 } from '@risklex/shared';
 import { z } from 'zod';
 import { AI_PROVIDER_CONFIG } from '../src/config/ai-provider.config.ts';
@@ -17,7 +19,6 @@ import {
   RESULTS_DIRECTORY,
   saveResponse,
 } from './live-check-results.ts';
-import { UnsafeTargetError, validateBaseUrl } from './live-check-target.ts';
 
 const PER_RUN_CAP_USD = 0.5;
 const SESSION_CAP_USD = 3;
@@ -57,7 +58,7 @@ function readOptions(): Options {
   }
   return {
     name: values.document,
-    baseUrl: validateBaseUrl(values['base-url']),
+    baseUrl: new URL(validateApiBaseUrl(values['base-url']).href),
     confirm: values.confirm && !values['dry-run'],
     details: values.details,
     saveResponse: values['save-response'],
@@ -192,7 +193,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  if (!(error instanceof UnsafeTargetError)) {
+  if (!(error instanceof UnsafeApiBaseUrlError)) {
     throw error;
   }
   console.log(error.message);
