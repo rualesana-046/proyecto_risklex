@@ -111,6 +111,27 @@
     "neutral": "Neutral"
   },
   "results": {
-    "essentialsEmpty": "We found nothing that needs special attention for this profile."
+    "essentialsEmpty": "We found nothing that needs special attention for this profile.",
+    "card": {
+      "meaning": "What it means for you",
+      "consequence": "What could happen",
+      "original": "Original contract text",
+      "ambiguous": "Ambiguous wording",
+      "ambiguityReason": "Why it is ambiguous:",
+      "insufficientEvidence": "The text is not enough to reach a firm conclusion.",
+      "confidence": "Analysis confidence: {{level}}",
+      "confidenceLevels": {
+        "low": "low",
+        "medium": "medium",
+        "high": "high"
+      }
+    }
+  },
+  "categories": {
+    "privacy": "Privacy",
+    "tracking": "Tracking",
+    "hidden_costs": "Hidden costs",
+    "cancellation": "Cancellation",
+    "content_license": "Content license"
   }
 }

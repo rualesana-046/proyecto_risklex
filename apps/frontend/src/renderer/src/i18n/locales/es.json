@@ -111,6 +111,27 @@
     "neutral": "Neutro"
   },
   "results": {
-    "essentialsEmpty": "No encontramos nada que requiera atención especial para este perfil."
+    "essentialsEmpty": "No encontramos nada que requiera atención especial para este perfil.",
+    "card": {
+      "meaning": "Lo que significa para ti",
+      "consequence": "Qué podría pasar",
+      "original": "Texto original del contrato",
+      "ambiguous": "Redacción ambigua",
+      "ambiguityReason": "Por qué es ambigua:",
+      "insufficientEvidence": "El texto no basta para sacar una conclusión firme.",
+      "confidence": "Confianza del análisis: {{level}}",
+      "confidenceLevels": {
+        "low": "baja",
+        "medium": "media",
+        "high": "alta"
+      }
+    }
+  },
+  "categories": {
+    "privacy": "Privacidad",
+    "tracking": "Seguimiento",
+    "hidden_costs": "Costos ocultos",
+    "cancellation": "Cancelación",
+    "content_license": "Licencia de contenido"
   }
 }

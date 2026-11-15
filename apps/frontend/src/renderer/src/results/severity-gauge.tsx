@@ -33,9 +33,10 @@ function arcPath(from: number, to: number): string {
 interface SeverityGaugeProps {
   readonly severity: Severity;
   readonly size?: number;
+  readonly decorative?: boolean;
 }
 
-export function SeverityGauge({ severity, size = 20 }: SeverityGaugeProps) {
+export function SeverityGauge({ severity, size = 20, decorative = false }: SeverityGaugeProps) {
   const { t } = useTranslation();
   const level = LEVELS[severity];
   const [needleX, needleY] = gaugePoint(level.angle, NEEDLE_RADIUS);
@@ -45,8 +46,9 @@ export function SeverityGauge({ severity, size = 20 }: SeverityGaugeProps) {
       viewBox="0 0 32 20"
       width={size}
       height={(size * 20) / 32}
-      role="img"
-      aria-label={t(`severity.${severity}`)}
+      role={decorative ? undefined : 'img'}
+      aria-label={decorative ? undefined : t(`severity.${severity}`)}
+      aria-hidden={decorative ? true : undefined}
       fill="none"
       stroke="currentColor"
     >
