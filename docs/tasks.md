@@ -62,6 +62,21 @@ R01 solo está cubierto en parte: falta el contrato del análisis, que correspon
 | B4-04 | Bienvenida animada, con pausa, opción de saltar y opción de volver a verla              | R14           | pendiente |
 | B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | pendiente |
 
+## Hito 1: app de escritorio mínima
+
+Estado: **completo en su versión mínima** (2026-11-15).
+
+La app de escritorio permite pegar el texto de unos términos, aceptar el aviso de privacidad, seguir el progreso real y leer los resultados con citas verificadas en el propio equipo.
+
+Evidencia:
+
+- Llamada real desde la app (`npm run dev`, URL de producción en `.env.local`, texto de ejemplo, una sola pulsación): funcionó sin reintento visible.
+- 1 POST de un presupuesto de 5 para el hito, con un gasto de unos 0,05 USD (la consola de Anthropic pasó de 0,43 a 0,48 USD).
+- Resultado: 10 tarjetas (2 de alto riesgo, 5 de advertencia y 3 neutras), "Lo esencial" con tres puntos, citas verificadas, cambio de perfil instantáneo y filtro por categoría correcto.
+- Verificación manual sin coste de la pantalla Analizar, del consentimiento, de los errores y del modo de resultado de prueba.
+
+No incluye: PDF, URL, historial, ajustes persistentes, bienvenida, glosario, inglés completo ni instaladores.
+
 ## Retoques de diseño pendientes
 
 Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
