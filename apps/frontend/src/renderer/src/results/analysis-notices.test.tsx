@@ -62,4 +62,19 @@ describe('AnalysisNotices', () => {
     render(<ResultsScreen analysis={both} />);
     expect(screen.getAllByRole('note')).toHaveLength(2);
   });
+
+  it('always labels a development fixture result, with no way to hide the label', () => {
+    render(<AnalysisNotices analysis={{ ...BASE, meta: { ...BASE.meta, model: 'fixture' } }} />);
+    expect(screen.getByRole('note').textContent).toBe(
+      'Resultado de prueba, no es un análisis real.',
+    );
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('does not label a real model result as a fixture', () => {
+    render(
+      <ResultsScreen analysis={{ ...BASE, meta: { ...BASE.meta, moreClausesLikely: true } }} />,
+    );
+    expect(screen.queryByText('Resultado de prueba, no es un análisis real.')).toBeNull();
+  });
 });
