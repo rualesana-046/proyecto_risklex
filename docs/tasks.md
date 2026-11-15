@@ -62,6 +62,15 @@ R01 solo está cubierto en parte: falta el contrato del análisis, que correspon
 | B4-04 | Bienvenida animada, con pausa, opción de saltar y opción de volver a verla              | R14           | pendiente |
 | B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | pendiente |
 
+## Retoques de diseño pendientes
+
+Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
+
+| ID    | Observación                                                                                                                                        | Estado    |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera. | pendiente |
+| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                  | pendiente |
+
 ## B5 Cierre
 
 | ID    | Tarea                                                                           | Requisitos | Estado    |
