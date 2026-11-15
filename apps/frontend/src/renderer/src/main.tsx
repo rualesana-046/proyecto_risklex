@@ -1,39 +1,12 @@
-import { StrictMode, useEffect, useSyncExternalStore } from 'react';
+import '@fontsource/atkinson-hyperlegible-next/latin-400.css';
+import '@fontsource/atkinson-hyperlegible-next/latin-500.css';
+import '@fontsource/atkinson-hyperlegible-next/latin-700.css';
+import '@fontsource/plus-jakarta-sans/latin-600.css';
+import '@fontsource/plus-jakarta-sans/latin-700.css';
+import './styles/tokens.css';
+import './styles/base.css';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
-const DARK_QUERY = '(prefers-color-scheme: dark)';
-
-const THEMES = {
-  light: { background: '#F6EFE5', text: '#26332D' },
-  dark: { background: '#10232A', text: '#F1EAE3' },
-} as const;
-
-function subscribe(onChange: () => void): () => void {
-  const query = window.matchMedia(DARK_QUERY);
-  query.addEventListener('change', onChange);
-  return () => {
-    query.removeEventListener('change', onChange);
-  };
-}
-
-function prefersDark(): boolean {
-  return window.matchMedia(DARK_QUERY).matches;
-}
-
-function App() {
-  const theme = useSyncExternalStore(subscribe, prefersDark) ? THEMES.dark : THEMES.light;
-  useEffect(() => {
-    document.body.style.margin = '0';
-    document.body.style.background = theme.background;
-    document.body.style.color = theme.text;
-    document.body.style.fontFamily = 'system-ui, sans-serif';
-  }, [theme]);
-  return (
-    <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
-      <h1>RiskLex</h1>
-    </main>
-  );
-}
 
 const container = document.getElementById('root');
 if (container === null) {
@@ -42,6 +15,8 @@ if (container === null) {
 
 createRoot(container).render(
   <StrictMode>
-    <App />
+    <main style={{ minHeight: '100%', display: 'grid', placeItems: 'center' }}>
+      <h1>RiskLex</h1>
+    </main>
   </StrictMode>,
 );

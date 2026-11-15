@@ -1,0 +1,82 @@
+:root {
+  color-scheme: light;
+  --bg: #f6efe5;
+  --surface: #fffbf6;
+  --surface-alt: #daebe3;
+  --text: #26332d;
+  --muted: #55645b;
+  --primary: #2f6b7b;
+  --primary-2: #3a7788;
+  --on-primary: #ffffff;
+  --accent: #2f6b7b;
+  --on-accent: #ffffff;
+  --focus: #2f6b7b;
+  --hi: #a33b32;
+  --hi-bg: #f9ddd6;
+  --wa: #8a5a1f;
+  --wa-bg: #fbe5c8;
+  --ne: #3f6b4a;
+  --ne-bg: #e1eddd;
+  --shadow: rgba(38, 51, 45, 0.13);
+  --hero-a: #99cdd8;
+  --hero-mid: #daebe3;
+  --hero-b: #fde8d3;
+  --hero-ink: #26332d;
+  --side-a: rgba(218, 235, 227, 0.85);
+  --side-b: rgba(153, 205, 216, 0.55);
+  --glass-a: rgba(255, 255, 255, 0.62);
+  --glass-b: rgba(218, 235, 227, 0.45);
+  --chip: rgba(255, 255, 255, 0.55);
+  --field: rgba(255, 255, 255, 0.8);
+  --edge: rgba(255, 255, 255, 0.85);
+  --category-privacy: #99cdd8;
+  --category-tracking: #f3c3b2;
+  --category-hidden-costs: #cfd6c4;
+  --category-cancellation: #b58863;
+  --category-content-license: #a79e9c;
+  --on-category: #0e1f23;
+  --font-body: 'Atkinson Hyperlegible Next', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-head:
+    'Plus Jakarta Sans', 'Atkinson Hyperlegible Next', system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration: 180ms;
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #10232a;
+    --surface: #18303a;
+    --surface-alt: #21404b;
+    --text: #f1eae3;
+    --muted: #bdb3af;
+    --primary: #d3c3b9;
+    --primary-2: #c2ae9f;
+    --on-primary: #10232a;
+    --accent: #c99a72;
+    --on-accent: #10232a;
+    --focus: #c99a72;
+    --hi: #f2a79b;
+    --hi-bg: #3a2528;
+    --wa: #e0b07c;
+    --wa-bg: #3a2f22;
+    --ne: #a8cba3;
+    --ne-bg: #213429;
+    --shadow: rgba(3, 12, 15, 0.45);
+    --hero-a: #10232a;
+    --hero-mid: #243a43;
+    --hero-b: #3d4d55;
+    --hero-ink: #f1eae3;
+    --side-a: rgba(61, 77, 85, 0.55);
+    --side-b: rgba(16, 35, 42, 0.55);
+    --glass-a: rgba(211, 195, 185, 0.1);
+    --glass-b: rgba(61, 77, 85, 0.38);
+    --chip: rgba(211, 195, 185, 0.13);
+    --field: rgba(211, 195, 185, 0.09);
+    --edge: rgba(211, 195, 185, 0.2);
+  }
+}
