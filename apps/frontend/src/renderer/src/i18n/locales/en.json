@@ -39,6 +39,11 @@
         "current": "In progress:",
         "pending": "Pending:"
       }
-    }
+    },
+    "title": "What are you about to accept today?",
+    "lead": "Paste the text of the terms or the privacy policy. We tell you, in plain words, what could happen if you accept.",
+    "submit": "Analyze document",
+    "cancel": "Cancel analysis",
+    "emptyHint": "Paste the document text to analyze it."
   }
 }
