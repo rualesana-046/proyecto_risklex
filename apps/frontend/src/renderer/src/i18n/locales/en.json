@@ -152,9 +152,10 @@
       "none": "We found no relevant clauses in this document."
     },
     "notices": {
-      "lowReliability": "We removed {{discarded}} of {{total}} points because their quote did not appear in your document. Review the remaining points more carefully and compare them with the original text.",
+      "lowReliability": "Many quotes of the analysis did not appear in your document, so this result is less reliable than usual. Review the remaining points more carefully and compare them with the original text.",
       "truncated": "The document has more relevant points than we show here. This analysis is not complete: read the original document too.",
-      "fixture": "Test result, not a real analysis."
+      "fixture": "Test result, not a real analysis.",
+      "discarded": "We removed {{discarded}} of {{total}} points because we could not confirm their original text in your document."
     }
   },
   "categories": {

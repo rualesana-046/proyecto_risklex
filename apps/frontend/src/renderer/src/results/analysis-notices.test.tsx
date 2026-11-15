@@ -18,18 +18,32 @@ const BASE: VerifiedAnalysis = {
     usage: { inputTokens: 1, outputTokens: 1 },
   },
   reliability: 'normal',
-  totalClauses: 0,
+  totalClauses: 9,
   discardedClauses: 0,
   attempts: 1,
 };
 
+function noticeIds(): (string | null)[] {
+  return [...document.querySelectorAll('[data-notice]')].map((notice) =>
+    notice.getAttribute('data-notice'),
+  );
+}
+
 describe('AnalysisNotices', () => {
-  it('stays silent for a complete and reliable analysis', () => {
+  it('stays silent for a complete, reliable analysis with no discarded quotes', () => {
     const { container } = render(<AnalysisNotices analysis={BASE} />);
     expect(container.textContent).toBe('');
   });
 
-  it('warns about low reliability with the real discard counts', () => {
+  it('reports a single discarded quote without any retry, with the right counts', () => {
+    render(<AnalysisNotices analysis={{ ...BASE, discardedClauses: 1 }} />);
+    expect(screen.getByRole('status').textContent).toBe(
+      'Quitamos 1 de 9 puntos porque no pudimos comprobar su texto original en tu documento.',
+    );
+    expect(noticeIds()).toEqual(['discarded']);
+  });
+
+  it('keeps the discard count and the low reliability warning as separate notices', () => {
     render(
       <AnalysisNotices
         analysis={{
@@ -41,7 +55,9 @@ describe('AnalysisNotices', () => {
         }}
       />,
     );
-    expect(screen.getByRole('note').textContent).toContain('Quitamos 3 de 6 puntos');
+    expect(screen.getByRole('status').textContent).toContain('Quitamos 3 de 6 puntos');
+    expect(screen.getByRole('note').textContent).toContain('menos fiable de lo habitual');
+    expect(screen.getByRole('note').textContent).not.toContain('Quitamos');
   });
 
   it('warns that a truncated analysis is not complete', () => {
@@ -51,16 +67,23 @@ describe('AnalysisNotices', () => {
     expect(screen.getByRole('note').textContent).toContain('Este análisis no es completo');
   });
 
-  it('shows both notices on the results screen when both apply', () => {
-    const both: VerifiedAnalysis = {
+  it('shows every applicable notice together on the results screen', () => {
+    const all: VerifiedAnalysis = {
       ...BASE,
       reliability: 'low',
       totalClauses: 4,
       discardedClauses: 2,
       meta: { ...BASE.meta, moreClausesLikely: true },
     };
-    render(<ResultsScreen analysis={both} />);
-    expect(screen.getAllByRole('note')).toHaveLength(2);
+    render(<ResultsScreen analysis={all} />);
+    expect(noticeIds()).toEqual(['discarded', 'low-reliability', 'truncated']);
+  });
+
+  it('renders the notices as plain text', () => {
+    render(<AnalysisNotices analysis={{ ...BASE, discardedClauses: 2 }} />);
+    const notice = screen.getByRole('status');
+    expect(notice.children).toHaveLength(0);
+    expect(notice.textContent).toContain('Quitamos 2 de 9 puntos');
   });
 
   it('always labels a development fixture result, with no way to hide the label', () => {
