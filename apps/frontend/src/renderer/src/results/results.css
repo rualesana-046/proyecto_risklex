@@ -108,3 +108,109 @@
   margin: 6px 0 0;
   white-space: pre-wrap;
 }
+
+.profile-selector {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.profile-selector legend {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font: 700 0.9375rem var(--font-head);
+}
+
+.profile-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--chip);
+}
+
+.profile-option {
+  position: relative;
+}
+
+.profile-option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.profile-option span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.profile-option input:checked + span {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: var(--on-primary);
+  font-weight: 700;
+}
+
+.profile-option input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text);
+  font: 600 0.9375rem var(--font-head);
+  cursor: pointer;
+}
+
+.filter-chip:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.filter-chip[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.filter-privacy[aria-pressed='true'] {
+  background: var(--category-privacy);
+  color: var(--on-category);
+}
+
+.filter-tracking[aria-pressed='true'] {
+  background: var(--category-tracking);
+  color: var(--on-category);
+}
+
+.filter-hidden_costs[aria-pressed='true'] {
+  background: var(--category-hidden-costs);
+  color: var(--on-category);
+}
+
+.filter-cancellation[aria-pressed='true'] {
+  background: var(--category-cancellation);
+  color: var(--on-category);
+}
+
+.filter-content_license[aria-pressed='true'] {
+  background: var(--category-content-license);
+  color: var(--on-category);
+}

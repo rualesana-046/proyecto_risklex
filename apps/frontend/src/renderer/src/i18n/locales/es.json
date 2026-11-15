@@ -125,6 +125,16 @@
         "medium": "media",
         "high": "alta"
       }
+    },
+    "profiles": {
+      "legend": "¿Cómo usas este servicio?",
+      "free_user": "Lo uso gratis",
+      "subscriber": "Pago una suscripción",
+      "professional": "Lo uso para trabajar"
+    },
+    "filter": {
+      "label": "Filtrar por categoría",
+      "all": "Todas"
     }
   },
   "categories": {
