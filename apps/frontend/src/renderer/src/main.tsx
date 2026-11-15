@@ -7,6 +7,17 @@ import './styles/tokens.css';
 import './styles/base.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import { i18n } from './i18n/i18n.ts';
+
+function App() {
+  const { t } = useTranslation();
+  return (
+    <main style={{ minHeight: '100%', display: 'grid', placeItems: 'center' }}>
+      <h1>{t('app.name')}</h1>
+    </main>
+  );
+}
 
 const container = document.getElementById('root');
 if (container === null) {
@@ -15,8 +26,8 @@ if (container === null) {
 
 createRoot(container).render(
   <StrictMode>
-    <main style={{ minHeight: '100%', display: 'grid', placeItems: 'center' }}>
-      <h1>RiskLex</h1>
-    </main>
+    <I18nextProvider i18n={i18n}>
+      <App />
+    </I18nextProvider>
   </StrictMode>,
 );
