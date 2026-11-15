@@ -100,14 +100,23 @@ describe('results view model', () => {
     expect(ids(rankClauses(CLAUSES, 'free_user'))).toEqual(['b', 'c', 'a', 'd', 'e']);
   });
 
-  it('picks the three most severe clauses for each profile', () => {
+  it('picks up to three of the most severe clauses for each profile', () => {
     expect(ids(essentials(CLAUSES, 'free_user'))).toEqual(['b', 'c', 'a']);
     expect(ids(essentials(CLAUSES, 'subscriber'))).toEqual(['c', 'd', 'e']);
     expect(ids(essentials(CLAUSES, 'professional'))).toEqual(['b', 'e', 'c']);
   });
 
-  it('returns fewer essentials when there are fewer clauses', () => {
-    expect(ids(essentials(CLAUSES.slice(0, 2), 'free_user'))).toEqual(['b', 'a']);
+  it('never includes a clause that is neutral for the chosen profile', () => {
+    const twoRiskyOneNeutral = [CLAUSES[0], CLAUSES[3], CLAUSES[4]].filter(
+      (entry) => entry !== undefined,
+    );
+    expect(ids(essentials(twoRiskyOneNeutral, 'free_user'))).toEqual(['a', 'd']);
+    expect(ids(essentials(twoRiskyOneNeutral, 'subscriber'))).toEqual(['d', 'e', 'a']);
+  });
+
+  it('returns no essentials when everything is neutral or there are no clauses', () => {
+    const neutralForFree = CLAUSES.filter((entry) => entry.clause.id === 'e');
+    expect(essentials(neutralForFree, 'free_user')).toEqual([]);
     expect(essentials([], 'free_user')).toEqual([]);
   });
 

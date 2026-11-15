@@ -37,7 +37,9 @@ export function essentials(
   clauses: readonly VerifiedClauseResult[],
   profile: UserProfile,
 ): VerifiedClauseResult[] {
-  return rankClauses(clauses, profile).slice(0, ESSENTIALS_COUNT);
+  return rankClauses(clauses, profile)
+    .filter((item) => severityFor(item, profile) !== 'neutral')
+    .slice(0, ESSENTIALS_COUNT);
 }
 
 export function severityCounts(

@@ -109,5 +109,8 @@
     "high_risk": "Alto riesgo",
     "warning": "Advertencia",
     "neutral": "Neutro"
+  },
+  "results": {
+    "essentialsEmpty": "No encontramos nada que requiera atención especial para este perfil."
   }
 }
