@@ -4,12 +4,15 @@ import { rendererUrl, restrictNavigation, secureWebPreferences } from './window-
 
 const DEVELOPMENT_RENDERER_URL_VARIABLE = 'ELECTRON_RENDERER_URL';
 
-export async function createMainWindow(): Promise<BrowserWindow> {
-  const url = rendererUrl(
+export function resolveRendererUrl(): string {
+  return rendererUrl(
     app.isPackaged,
     process.env[DEVELOPMENT_RENDERER_URL_VARIABLE],
     join(import.meta.dirname, '../renderer/index.html'),
   );
+}
+
+export async function createMainWindow(url: string): Promise<BrowserWindow> {
   const window = new BrowserWindow({
     width: 1200,
     height: 800,

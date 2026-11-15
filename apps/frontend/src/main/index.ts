@@ -1,6 +1,7 @@
 import { app, BrowserWindow, session } from 'electron';
-import { createMainWindow } from './app/create-window.ts';
+import { createMainWindow, resolveRendererUrl } from './app/create-window.ts';
 import { denyAllPermissions, denyNewWindowsAndWebviews } from './app/window-security.ts';
+import { composeApplication } from './composition-root.ts';
 
 app.enableSandbox();
 
@@ -16,11 +17,13 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    void createMainWindow();
+    void createMainWindow(resolveRendererUrl());
   }
 });
 
 void app.whenReady().then(async () => {
   denyAllPermissions(session.defaultSession);
-  await createMainWindow();
+  const url = resolveRendererUrl();
+  composeApplication(url);
+  await createMainWindow(url);
 });
