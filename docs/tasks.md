@@ -104,7 +104,7 @@ Estado: **listo para la verificación con llamadas reales** (2026-11-16). Se cer
 
 - "Elegir un PDF…" y "Leer un enlace" rellenan la caja de texto sin enviar nada; solo "Analizar documento" envía el texto, tras el consentimiento.
 - PDF en un proceso aislado con límites de tamaño, páginas, tiempo y memoria; enlaces con protección contra peticiones a redes privadas, DNS fijado, redirecciones revalidadas y límites en streaming (ADR 0005).
-- Verificación manual hecha: PDF normal y protegido, caja conservada ante errores, enlace real y error sin red.
+- Verificación manual hecha: PDF normal y protegido, y caja conservada ante errores. Pendiente de confirmar: lectura de un enlace real y error sin red.
 - Licencias de terceros en `apps/frontend/THIRD-PARTY-NOTICES.txt`, dentro del paquete.
 
 ## Mejoras pendientes
