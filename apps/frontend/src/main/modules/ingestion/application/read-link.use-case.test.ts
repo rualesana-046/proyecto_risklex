@@ -1,5 +1,5 @@
 import { MAX_DOCUMENT_CHARACTERS } from '@risklex/shared';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PdfReader } from '../infrastructure/pdf-reader.client.ts';
 import type { FetchedDocument } from '../infrastructure/safe-fetch.ts';
 import { readLinkDocument } from './read-link.use-case.ts';
@@ -32,7 +32,25 @@ function read(fetched: FetchedDocument, reader: PdfReader = NO_PDF) {
   );
 }
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('readLinkDocument (simulated fetch and pdf reader)', () => {
+  it('never logs the link, its path or its text', async () => {
+    const logs = [
+      vi.spyOn(console, 'log'),
+      vi.spyOn(console, 'info'),
+      vi.spyOn(console, 'warn'),
+      vi.spyOn(console, 'error'),
+    ];
+    await read(page(`<p>${LONG_PARAGRAPH}</p>`));
+    await read({ ok: false, code: 'link_not_found' });
+    for (const log of logs) {
+      expect(log).not.toHaveBeenCalled();
+    }
+  });
+
   it('extracts the page text and shows only the host, never the path or query', async () => {
     const outcome = await read(
       page(`<html><body><h1>Términos</h1><p>${LONG_PARAGRAPH}</p></body></html>`),
