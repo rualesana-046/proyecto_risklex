@@ -21,7 +21,15 @@ export default defineConfig(({ mode }) => {
   assertReleaseEnvironment(mode, loadEnv(mode));
   return {
     main: {
-      build: { externalizeDeps: false },
+      build: {
+        externalizeDeps: false,
+        rolldownOptions: {
+          input: {
+            index: 'src/main/index.ts',
+            'pdf-text.worker': 'src/main/workers/pdf-text.worker.ts',
+          },
+        },
+      },
     },
     preload: {
       build: {

@@ -22,6 +22,8 @@ interface Scan {
   readonly renderer: string[];
   readonly files: number;
   readonly mainImports: string[];
+  readonly indexImports: string[];
+  readonly hasPdfWorker: boolean;
   readonly absoluteReferences: string[];
   readonly fonts: number;
   readonly policy: string;
@@ -39,7 +41,7 @@ function moduleImports(source: string): string[] {
     ...source.matchAll(/\bimport\(\s*["']([^"']+)["']\s*\)/gu),
     ...source.matchAll(/\brequire\(\s*["']([^"']+)["']\s*\)/gu),
   ].map((match) => match[1] ?? '');
-  return [...new Set(specifiers)];
+  return [...new Set(specifiers)].filter((specifier) => !specifier.includes('${'));
 }
 
 function absoluteReferences(renderer: string): string[] {
@@ -57,7 +59,11 @@ function inspect(outDir: string) {
   const renderer = join(outDir, 'renderer');
   const html = readFileSync(join(renderer, 'index.html'), 'utf8');
   return {
-    mainImports: moduleImports(readFileSync(join(outDir, 'main', 'index.js'), 'utf8')),
+    mainImports: filesUnder(join(outDir, 'main'), '.js').flatMap((file) =>
+      moduleImports(readFileSync(file, 'utf8')),
+    ),
+    indexImports: moduleImports(readFileSync(join(outDir, 'main', 'index.js'), 'utf8')),
+    hasPdfWorker: filesUnder(join(outDir, 'main'), 'pdf-text.worker.js').length === 1,
     absoluteReferences: absoluteReferences(renderer),
     fonts: filesUnder(renderer, '.woff2').length,
     policy: (
@@ -143,8 +149,12 @@ describe('production build output (real electron-vite build)', () => {
       expect(scan.main).toEqual([]);
       expect(scan.renderer).toEqual([]);
       expect(
-        scan.mainImports.filter((name) => name !== 'electron' && !name.startsWith('node:')),
+        scan.mainImports.filter(
+          (name) => name !== 'electron' && !name.startsWith('node:') && !name.startsWith('./'),
+        ),
       ).toEqual([]);
+      expect(scan.hasPdfWorker).toBe(true);
+      expect(scan.indexImports.filter((name) => name.includes('pdfjs'))).toEqual([]);
       expect(scan.absoluteReferences).toEqual([]);
       expect(scan.fonts).toBeGreaterThanOrEqual(5);
       expect(scan.policy).toContain("default-src 'none'");
