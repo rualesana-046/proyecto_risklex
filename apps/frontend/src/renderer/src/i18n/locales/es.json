@@ -14,6 +14,7 @@
     "title": "Antes de analizar",
     "what": "Para analizarlo, RiskLex enviará el texto del documento que pegaste al backend de RiskLex, que lo pasa a su proveedor de inteligencia artificial.",
     "retention": "El proveedor de inteligencia artificial puede conservar los datos temporalmente: hasta 30 días, o más tiempo si algún contenido se marca para revisión. RiskLex no guarda el documento ni el resultado.",
+    "link": "Si leíste un enlace, la página se descargó desde tu equipo y el sitio pudo ver tu dirección IP. A la IA solo se envía el texto, no la dirección del enlace ni el nombre del archivo.",
     "advice": "No pegues información que no quieras compartir, como contraseñas o datos de salud.",
     "session": "Te lo volveremos a preguntar la próxima vez que abras RiskLex.",
     "accept": "Aceptar y analizar",

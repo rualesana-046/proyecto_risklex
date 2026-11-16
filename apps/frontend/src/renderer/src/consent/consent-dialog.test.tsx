@@ -46,6 +46,9 @@ describe('ConsentDialog (simulated native dialog)', () => {
     expect(dialog.textContent).toContain('proveedor de inteligencia artificial');
     expect(dialog.textContent).toContain('hasta 30 días');
     expect(dialog.textContent).toContain('RiskLex no guarda el documento');
+    expect(dialog.textContent).toContain('la página se descargó desde tu equipo');
+    expect(dialog.textContent).toContain('dirección IP');
+    expect(dialog.textContent).toContain('A la IA solo se envía el texto');
   });
 
   it('moves the focus to the safe choice when it opens', () => {
