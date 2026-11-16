@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { appVersionSchema } from '@risklex/shared';
+import { lookup } from 'node:dns/promises';
 import { join } from 'node:path';
 import { app, ipcMain, utilityProcess } from 'electron';
 import { PDF_READER_MAX_HEAP_MB } from '../common/document-sources.ts';
@@ -7,13 +8,16 @@ import { readApiConfig } from './app/api-config.ts';
 import { createFixtureAnalysisClient } from './dev/fixture-analysis.client.ts';
 import { registerAnalysisIpc } from './ipc/analysis.ipc.ts';
 import { registerDocumentIpc } from './ipc/document.ipc.ts';
+import { readLinkDocument } from './modules/ingestion/application/read-link.use-case.ts';
 import { readPdfDocument } from './modules/ingestion/application/read-pdf.use-case.ts';
+import { httpsTransport } from './modules/ingestion/infrastructure/https-transport.ts';
 import { pickPdfFile } from './modules/ingestion/infrastructure/native-pdf-picker.ts';
 import {
   createPdfReader,
   type ForkWorker,
 } from './modules/ingestion/infrastructure/pdf-reader.client.ts';
 import { PDF_WORKER_FILE } from './modules/ingestion/infrastructure/pdf-worker-protocol.ts';
+import { safeFetch, type Resolve } from './modules/ingestion/infrastructure/safe-fetch.ts';
 import {
   createAnalysisHttpClient,
   type AnalysisClient,
@@ -76,6 +80,11 @@ function createPdfReaderForApp() {
   });
 }
 
+const resolveAll: Resolve = async (hostname) => {
+  const addresses = await lookup(hostname, { all: true, order: 'verbatim' });
+  return addresses.map((entry) => ({ address: entry.address, family: entry.family === 6 ? 6 : 4 }));
+};
+
 export function composeApplication(appUrl: string): void {
   registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient() });
   const reader = createPdfReaderForApp();
@@ -83,5 +92,14 @@ export function composeApplication(appUrl: string): void {
     ipc: ipcMain,
     appUrl,
     readPdf: (signal) => readPdfDocument({ pick: pickPdfFile, reader }, signal),
+    readLink: (url, signal) =>
+      readLinkDocument(
+        {
+          fetch: (raw, s) => safeFetch(raw, { resolve: resolveAll, transport: httpsTransport }, s),
+          reader,
+        },
+        url,
+        signal,
+      ),
   });
 }

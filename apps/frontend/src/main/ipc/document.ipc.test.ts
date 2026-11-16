@@ -6,20 +6,28 @@ import { registerDocumentIpc } from './document.ipc.ts';
 
 const APP_URL = 'http://localhost:5173';
 
-type InvokeHandler = (event: IpcMainInvokeEvent) => Promise<DocumentReadOutcome>;
+type InvokeHandler = (event: IpcMainInvokeEvent, payload?: unknown) => Promise<DocumentReadOutcome>;
 type CancelHandler = (event: IpcMainEvent) => void;
 
-function setup(readPdf: (signal: AbortSignal) => Promise<DocumentReadOutcome>) {
-  const handlers: { invoke?: InvokeHandler; cancel?: CancelHandler } = {};
+function setup(
+  readPdf: (signal: AbortSignal) => Promise<DocumentReadOutcome>,
+  readLink: (url: string, signal: AbortSignal) => Promise<DocumentReadOutcome> = () =>
+    Promise.resolve(READ),
+) {
+  const handlers: { invoke?: InvokeHandler; link?: InvokeHandler; cancel?: CancelHandler } = {};
   const ipc = {
-    handle: vi.fn((_channel: string, handler: InvokeHandler) => {
-      handlers.invoke = handler;
+    handle: vi.fn((channel: string, handler: InvokeHandler) => {
+      if (channel === IPC_CHANNELS.readLink) {
+        handlers.link = handler;
+      } else {
+        handlers.invoke = handler;
+      }
     }),
     on: vi.fn((_channel: string, handler: CancelHandler) => {
       handlers.cancel = handler;
     }),
   };
-  registerDocumentIpc({ ipc: ipc as never, appUrl: APP_URL, readPdf });
+  registerDocumentIpc({ ipc: ipc as never, appUrl: APP_URL, readPdf, readLink });
   const event = (url: string | null) =>
     ({ senderFrame: url === null ? null : { url } }) as unknown as IpcMainInvokeEvent &
       IpcMainEvent;
@@ -30,6 +38,12 @@ function setup(readPdf: (signal: AbortSignal) => Promise<DocumentReadOutcome>) {
         throw new Error('The pick handler was not registered');
       }
       return handlers.invoke(event(url));
+    },
+    link: (payload: unknown, url: string | null = `${APP_URL}/`) => {
+      if (handlers.link === undefined) {
+        throw new Error('The link handler was not registered');
+      }
+      return handlers.link(event(url), payload);
     },
     cancel: (url: string | null = `${APP_URL}/`) => {
       handlers.cancel?.(event(url));
@@ -52,6 +66,7 @@ describe('document ipc (simulated electron)', () => {
   it('registers the pick and cancel channels', () => {
     const { ipc } = setup(() => Promise.resolve(READ));
     expect(ipc.handle).toHaveBeenCalledWith(IPC_CHANNELS.pickPdf, expect.any(Function));
+    expect(ipc.handle).toHaveBeenCalledWith(IPC_CHANNELS.readLink, expect.any(Function));
     expect(ipc.on).toHaveBeenCalledWith(IPC_CHANNELS.cancelDocument, expect.any(Function));
   });
 
@@ -109,6 +124,42 @@ describe('document ipc (simulated electron)', () => {
     expect(await pending).toEqual({
       ok: false,
       error: { code: 'document_cancelled', characters: null },
+    });
+  });
+
+  it('reads a link given as a trimmed string', async () => {
+    const readLink = vi.fn(() => Promise.resolve(READ));
+    const { link } = setup(() => Promise.resolve(READ), readLink);
+    expect(await link('  https://example.com/terms  ')).toEqual(READ);
+    expect(readLink).toHaveBeenCalledWith('https://example.com/terms', expect.any(AbortSignal));
+  });
+
+  it.each([[42], [''], ['a'.repeat(2049)], [{ url: 'https://example.com' }]])(
+    'rejects the link payload %j before any download',
+    async (payload) => {
+      const readLink = vi.fn(() => Promise.resolve(READ));
+      const { link } = setup(() => Promise.resolve(READ), readLink);
+      expect(await link(payload)).toEqual({
+        ok: false,
+        error: { code: 'link_invalid', characters: null },
+      });
+      expect(readLink).not.toHaveBeenCalled();
+    },
+  );
+
+  it('refuses link requests from other pages', async () => {
+    const readLink = vi.fn(() => Promise.resolve(READ));
+    const { link } = setup(() => Promise.resolve(READ), readLink);
+    expect(await link('https://example.com', 'https://example.com/')).toMatchObject({ ok: false });
+    expect(readLink).not.toHaveBeenCalled();
+  });
+
+  it('runs one document read at a time', async () => {
+    const { pick, link } = setup(() => new Promise(() => undefined));
+    void pick();
+    expect(await link('https://example.com')).toEqual({
+      ok: false,
+      error: { code: 'document_unexpected', characters: null },
     });
   });
 });
