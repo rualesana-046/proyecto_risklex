@@ -11,6 +11,7 @@ describe('hasComment', () => {
     ['.yml', "color: '#FFFFFF'\nname: build"],
     ['.jsonc', '{ "schema": "https://example.com/schema.json" }'],
     ['.jsonc', '{ "include": ["src/**/*.ts"], "main": "src/index.ts", }'],
+    ['.sh', '#!/bin/sh\nset -eu\nprintf "%s" "a#b" "${#value}"'],
   ])('accepts clean %s content', (extension, content) => {
     expect(hasComment(content, extension)).toBe(false);
   });
@@ -23,6 +24,9 @@ describe('hasComment', () => {
     ['.jsonc', '// note\n{ "name": "api" }'],
     ['.jsonc', '{ "name": "api", // note\n}'],
     ['.jsonc', '{ /* note */ "name": "api" }'],
+    ['.sh', '#!/bin/sh\n# note\nset -eu'],
+    ['.sh', 'set -eu # note'],
+    ['.sh', '#note\nset -eu'],
   ])('detects comments in %s content', (extension, content) => {
     expect(hasComment(content, extension)).toBe(true);
   });
@@ -37,7 +41,7 @@ describe('repository scan', () => {
     expect(excludedFiles.has('docs/design/risklex-prototype.html')).toBe(true);
   });
 
-  it('finds no comments in css, html, yaml or jsonc files', async () => {
+  it('finds no comments in css, html, yaml, jsonc or shell files', async () => {
     expect(await findCommentViolations(repositoryRoot)).toEqual([]);
   });
 });
