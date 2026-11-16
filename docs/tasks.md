@@ -79,7 +79,15 @@ No incluye: PDF, URL, historial, ajustes persistentes, bienvenida, glosario, ing
 
 ## Hito 2: instalador de macOS
 
-Estado: **listo para la verificación manual** (2026-11-15). Se cerrará cuando la responsable del producto instale el `.dmg` generado con su configuración y haga la comprobación sin gasto y una llamada real.
+Estado: **completo** (2026-11-15).
+
+Verificación de la responsable del producto en su Mac, con el `.dmg` generado con su configuración:
+
+- abre sin avisos y el icono se ve bien en el Dock;
+- tipografía y temas correctos; ⌥⌘I no abre nada; `codesign --verify` pasa;
+- sin red muestra "No pudimos conectar con RiskLex", lo que confirma que el IPC acepta el remitente `file://`;
+- `ELECTRON_RENDERER_URL` se ignora;
+- llamada real desde la app instalada: funcionó, con 3 puntos en "Lo esencial" y perfiles y filtro correctos. Consumo de 0,48 a 0,54 USD, coherente con **1 POST (inferido por el costo, no confirmado)**. Acumulado: 2 de 5 POST y 0,54 USD en total.
 
 - `npm run dist:mac -w @risklex/frontend` genera un `.dmg` solo para macOS con Apple Silicon, firmado ad hoc y sin notarización, en `apps/frontend/release/` (ignorada por Git).
 - Evidencia del empaquetado de comprobación, hecho con la dirección de ejemplo:

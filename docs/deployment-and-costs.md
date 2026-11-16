@@ -38,3 +38,12 @@ Tras el despliegue, una llamada de verificación en producción respondió 200 e
 ## Costos de IA
 
 Los costos medidos y la estimación para documentos grandes están en `docs/ai-analysis.md`. La calibración gastó 0,31 USD, y las dos llamadas de verificación en producción, 0,0542 y 0,0618 USD (0,43 USD en total).
+
+Llamadas desde la app de escritorio (cifras de la consola de Anthropic, que redondea a céntimos):
+
+| Fecha      | Origen                                                  | Resultado                                              | POST                                                 | Gasto         | Acumulado |
+| ---------- | ------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------- | ------------- | --------- |
+| 2026-11-15 | `npm run dev`, Hito 1, texto de ejemplo                 | 10 tarjetas, sin reintento visible                     | 1                                                    | unos 0,05 USD | 0,48 USD  |
+| 2026-11-15 | App instalada desde el `.dmg`, Hito 2, texto de ejemplo | 3 puntos en "Lo esencial", perfiles y filtro correctos | 1 (inferido por el costo, sin confirmar en el panel) | unos 0,06 USD | 0,54 USD  |
+
+Presupuesto de POST de la app: 2 usados de los 5 del Hito 1 y el Hito 2.
