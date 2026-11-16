@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'electron-vite';
+import { defineConfig, loadEnv } from 'electron-vite';
 import type { Plugin } from 'vite';
 import { contentSecurityPolicy } from './build/content-security-policy.ts';
+import { assertReleaseEnvironment } from './build/release-environment.ts';
 
 function contentSecurityPolicyPlugin(mode: string): Plugin {
   return {
@@ -16,18 +17,21 @@ function contentSecurityPolicyPlugin(mode: string): Plugin {
   };
 }
 
-export default defineConfig(({ mode }) => ({
-  main: {
-    build: { externalizeDeps: false },
-  },
-  preload: {
-    build: {
-      externalizeDeps: false,
-      rolldownOptions: { output: { format: 'cjs', entryFileNames: '[name].cjs' } },
+export default defineConfig(({ mode }) => {
+  assertReleaseEnvironment(mode, loadEnv(mode));
+  return {
+    main: {
+      build: { externalizeDeps: false },
     },
-  },
-  renderer: {
-    plugins: [react(), contentSecurityPolicyPlugin(mode)],
-    build: { assetsInlineLimit: 0 },
-  },
-}));
+    preload: {
+      build: {
+        externalizeDeps: false,
+        rolldownOptions: { output: { format: 'cjs', entryFileNames: '[name].cjs' } },
+      },
+    },
+    renderer: {
+      plugins: [react(), contentSecurityPolicyPlugin(mode)],
+      build: { assetsInlineLimit: 0 },
+    },
+  };
+});

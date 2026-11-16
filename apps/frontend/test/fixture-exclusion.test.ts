@@ -14,6 +14,8 @@ const MARKERS = [
   'expectedSeverity',
 ];
 const BUILD_TIMEOUT_MS = 120_000;
+const EXAMPLE_URL = 'https://example-api.example-account.workers.dev';
+const RELEASE_URL_ERROR = 'MAIN_VITE_RISKLEX_API_URL is missing or invalid for a release build';
 
 interface Scan {
   readonly main: string[];
@@ -77,33 +79,56 @@ function markersIn(directory: string): string[] {
   return [...found];
 }
 
-function runBuild(outDir: string, define: Record<string, string> | undefined): void {
+interface BuildOptions {
+  readonly define?: Record<string, string>;
+  readonly mode?: string;
+  readonly url?: string;
+}
+
+function runBuild(outDir: string, options: BuildOptions) {
   const config = JSON.stringify({
     logLevel: 'silent',
     build: { outDir },
-    ...(define ? { define } : {}),
+    ...(options.mode === undefined ? {} : { mode: options.mode }),
+    ...(options.define === undefined ? {} : { define: options.define }),
   });
   const script = `import { build } from 'electron-vite'; await build(${config});`;
-  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], {
+  return spawnSync(process.execPath, ['--input-type=module', '-e', script], {
     cwd: ROOT,
-    env: { ...process.env, [FIXTURE_VARIABLE]: 'sample' },
+    env: {
+      ...process.env,
+      [FIXTURE_VARIABLE]: 'sample',
+      MAIN_VITE_RISKLEX_API_URL: options.url ?? EXAMPLE_URL,
+    },
     encoding: 'utf8',
   });
-  if (result.status !== 0) {
-    throw new Error(`electron-vite build failed: ${result.stderr}`);
-  }
 }
 
-function buildWithFixtureVariable(define?: Record<string, string>): Scan {
-  const outDir = mkdtempSync(join(tmpdir(), 'risklex-fixture-'));
+function buildAndInspect(options: BuildOptions = {}): Scan & { readonly mainSource: string } {
+  const outDir = mkdtempSync(join(tmpdir(), 'risklex-build-'));
   try {
-    runBuild(outDir, define);
+    const result = runBuild(outDir, options);
+    if (result.status !== 0) {
+      throw new Error(`electron-vite build failed: ${result.stderr}`);
+    }
     return {
       main: markersIn(join(outDir, 'main')),
       renderer: markersIn(join(outDir, 'renderer')),
       files: readdirSync(outDir, { recursive: true }).length,
+      mainSource: readFileSync(join(outDir, 'main', 'index.js'), 'utf8'),
       ...inspect(outDir),
     };
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+}
+
+function failedBuildOutput(options: BuildOptions): string {
+  const outDir = mkdtempSync(join(tmpdir(), 'risklex-build-'));
+  try {
+    const result = runBuild(outDir, options);
+    expect(result.status).not.toBe(0);
+    return `${result.stdout}${result.stderr}`;
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
@@ -113,7 +138,7 @@ describe('production build output (real electron-vite build)', () => {
   it(
     'leaves the fixture out of the build that both build and preview run, even with the variable set',
     () => {
-      const scan = buildWithFixtureVariable();
+      const scan = buildAndInspect();
       expect(scan.files).toBeGreaterThan(0);
       expect(scan.main).toEqual([]);
       expect(scan.renderer).toEqual([]);
@@ -131,9 +156,34 @@ describe('production build output (real electron-vite build)', () => {
   it(
     'detects the fixture when development mode is forced, so the scan is not blind',
     () => {
-      const scan = buildWithFixtureVariable({ 'import.meta.env.DEV': 'true' });
+      const scan = buildAndInspect({ define: { 'import.meta.env.DEV': 'true' } });
       expect(scan.main).toContain('risklex-development-fixture');
       expect(scan.renderer).toEqual([]);
+    },
+    BUILD_TIMEOUT_MS,
+  );
+});
+
+describe('release build (real electron-vite build)', () => {
+  it(
+    'embeds the backend url and keeps the fixture and dev policy out',
+    () => {
+      const scan = buildAndInspect({ mode: 'release' });
+      expect(scan.mainSource).toContain(EXAMPLE_URL);
+      expect(scan.main).toEqual([]);
+      expect(scan.policy).not.toMatch(/unsafe-|ws:/u);
+    },
+    BUILD_TIMEOUT_MS,
+  );
+
+  it(
+    'fails without a valid url and never prints the value it rejected',
+    () => {
+      const rejected = 'http://rejected-value.example.test';
+      const output = failedBuildOutput({ mode: 'release', url: rejected });
+      expect(output).toContain(RELEASE_URL_ERROR);
+      expect(output).not.toContain('rejected-value');
+      expect(failedBuildOutput({ mode: 'release', url: '' })).toContain(RELEASE_URL_ERROR);
     },
     BUILD_TIMEOUT_MS,
   );
