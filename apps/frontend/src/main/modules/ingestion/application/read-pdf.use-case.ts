@@ -38,7 +38,10 @@ export async function readPdfDocument(
   signal: AbortSignal,
 ): Promise<DocumentReadOutcome> {
   const file = await dependencies.pick();
-  if (file === null || signal.aborted) {
+  if (file === null) {
+    return failure('document_dismissed');
+  }
+  if (signal.aborted) {
     return failure('document_cancelled');
   }
   if (file.sizeBytes > PDF_MAX_BYTES) {

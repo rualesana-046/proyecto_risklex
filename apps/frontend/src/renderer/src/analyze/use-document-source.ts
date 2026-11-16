@@ -4,7 +4,7 @@ import type { DocumentReadErrorCode, DocumentSource } from '../../../common/docu
 export type DocumentSourceBridge = Pick<Window['risklex'], 'pickPdf' | 'cancelDocumentRead'>;
 
 export interface DocumentReadFailure {
-  readonly code: DocumentReadErrorCode;
+  readonly code: Exclude<DocumentReadErrorCode, 'document_dismissed'>;
   readonly characters: number | null;
 }
 
@@ -27,8 +27,10 @@ export function useDocumentSource(bridge: DocumentSourceBridge, onText: (text: s
       if (outcome.ok) {
         onText(outcome.text);
         next = { status: 'loaded', source: outcome.source, characters: outcome.characters };
+      } else if (outcome.error.code === 'document_dismissed') {
+        next = { status: 'idle' };
       } else {
-        next = { status: 'failed', error: outcome.error };
+        next = { status: 'failed', error: { ...outcome.error, code: outcome.error.code } };
       }
     } catch {
       next = { status: 'failed', error: UNEXPECTED };

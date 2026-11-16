@@ -35,11 +35,11 @@ describe('readPdfDocument (simulated dialog and reader)', () => {
     });
   });
 
-  it('does nothing when the dialog is closed', async () => {
+  it('reports a closed dialog as dismissed without reading anything', async () => {
     const read = vi.fn<PdfReader['read']>();
     expect(await run(null, { read })).toEqual({
       ok: false,
-      error: { code: 'document_cancelled', characters: null },
+      error: { code: 'document_dismissed', characters: null },
     });
     expect(read).not.toHaveBeenCalled();
   });

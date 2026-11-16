@@ -59,16 +59,17 @@ describe('DocumentSourcePanel', () => {
     );
   });
 
-  it.each(DOCUMENT_READ_ERROR_CODES.filter((code) => code !== 'document_cancelled'))(
-    'explains %s with a next step',
-    (code) => {
-      renderPanel({ status: 'failed', error: { code, characters: 210000 } });
-      const [message, next] = screen.getByRole('alert').querySelectorAll('p');
-      expect(message?.textContent.trim()).not.toBe('');
-      expect(next?.textContent.trim()).not.toBe('');
-      expect(screen.getByRole('alert').textContent).not.toMatch(/documentErrors\.|\{\{/u);
-    },
-  );
+  it.each(
+    DOCUMENT_READ_ERROR_CODES.filter(
+      (code) => code !== 'document_cancelled' && code !== 'document_dismissed',
+    ),
+  )('explains %s with a next step', (code) => {
+    renderPanel({ status: 'failed', error: { code, characters: 210000 } });
+    const [message, next] = screen.getByRole('alert').querySelectorAll('p');
+    expect(message?.textContent.trim()).not.toBe('');
+    expect(next?.textContent.trim()).not.toBe('');
+    expect(screen.getByRole('alert').textContent).not.toMatch(/documentErrors\.|\{\{/u);
+  });
 
   it('gives the real numbers for a document that is too long', () => {
     renderPanel({ status: 'failed', error: { code: 'document_too_long', characters: 210000 } });

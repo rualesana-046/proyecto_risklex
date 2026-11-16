@@ -76,4 +76,19 @@ describe('useDocumentSource (simulated preload bridge)', () => {
     });
     expect(bridge.cancelDocumentRead).toHaveBeenCalledOnce();
   });
+
+  it('stays silent and keeps the text when the dialog is closed', async () => {
+    const bridge = bridgeReturning(
+      Promise.resolve({ ok: false, error: { code: 'document_dismissed', characters: null } }),
+    );
+    const onText = vi.fn();
+    const { result } = renderHook(() => useDocumentSource(bridge, onText));
+    let next: unknown;
+    await act(async () => {
+      next = await result.current.pickPdf();
+    });
+    expect(onText).not.toHaveBeenCalled();
+    expect(next).toEqual({ status: 'idle' });
+    expect(result.current.state).toEqual({ status: 'idle' });
+  });
 });

@@ -18,6 +18,7 @@ export const DOCUMENT_READ_ERROR_CODES = [
   'pdf_timeout',
   'document_too_long',
   'document_cancelled',
+  'document_dismissed',
   'document_unexpected',
 ] as const;
 export type DocumentReadErrorCode = (typeof DOCUMENT_READ_ERROR_CODES)[number];
