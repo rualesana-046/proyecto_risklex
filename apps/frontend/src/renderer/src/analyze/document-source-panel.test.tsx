@@ -11,16 +11,19 @@ afterEach(cleanup);
 function renderPanel(state: DocumentSourceState, busy = false) {
   const onPickPdf = vi.fn();
   const onCancel = vi.fn();
+  const onReadLink = vi.fn();
   render(
     <DocumentSourcePanel
       state={state}
       busy={busy}
       pdfButtonRef={null}
+      linkInputRef={null}
       onPickPdf={onPickPdf}
+      onReadLink={onReadLink}
       onCancel={onCancel}
     />,
   );
-  return { onPickPdf, onCancel };
+  return { onPickPdf, onCancel, onReadLink };
 }
 
 describe('DocumentSourcePanel', () => {
@@ -90,5 +93,35 @@ describe('DocumentSourcePanel', () => {
     });
     expect(screen.queryByRole('alert')).toBeNull();
     expect(screen.getByRole('status').textContent).toContain('Cancelaste la lectura');
+  });
+
+  it('opens the link form from its toggle and closes it with Escape, returning the focus', async () => {
+    const { onReadLink } = renderPanel({ status: 'idle' });
+    const user = userEvent.setup();
+    const toggle = screen.getByRole('button', { name: 'Leer un enlace' });
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    await user.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    await user.type(screen.getByLabelText('Dirección del enlace'), 'https://example.com{Enter}');
+    expect(onReadLink).toHaveBeenCalledWith('https://example.com');
+    await user.keyboard('{Escape}');
+    expect(screen.queryByLabelText('Dirección del enlace')).toBeNull();
+    expect(document.activeElement).toBe(toggle);
+  });
+
+  it('shows that a page is being downloaded', () => {
+    renderPanel({ status: 'reading', kind: 'link' });
+    expect(screen.getByRole('status').textContent).toBe('Descargando la página…');
+  });
+
+  it('shows only the domain of a read link', () => {
+    renderPanel({
+      status: 'loaded',
+      source: { kind: 'link', name: 'example.com' },
+      characters: 900,
+    });
+    expect(screen.getByRole('status').textContent).toBe(
+      'Texto extraído de example.com · 900 caracteres',
+    );
   });
 });

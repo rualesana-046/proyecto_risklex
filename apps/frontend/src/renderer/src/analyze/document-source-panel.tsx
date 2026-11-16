@@ -1,14 +1,17 @@
 import { MAX_DOCUMENT_CHARACTERS } from '@risklex/shared';
-import type { Ref } from 'react';
+import { useRef, useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PDF_MAX_BYTES, PDF_MAX_PAGES } from '../../../common/document-sources.ts';
+import { LinkForm } from './link-form.tsx';
 import type { DocumentReadFailure, DocumentSourceState } from './use-document-source.ts';
 
 interface DocumentSourcePanelProps {
   readonly state: DocumentSourceState;
   readonly busy: boolean;
   readonly pdfButtonRef: Ref<HTMLButtonElement>;
+  readonly linkInputRef: Ref<HTMLInputElement>;
   readonly onPickPdf: () => void;
+  readonly onReadLink: (url: string) => void;
   readonly onCancel: () => void;
 }
 
@@ -51,38 +54,116 @@ function SourceStatus({
   );
 }
 
+function ReadingStatus({
+  kind,
+  onCancel,
+}: {
+  readonly kind: 'pdf' | 'link';
+  readonly onCancel: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <p role="status" className="analyze-hint">
+        {kind === 'link' ? t('analyze.sources.readingLink') : t('analyze.sources.readingPdf')}
+      </p>
+      <button type="button" className="button-secondary" onClick={onCancel}>
+        {t('analyze.sources.cancel')}
+      </button>
+    </>
+  );
+}
+
+interface SourceButtonsProps {
+  readonly locked: boolean;
+  readonly reading: DocumentSourceState;
+  readonly linkOpen: boolean;
+  readonly pdfButtonRef: Ref<HTMLButtonElement>;
+  readonly toggleRef: Ref<HTMLButtonElement>;
+  readonly onPickPdf: () => void;
+  readonly onToggleLink: () => void;
+  readonly onCancel: () => void;
+}
+
+function SourceButtons({
+  locked,
+  reading,
+  linkOpen,
+  pdfButtonRef,
+  toggleRef,
+  onPickPdf,
+  onToggleLink,
+  onCancel,
+}: SourceButtonsProps) {
+  const { t } = useTranslation();
+  return (
+    <div className="document-source-actions" role="group" aria-label={t('analyze.sources.label')}>
+      <button
+        ref={pdfButtonRef}
+        type="button"
+        className="button-secondary"
+        disabled={locked}
+        onClick={onPickPdf}
+      >
+        {t('analyze.sources.pdf')}
+      </button>
+      <button
+        ref={toggleRef}
+        type="button"
+        className="button-secondary"
+        aria-expanded={linkOpen}
+        aria-controls="link-form"
+        disabled={locked}
+        onClick={onToggleLink}
+      >
+        {t('analyze.sources.link')}
+      </button>
+      {reading.status === 'reading' ? (
+        <ReadingStatus kind={reading.kind} onCancel={onCancel} />
+      ) : null}
+    </div>
+  );
+}
+
+function useLinkToggle() {
+  const [linkOpen, setLinkOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const toggle = () => {
+    setLinkOpen((open) => !open);
+  };
+  const close = () => {
+    setLinkOpen(false);
+    toggleRef.current?.focus();
+  };
+  return { linkOpen, toggleRef, toggle, close };
+}
+
 export function DocumentSourcePanel({
   state,
   busy,
   pdfButtonRef,
+  linkInputRef,
   onPickPdf,
+  onReadLink,
   onCancel,
 }: DocumentSourcePanelProps) {
-  const { t } = useTranslation();
-  const reading = state.status === 'reading';
+  const { linkOpen, toggleRef, toggle, close } = useLinkToggle();
+  const locked = busy || state.status === 'reading';
   return (
     <div className="document-sources">
-      <div className="document-source-actions" role="group" aria-label={t('analyze.sources.label')}>
-        <button
-          ref={pdfButtonRef}
-          type="button"
-          className="button-secondary"
-          disabled={busy || reading}
-          onClick={onPickPdf}
-        >
-          {t('analyze.sources.pdf')}
-        </button>
-        {reading ? (
-          <>
-            <p role="status" className="analyze-hint">
-              {t('analyze.sources.readingPdf')}
-            </p>
-            <button type="button" className="button-secondary" onClick={onCancel}>
-              {t('analyze.sources.cancel')}
-            </button>
-          </>
-        ) : null}
-      </div>
+      <SourceButtons
+        locked={locked}
+        reading={state}
+        linkOpen={linkOpen}
+        pdfButtonRef={pdfButtonRef}
+        toggleRef={toggleRef}
+        onPickPdf={onPickPdf}
+        onToggleLink={toggle}
+        onCancel={onCancel}
+      />
+      {linkOpen ? (
+        <LinkForm busy={locked} inputRef={linkInputRef} onSubmit={onReadLink} onClose={close} />
+      ) : null}
       {state.status === 'loaded' ? (
         <SourceStatus name={state.source.name} characters={state.characters} />
       ) : null}

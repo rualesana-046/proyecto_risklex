@@ -116,25 +116,27 @@ function AnalyzeHero() {
   );
 }
 
-function usePdfSource(bridge: DocumentSourceBridge, setText: (text: string) => void) {
+function useDocumentSources(bridge: DocumentSourceBridge, setText: (text: string) => void) {
   const pdfButtonRef = useRef<HTMLButtonElement>(null);
+  const linkInputRef = useRef<HTMLInputElement>(null);
   const source = useDocumentSource(bridge, setText);
-  const previousStatus = useRef(source.state.status);
+  const previous = useRef(source.state);
   useEffect(() => {
-    const wasReading = previousStatus.current === 'reading';
-    previousStatus.current = source.state.status;
-    if (wasReading && source.state.status !== 'loaded') {
-      pdfButtonRef.current?.focus();
+    const before = previous.current;
+    previous.current = source.state;
+    if (before.status !== 'reading' || source.state.status === 'loaded') {
+      return;
     }
-  }, [source.state.status]);
-  return { pdfButtonRef, ...source };
+    (before.kind === 'link' ? linkInputRef.current : pdfButtonRef.current)?.focus();
+  }, [source.state]);
+  return { pdfButtonRef, linkInputRef, ...source };
 }
 
 export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
   const [text, setText] = useState('');
   const { buttonRef, state, cancel, consentOpen, requestAnalysis, accept, dismiss } =
     useAnalyzeFlow(bridge, onAnalysis, text);
-  const pdf = usePdfSource(bridge, setText);
+  const pdf = useDocumentSources(bridge, setText);
   const running = state.status === 'running';
   const reading = pdf.state.status === 'reading';
   return (
@@ -145,7 +147,9 @@ export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
           state={pdf.state}
           busy={running}
           pdfButtonRef={pdf.pdfButtonRef}
+          linkInputRef={pdf.linkInputRef}
           onPickPdf={() => void pdf.pickPdf()}
+          onReadLink={(url) => void pdf.readLink(url)}
           onCancel={pdf.cancel}
         />
         <SampleDocumentButton disabled={running || reading} onUse={setText} />
