@@ -54,7 +54,12 @@
       "pdf": "Choose a PDF…",
       "readingPdf": "Reading the PDF…",
       "cancel": "Cancel reading",
-      "extracted": "Text extracted from {{name}} · {{characters}} characters"
+      "extracted": "Text extracted from {{name}} · {{characters}} characters",
+      "link": "Read a link",
+      "linkLabel": "Link address",
+      "linkSubmit": "Read link",
+      "linkNotice": "RiskLex will download this page from your computer, so the site will see your IP address. Nothing is sent to the AI until you press Analyze.",
+      "readingLink": "Downloading the page…"
     }
   },
   "errors": {

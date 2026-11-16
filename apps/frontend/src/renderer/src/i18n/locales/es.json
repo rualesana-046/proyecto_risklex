@@ -54,7 +54,12 @@
       "pdf": "Elegir un PDF…",
       "readingPdf": "Leyendo el PDF…",
       "cancel": "Cancelar lectura",
-      "extracted": "Texto extraído de {{name}} · {{characters}} caracteres"
+      "extracted": "Texto extraído de {{name}} · {{characters}} caracteres",
+      "link": "Leer un enlace",
+      "linkLabel": "Dirección del enlace",
+      "linkSubmit": "Leer enlace",
+      "linkNotice": "RiskLex descargará esta página desde tu equipo, así que el sitio verá tu dirección IP. No se envía nada a la IA hasta que pulses Analizar.",
+      "readingLink": "Descargando la página…"
     }
   },
   "errors": {
