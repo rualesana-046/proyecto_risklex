@@ -40,6 +40,7 @@ function fakeBridge(
   return {
     bridge: {
       pickPdf: vi.fn(() => pdf),
+      readLink: vi.fn(() => pdf),
       cancelDocumentRead: vi.fn(),
       analyze: vi.fn(() => outcome),
       onProgress: vi.fn((listener: (stage: AnalysisStage) => void) => {

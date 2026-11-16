@@ -42,7 +42,7 @@ describe('DocumentSourcePanel', () => {
   });
 
   it('shows the reading state with a cancel button', async () => {
-    const { onCancel } = renderPanel({ status: 'reading' });
+    const { onCancel } = renderPanel({ status: 'reading', kind: 'pdf' });
     expect(screen.getByRole('status').textContent).toBe('Leyendo el PDF…');
     await userEvent.setup().click(screen.getByRole('button', { name: 'Cancelar lectura' }));
     expect(onCancel).toHaveBeenCalledOnce();
@@ -64,7 +64,7 @@ describe('DocumentSourcePanel', () => {
       (code) => code !== 'document_cancelled' && code !== 'document_dismissed',
     ),
   )('explains %s with a next step', (code) => {
-    renderPanel({ status: 'failed', error: { code, characters: 210000 } });
+    renderPanel({ status: 'failed', kind: 'pdf', error: { code, characters: 210000 } });
     const [message, next] = screen.getByRole('alert').querySelectorAll('p');
     expect(message?.textContent.trim()).not.toBe('');
     expect(next?.textContent.trim()).not.toBe('');
@@ -72,14 +72,22 @@ describe('DocumentSourcePanel', () => {
   });
 
   it('gives the real numbers for a document that is too long', () => {
-    renderPanel({ status: 'failed', error: { code: 'document_too_long', characters: 210000 } });
+    renderPanel({
+      status: 'failed',
+      kind: 'pdf',
+      error: { code: 'document_too_long', characters: 210000 },
+    });
     expect(screen.getByRole('alert').textContent).toContain(
       'El documento tiene 210.000 caracteres y el límite es 150.000.',
     );
   });
 
   it('reports a cancelled read calmly', () => {
-    renderPanel({ status: 'failed', error: { code: 'document_cancelled', characters: null } });
+    renderPanel({
+      status: 'failed',
+      kind: 'pdf',
+      error: { code: 'document_cancelled', characters: null },
+    });
     expect(screen.queryByRole('alert')).toBeNull();
     expect(screen.getByRole('status').textContent).toContain('Cancelaste la lectura');
   });

@@ -6,6 +6,7 @@ import { useDocumentSource, type DocumentSourceBridge } from './use-document-sou
 function bridgeReturning(outcome: Promise<DocumentReadOutcome>) {
   const bridge = {
     pickPdf: vi.fn<DocumentSourceBridge['pickPdf']>(() => outcome),
+    readLink: vi.fn<DocumentSourceBridge['readLink']>(() => outcome),
     cancelDocumentRead: vi.fn(),
   };
   return bridge;
@@ -46,6 +47,7 @@ describe('useDocumentSource (simulated preload bridge)', () => {
     expect(onText).not.toHaveBeenCalled();
     expect(result.current.state).toEqual({
       status: 'failed',
+      kind: 'pdf',
       error: { code: 'pdf_encrypted', characters: null },
     });
   });
@@ -70,7 +72,7 @@ describe('useDocumentSource (simulated preload bridge)', () => {
     act(() => {
       void result.current.pickPdf();
     });
-    expect(result.current.state).toEqual({ status: 'reading' });
+    expect(result.current.state).toEqual({ status: 'reading', kind: 'pdf' });
     act(() => {
       result.current.cancel();
     });
@@ -90,5 +92,43 @@ describe('useDocumentSource (simulated preload bridge)', () => {
     expect(onText).not.toHaveBeenCalled();
     expect(next).toEqual({ status: 'idle' });
     expect(result.current.state).toEqual({ status: 'idle' });
+  });
+
+  it('reads a link and remembers only its domain', async () => {
+    const bridge = bridgeReturning(
+      Promise.resolve({
+        ok: true,
+        text: 'Términos',
+        source: { kind: 'link', name: 'example.com' },
+        characters: 8,
+      }),
+    );
+    const onText = vi.fn();
+    const { result } = renderHook(() => useDocumentSource(bridge, onText));
+    await act(async () => {
+      await result.current.readLink('https://example.com/terms');
+    });
+    expect(bridge.readLink).toHaveBeenCalledWith('https://example.com/terms');
+    expect(onText).toHaveBeenCalledWith('Términos');
+    expect(result.current.state).toEqual({
+      status: 'loaded',
+      source: { kind: 'link', name: 'example.com' },
+      characters: 8,
+    });
+  });
+
+  it('marks a failed link read as a link failure', async () => {
+    const bridge = bridgeReturning(
+      Promise.resolve({ ok: false, error: { code: 'link_blocked', characters: null } }),
+    );
+    const { result } = renderHook(() => useDocumentSource(bridge, vi.fn()));
+    await act(async () => {
+      await result.current.readLink('https://192.168.1.1');
+    });
+    expect(result.current.state).toEqual({
+      status: 'failed',
+      kind: 'link',
+      error: { code: 'link_blocked', characters: null },
+    });
   });
 });
