@@ -1,4 +1,4 @@
-# 0004. Aplicación de escritorio: seguridad, comunicación entre procesos y modo de prueba
+# 0004. Aplicación de escritorio: seguridad, comunicación entre procesos, modo de prueba y empaquetado
 
 - Estado: aceptada
 - Fecha: 2026-11-15
@@ -50,10 +50,19 @@ La aplicación de escritorio muestra texto que viene de una IA y de documentos d
 - La pantalla muestra siempre, sin forma de ocultarlo, el aviso "Resultado de prueba, no es un análisis real".
 - Una prueba compila de verdad con `electron-vite build` y la variable definida, que es la misma compilación que ejecuta `preview` antes de abrir Electron, y comprueba que ni `out/main` ni `out/renderer` contienen el simulador. Un control positivo fuerza `DEV` y comprueba que entonces sí aparece, para demostrar que la búsqueda funciona.
 
+### Empaquetado de macOS
+
+- electron-builder genera un `.dmg` solo para arm64 en `apps/frontend/release/`, que Git ignora.
+- Todo el código de main y del preload se empaqueta con Vite, y las dependencias del frontend son de desarrollo. Así `app.asar` solo contiene `out/**` y `package.json`, sin `node_modules`, y no dependemos de cómo trate electron-builder los workspaces de npm.
+- La compilación del instalador usa el modo `release`, que exige una dirección https válida en `MAIN_VITE_RISKLEX_API_URL` y falla sin mostrar el valor.
+- Firma ad hoc (`mac.identity: "-"`): sin certificado, electron-builder no firma nada y la app queda con una firma incompleta que `codesign --verify --deep --strict` rechaza. La firma ad hoc sella el paquete completo y pasa esa verificación.
+- `hardenedRuntime` está desactivado solo para esta versión de prueba sin notarización: con firma ad hoc, el entorno endurecido rechaza el framework de Electron firmado con otro equipo. Si algún día se notariza, hay que activarlo y declarar los permisos (entitlements) necesarios.
+
 ## Consecuencias
 
 - El renderer no puede llegar a la red ni al sistema aunque se inyecte contenido.
 - Añadir un canal nuevo exige tocar `common/`, el preload y su prueba, lo que hace visible cualquier cambio en la superficie entre procesos.
 - La URL del backend queda incrustada en el paquete de main al compilar. No es un secreto, pero acaba dentro del binario distribuido.
-- `zod` se externaliza en main (TD-004) y hay que resolverlo antes de los instaladores.
+- `zod` ya no se externaliza en main: TD-004 está cerrada.
+- El instalador de prueba solo sirve en Mac con Apple Silicon y macOS pide confirmar la apertura si el archivo llega descargado.
 - Se puede revisar la interfaz completa sin gastar llamadas, con la garantía comprobada de que el simulador no llega a ninguna compilación distribuible.
