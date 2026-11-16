@@ -48,6 +48,13 @@
     "sample": {
       "label": "Use sample text",
       "note": "It is a fictional document, written to try RiskLex."
+    },
+    "sources": {
+      "label": "How to add the document",
+      "pdf": "Choose a PDF…",
+      "readingPdf": "Reading the PDF…",
+      "cancel": "Cancel reading",
+      "extracted": "Text extracted from {{name}} · {{characters}} characters"
     }
   },
   "errors": {
@@ -164,5 +171,47 @@
     "hidden_costs": "Hidden costs",
     "cancellation": "Cancellation",
     "content_license": "Content license"
+  },
+  "documentErrors": {
+    "pdf_not_pdf": {
+      "message": "This file is not a PDF.",
+      "next": "Choose a PDF file or paste the text."
+    },
+    "pdf_too_large": {
+      "message": "The PDF is larger than the {{maxMb}} MB limit.",
+      "next": "Use a smaller PDF or paste only the terms."
+    },
+    "pdf_too_many_pages": {
+      "message": "The PDF has more than {{maxPages}} pages.",
+      "next": "Use a shorter PDF or paste only the terms."
+    },
+    "pdf_encrypted": {
+      "message": "This PDF is protected with a password.",
+      "next": "Open it in your PDF reader, copy the text and paste it here."
+    },
+    "pdf_damaged": {
+      "message": "We could not read this PDF: it looks damaged or incomplete.",
+      "next": "Download it again or paste the text."
+    },
+    "pdf_no_text": {
+      "message": "This PDF looks like a scanned image: it has no text we can read.",
+      "next": "Look for a version of the document with text or copy and paste the text."
+    },
+    "pdf_timeout": {
+      "message": "Reading this PDF takes too much time or memory.",
+      "next": "Try another file or paste the text."
+    },
+    "document_too_long": {
+      "message": "The document has {{characters}} characters and the limit is {{max}}.",
+      "next": "Paste only the terms or the privacy part."
+    },
+    "document_cancelled": {
+      "message": "You cancelled reading the document.",
+      "next": "The text in the box has not changed."
+    },
+    "document_unexpected": {
+      "message": "Something went wrong while reading the document.",
+      "next": "Try again or paste the text."
+    }
   }
 }

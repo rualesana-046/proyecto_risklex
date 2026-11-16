@@ -48,6 +48,13 @@
     "sample": {
       "label": "Usar texto de ejemplo",
       "note": "Es un documento ficticio, escrito para probar RiskLex."
+    },
+    "sources": {
+      "label": "Cómo añadir el documento",
+      "pdf": "Elegir un PDF…",
+      "readingPdf": "Leyendo el PDF…",
+      "cancel": "Cancelar lectura",
+      "extracted": "Texto extraído de {{name}} · {{characters}} caracteres"
     }
   },
   "errors": {
@@ -164,5 +171,47 @@
     "hidden_costs": "Costos ocultos",
     "cancellation": "Cancelación",
     "content_license": "Licencia de contenido"
+  },
+  "documentErrors": {
+    "pdf_not_pdf": {
+      "message": "Este archivo no es un PDF.",
+      "next": "Elige un archivo PDF o pega el texto."
+    },
+    "pdf_too_large": {
+      "message": "El PDF supera el tamaño máximo de {{maxMb}} MB.",
+      "next": "Usa un PDF más pequeño o pega solo la parte de términos."
+    },
+    "pdf_too_many_pages": {
+      "message": "El PDF tiene más de {{maxPages}} páginas.",
+      "next": "Usa un PDF más corto o pega solo la parte de términos."
+    },
+    "pdf_encrypted": {
+      "message": "Este PDF está protegido con contraseña.",
+      "next": "Ábrelo con tu lector de PDF, copia el texto y pégalo aquí."
+    },
+    "pdf_damaged": {
+      "message": "No pudimos leer este PDF: parece dañado o incompleto.",
+      "next": "Descárgalo de nuevo o pega el texto."
+    },
+    "pdf_no_text": {
+      "message": "Este PDF parece una imagen escaneada: no tiene texto que podamos leer.",
+      "next": "Busca una versión del documento con texto o copia y pega el texto."
+    },
+    "pdf_timeout": {
+      "message": "Leer este PDF exige demasiado tiempo o memoria.",
+      "next": "Prueba con otro archivo o pega el texto."
+    },
+    "document_too_long": {
+      "message": "El documento tiene {{characters}} caracteres y el límite es {{max}}.",
+      "next": "Pega solo la parte de términos o de privacidad."
+    },
+    "document_cancelled": {
+      "message": "Cancelaste la lectura del documento.",
+      "next": "El texto de la caja no ha cambiado."
+    },
+    "document_unexpected": {
+      "message": "Algo salió mal al leer el documento.",
+      "next": "Vuelve a intentarlo o pega el texto."
+    }
   }
 }
