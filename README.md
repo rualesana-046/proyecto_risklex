@@ -8,7 +8,7 @@ No es un resumidor: identifica riesgos, explica consecuencias, muestra la cláus
 
 ## Estado
 
-Proyecto académico en desarrollo. La aplicación de escritorio analiza texto pegado de punta a punta contra el backend desplegado; el avance real está en `docs/tasks.md`.
+Proyecto académico en desarrollo. La aplicación de escritorio analiza texto pegado, PDF y enlaces de punta a punta contra el backend desplegado; el avance real está en `docs/tasks.md`.
 
 Hay un instalador de prueba solo para macOS con Apple Silicon (ver "Instalar en macOS"). Los de Windows y Linux llegarán con la integración continua.
 
@@ -79,6 +79,23 @@ npm run dev -w @risklex/frontend
 | `npm run validate`     | Ejecuta las cuatro comprobaciones anteriores en orden.           |
 
 Comandos de la app de escritorio, con `-w @risklex/frontend`: `dev` (desarrollo), `build` y `preview` (compilación de producción) y `dist:mac` (instalador de macOS).
+
+## Leer un PDF o un enlace
+
+En la pantalla Analizar, "Elegir un PDF…" y "Leer un enlace" rellenan la caja de texto, que sigue siendo editable. Leer no gasta nada: solo "Analizar documento" envía el texto a la IA, después del consentimiento.
+
+- **PDF:** se lee en un proceso aislado, con límites de 20 MB, 300 páginas, 30 s y 512 MB. Los PDF escaneados sin texto, protegidos con contraseña o dañados muestran un mensaje con el siguiente paso.
+- **Enlace:** la página se descarga desde este equipo, solo por https, sin cookies ni credenciales, y nunca desde direcciones privadas o locales. Las páginas que necesitan JavaScript o inicio de sesión no se pueden leer; en ese caso hay que pegar el texto.
+- **Privacidad:** a la IA solo viaja el texto, nunca la dirección del enlace ni el nombre del archivo. El sitio del enlace sí ve la dirección IP de quien lo lee, y la app lo avisa antes de descargar.
+- **Límite:** un texto de más de 150.000 caracteres se rechaza; hay que pegar solo la parte de términos o de privacidad.
+
+Para probarlo sin contenido de terceros, este comando escribe PDF sintéticos (normal, sin texto, protegido y dañado) en una carpeta temporal fuera del repositorio e imprime su ruta:
+
+```bash
+node apps/frontend/scripts/write-sample-pdfs.ts
+```
+
+Las decisiones de seguridad están en `docs/decisions/0005-isolated-document-reading.md`. Las licencias del software de terceros incluido en la app están en `apps/frontend/THIRD-PARTY-NOTICES.txt`, que también viaja dentro del paquete.
 
 ## Resultado de prueba (solo desarrollo)
 
