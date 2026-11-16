@@ -257,6 +257,22 @@
     "link_needs_javascript": {
       "message": "Esta página necesita JavaScript para mostrar el texto.",
       "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
+    },
+    "link_forbidden": {
+      "message": "La página no permite que RiskLex la lea.",
+      "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
+    },
+    "link_not_found": {
+      "message": "No encontramos esa página.",
+      "next": "Revisa la dirección o busca el enlace actualizado a los términos."
+    },
+    "link_rate_limited": {
+      "message": "La página recibió demasiadas solicitudes.",
+      "next": "Espera unos minutos y vuelve a intentarlo, o pega el texto."
+    },
+    "link_server_error": {
+      "message": "El sitio tuvo un problema al responder.",
+      "next": "Vuelve a intentarlo más tarde o pega el texto."
     }
   }
 }
