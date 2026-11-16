@@ -212,6 +212,46 @@
     "document_unexpected": {
       "message": "Something went wrong while reading the document.",
       "next": "Try again or paste the text."
+    },
+    "link_invalid": {
+      "message": "This address is not valid.",
+      "next": "Check that it is a full web address, for example https://example.com/terms."
+    },
+    "link_blocked": {
+      "message": "For safety, RiskLex does not read addresses on private or local networks.",
+      "next": "Use the public address of the page or paste the text."
+    },
+    "link_unreachable": {
+      "message": "We could not connect to that page.",
+      "next": "Check your connection and the address, or paste the text."
+    },
+    "link_timeout": {
+      "message": "The page took too long to respond.",
+      "next": "Try again later or paste the text."
+    },
+    "link_too_many_redirects": {
+      "message": "The page redirects too many times.",
+      "next": "Open it in your browser, copy the text and paste it here."
+    },
+    "link_http_error": {
+      "message": "The page answered with an error.",
+      "next": "Check that the address is right or paste the text."
+    },
+    "link_unsupported_type": {
+      "message": "That address is neither a web page nor a PDF.",
+      "next": "Use the link to the terms page or paste the text."
+    },
+    "link_too_large": {
+      "message": "The page is too large to read.",
+      "next": "Paste only the terms or the privacy part."
+    },
+    "link_no_text": {
+      "message": "We found no text on this page.",
+      "next": "Open it in your browser, copy the text and paste it here."
+    },
+    "link_needs_javascript": {
+      "message": "This page needs JavaScript to show its text.",
+      "next": "Open it in your browser, copy the text and paste it here."
     }
   }
 }

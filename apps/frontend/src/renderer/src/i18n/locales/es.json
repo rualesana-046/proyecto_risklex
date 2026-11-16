@@ -212,6 +212,46 @@
     "document_unexpected": {
       "message": "Algo salió mal al leer el documento.",
       "next": "Vuelve a intentarlo o pega el texto."
+    },
+    "link_invalid": {
+      "message": "Esta dirección no es válida.",
+      "next": "Revisa que sea una dirección web completa, por ejemplo https://ejemplo.com/terminos."
+    },
+    "link_blocked": {
+      "message": "Por seguridad, RiskLex no lee direcciones de redes privadas o locales.",
+      "next": "Usa la dirección pública de la página o pega el texto."
+    },
+    "link_unreachable": {
+      "message": "No pudimos conectar con esa página.",
+      "next": "Revisa tu conexión y la dirección, o pega el texto."
+    },
+    "link_timeout": {
+      "message": "La página tardó demasiado en responder.",
+      "next": "Vuelve a intentarlo más tarde o pega el texto."
+    },
+    "link_too_many_redirects": {
+      "message": "La página redirige demasiadas veces.",
+      "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
+    },
+    "link_http_error": {
+      "message": "La página respondió con un error.",
+      "next": "Revisa que la dirección sea correcta o pega el texto."
+    },
+    "link_unsupported_type": {
+      "message": "Esa dirección no es una página web ni un PDF.",
+      "next": "Usa el enlace a la página de términos o pega el texto."
+    },
+    "link_too_large": {
+      "message": "La página es demasiado grande para leerla.",
+      "next": "Pega solo la parte de términos o de privacidad."
+    },
+    "link_no_text": {
+      "message": "No encontramos texto en esta página.",
+      "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
+    },
+    "link_needs_javascript": {
+      "message": "Esta página necesita JavaScript para mostrar el texto.",
+      "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
     }
   }
 }

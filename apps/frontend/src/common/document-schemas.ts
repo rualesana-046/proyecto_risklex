@@ -3,6 +3,7 @@ import * as z from 'zod';
 import {
   DOCUMENT_READ_ERROR_CODES,
   DOCUMENT_SOURCE_KINDS,
+  MAX_LINK_CHARACTERS,
   MAX_SOURCE_NAME_CHARACTERS,
 } from './document-sources.ts';
 
@@ -31,3 +32,5 @@ export const documentReadOutcomeSchema = z.union([
     })
     .readonly(),
 ]);
+
+export const linkInputSchema = z.string().trim().min(1).max(MAX_LINK_CHARACTERS);

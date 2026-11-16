@@ -4,8 +4,9 @@ export const PDF_READ_TIMEOUT_MS = 30_000;
 export const PDF_READER_MAX_HEAP_MB = 512;
 export const MIN_USEFUL_CHARACTERS = 200;
 export const MAX_SOURCE_NAME_CHARACTERS = 255;
+export const MAX_LINK_CHARACTERS = 2048;
 
-export const DOCUMENT_SOURCE_KINDS = ['pdf'] as const;
+export const DOCUMENT_SOURCE_KINDS = ['pdf', 'link'] as const;
 export type DocumentSourceKind = (typeof DOCUMENT_SOURCE_KINDS)[number];
 
 export const DOCUMENT_READ_ERROR_CODES = [
@@ -16,6 +17,16 @@ export const DOCUMENT_READ_ERROR_CODES = [
   'pdf_damaged',
   'pdf_no_text',
   'pdf_timeout',
+  'link_invalid',
+  'link_blocked',
+  'link_unreachable',
+  'link_timeout',
+  'link_too_many_redirects',
+  'link_http_error',
+  'link_unsupported_type',
+  'link_too_large',
+  'link_no_text',
+  'link_needs_javascript',
   'document_too_long',
   'document_cancelled',
   'document_dismissed',
