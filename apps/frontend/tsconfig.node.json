@@ -9,6 +9,7 @@
     "electron.vite.config.ts",
     "build/**/*",
     "test/**/*",
+    "scripts/**/*.ts",
     "src/main/**/*",
     "src/preload/**/*",
     "src/common/**/*"
