@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createPdfReader, type ForkWorker, type WorkerOptions } from './pdf-reader.client.ts';
 
 class FakeWorker {
+  readonly pid = 4242;
   readonly posted: unknown[] = [];
   killed = 0;
   private messageListener: (message: unknown) => void = () => undefined;
@@ -32,7 +33,7 @@ class FakeWorker {
   }
 }
 
-function setup(timeoutMs = 1000) {
+function setup(timeoutMs = 1000, usageKb: (pid: number) => number | null = () => null) {
   const worker = new FakeWorker();
   const calls: { path: string; options: WorkerOptions }[] = [];
   const fork: ForkWorker = (path, options) => {
@@ -43,8 +44,8 @@ function setup(timeoutMs = 1000) {
     fork,
     workerPath: '/app/out/main/pdf-text.worker.js',
     timeoutMs,
-    maxHeapMb: 512,
     maxPages: 300,
+    memory: { usageKb, limitKb: 512 * 1024, intervalMs: 100 },
   });
   return { worker, calls, reader };
 }
@@ -56,12 +57,11 @@ afterEach(() => {
 });
 
 describe('pdf reader client (simulated utility process)', () => {
-  it('forks the isolated reader with a memory limit and sends the bytes', async () => {
+  it('forks the isolated reader and sends the bytes', async () => {
     const { worker, calls, reader } = setup();
     const pending = reader.read(BYTES, new AbortController().signal);
     expect(calls[0]?.path).toBe('/app/out/main/pdf-text.worker.js');
     expect(calls[0]?.options).toEqual({
-      execArgv: ['--max-old-space-size=512'],
       serviceName: 'RiskLex PDF reader',
       stdio: 'ignore',
     });
@@ -121,5 +121,23 @@ describe('pdf reader client (simulated utility process)', () => {
     worker.crash();
     expect(await pending).toEqual({ ok: false, code: 'pdf_no_text' });
     expect(worker.killed).toBe(1);
+  });
+
+  it('kills the reader when its memory goes over the limit', async () => {
+    vi.useFakeTimers();
+    let usage = 100 * 1024;
+    const seen: number[] = [];
+    const { worker, reader } = setup(30_000, (pid) => {
+      seen.push(pid);
+      return usage;
+    });
+    const pending = reader.read(BYTES, new AbortController().signal);
+    await vi.advanceTimersByTimeAsync(300);
+    expect(worker.killed).toBe(0);
+    usage = 600 * 1024;
+    await vi.advanceTimersByTimeAsync(100);
+    expect(await pending).toEqual({ ok: false, code: 'pdf_timeout' });
+    expect(worker.killed).toBe(1);
+    expect(seen.every((pid) => pid === 4242)).toBe(true);
   });
 });

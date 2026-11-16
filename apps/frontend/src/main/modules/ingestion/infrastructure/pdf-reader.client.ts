@@ -1,14 +1,11 @@
-import {
-  PDF_MAX_PAGES,
-  PDF_READ_TIMEOUT_MS,
-  PDF_READER_MAX_HEAP_MB,
-} from '../../../../common/document-sources.ts';
+import { PDF_MAX_PAGES, PDF_READ_TIMEOUT_MS } from '../../../../common/document-sources.ts';
 import { pdfWorkerResponseSchema, type PdfWorkerResponse } from './pdf-worker-protocol.ts';
 
 export type PdfReadResult =
   PdfWorkerResponse | { readonly ok: false; readonly code: 'pdf_timeout' | 'document_cancelled' };
 
 export interface WorkerHandle {
+  readonly pid: number | undefined;
   postMessage(message: unknown): void;
   kill(): void;
   onMessage(listener: (message: unknown) => void): void;
@@ -16,18 +13,23 @@ export interface WorkerHandle {
 }
 
 export interface WorkerOptions {
-  readonly execArgv: readonly string[];
   readonly serviceName: string;
   readonly stdio: 'ignore';
 }
 
 export type ForkWorker = (modulePath: string, options: WorkerOptions) => WorkerHandle;
 
+export interface MemoryWatch {
+  readonly usageKb: (pid: number) => number | null;
+  readonly limitKb: number;
+  readonly intervalMs: number;
+}
+
 export interface PdfReaderOptions {
   readonly fork: ForkWorker;
+  readonly memory?: MemoryWatch;
   readonly workerPath: string;
   readonly timeoutMs?: number;
-  readonly maxHeapMb?: number;
   readonly maxPages?: number;
 }
 
@@ -38,11 +40,25 @@ export interface PdfReader {
 const CANCELLED: PdfReadResult = { ok: false, code: 'document_cancelled' };
 const TIMEOUT: PdfReadResult = { ok: false, code: 'pdf_timeout' };
 const DAMAGED: PdfReadResult = { ok: false, code: 'pdf_damaged' };
+const DEFAULT_WATCH_INTERVAL_MS = 100;
+
+function watchMemory(
+  child: WorkerHandle,
+  memory: MemoryWatch | undefined,
+  onExceeded: () => void,
+): ReturnType<typeof setInterval> {
+  return setInterval(() => {
+    const usage =
+      child.pid === undefined || memory === undefined ? null : memory.usageKb(child.pid);
+    if (usage !== null && memory !== undefined && usage > memory.limitKb) {
+      onExceeded();
+    }
+  }, memory?.intervalMs ?? DEFAULT_WATCH_INTERVAL_MS);
+}
 
 function runWorker(options: PdfReaderOptions, bytes: Uint8Array, signal: AbortSignal) {
   return new Promise<PdfReadResult>((resolve) => {
     const child = options.fork(options.workerPath, {
-      execArgv: [`--max-old-space-size=${String(options.maxHeapMb ?? PDF_READER_MAX_HEAP_MB)}`],
       serviceName: 'RiskLex PDF reader',
       stdio: 'ignore',
     });
@@ -53,6 +69,7 @@ function runWorker(options: PdfReaderOptions, bytes: Uint8Array, signal: AbortSi
       }
       settled = true;
       clearTimeout(timer);
+      clearInterval(watcher);
       signal.removeEventListener('abort', onAbort);
       child.kill();
       resolve(result);
@@ -63,6 +80,9 @@ function runWorker(options: PdfReaderOptions, bytes: Uint8Array, signal: AbortSi
     const timer = setTimeout(() => {
       finish(TIMEOUT);
     }, options.timeoutMs ?? PDF_READ_TIMEOUT_MS);
+    const watcher = watchMemory(child, options.memory, () => {
+      finish(TIMEOUT);
+    });
     signal.addEventListener('abort', onAbort, { once: true });
     child.onMessage((message) => {
       const parsed = pdfWorkerResponseSchema.safeParse(message);

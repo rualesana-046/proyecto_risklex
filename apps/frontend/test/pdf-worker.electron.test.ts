@@ -16,14 +16,21 @@ const RUN_TIMEOUT_MS = 120_000;
 const canRunElectron = process.platform === 'darwin' && existsSync(ELECTRON);
 
 interface HarnessResult {
-  readonly kind: 'message' | 'exit' | 'timeout';
+  readonly kind: 'message' | 'exit' | 'timeout' | 'killed';
   readonly message?: { ok: boolean; text?: string; code?: string };
   readonly code?: number;
+  readonly usageMb?: number;
+  readonly lastReport?: { heapMb: number } | null;
   readonly ms: number;
 }
 
-function harness(mode: string, modulePath: string, pdfPath: string, heapMb: number): HarnessResult {
-  const result = spawnSync(ELECTRON, [HARNESS, mode, modulePath, pdfPath, String(heapMb)], {
+function harness(
+  mode: string,
+  modulePath: string,
+  pdfPath: string,
+  limitMb: number,
+): HarnessResult {
+  const result = spawnSync(ELECTRON, [HARNESS, mode, modulePath, pdfPath, String(limitMb)], {
     encoding: 'utf8',
     timeout: RUN_TIMEOUT_MS,
   });
@@ -77,12 +84,12 @@ describe.runIf(canRunElectron)('pdf reader in a real Electron utility process', 
   );
 
   it(
-    'stops a reader that exceeds its memory limit',
+    'lets the main process watch and stop a reader that goes over its memory limit',
     () => {
-      const result = harness('memory', MEMORY_HOG, samplePdf, 64);
-      expect(result.kind).toBe('exit');
-      expect(result.code).not.toBe(0);
-      expect(result.ms).toBeLessThan(RUN_TIMEOUT_MS / 2);
+      const result = harness('memory', MEMORY_HOG, samplePdf, 512);
+      expect(result.kind).toBe('killed');
+      expect(result.usageMb).toBeGreaterThan(512);
+      expect(result.lastReport?.heapMb ?? 0).toBeLessThan(1024);
     },
     RUN_TIMEOUT_MS,
   );
