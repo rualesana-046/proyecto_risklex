@@ -106,14 +106,21 @@ Verificación de la responsable del producto en su Mac, con el `.dmg` generado c
 | Hito 4 | Análisis desde PDF y desde dirección web                                                                                                                              | media     | Requisito del producto aplazado en el Hito 1.                                                     |
 | Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                         |
 
+## Verificaciones pendientes en otros sistemas
+
+| ID    | Verificación                                                                                                                                                        | Estado    |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| VP-01 | El vigilante de memoria del lector de PDF (`app.getAppMetrics()` cada 100 ms, límite de 512 MB) debe comprobarse en Windows y Linux, igual que en macOS (ADR 0005). | pendiente |
+
 ## Retoques de diseño pendientes
 
 Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
 
-| ID    | Observación                                                                                                                                        | Estado    |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera. | pendiente |
-| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                  | pendiente |
+| ID    | Observación                                                                                                                                                                          | Estado    |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera.                                   | pendiente |
+| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                                                    | pendiente |
+| DR-03 | El aviso de error de la fuente del documento aparece entre los botones "Elegir un PDF…" y "Usar texto de ejemplo". Colocarlo debajo del grupo de botones o junto a la caja de texto. | pendiente |
 
 ## Retoques de texto pendientes
 
