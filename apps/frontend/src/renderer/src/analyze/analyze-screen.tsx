@@ -119,8 +119,11 @@ function AnalyzeHero() {
 function usePdfSource(bridge: DocumentSourceBridge, setText: (text: string) => void) {
   const pdfButtonRef = useRef<HTMLButtonElement>(null);
   const source = useDocumentSource(bridge, setText);
+  const previousStatus = useRef(source.state.status);
   useEffect(() => {
-    if (source.state.status === 'failed') {
+    const wasReading = previousStatus.current === 'reading';
+    previousStatus.current = source.state.status;
+    if (wasReading && source.state.status !== 'loaded') {
       pdfButtonRef.current?.focus();
     }
   }, [source.state.status]);

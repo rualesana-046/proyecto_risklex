@@ -174,4 +174,18 @@ describe('pdf source on the analyze screen (simulated preload bridge)', () => {
     await user.click(screen.getByRole('button', { name: 'Cancelar lectura' }));
     expect(bridge.cancelDocumentRead).toHaveBeenCalledOnce();
   });
+
+  it('closing the dialog changes nothing, shows no message and returns the focus', async () => {
+    const pdf = Promise.resolve<DocumentReadOutcome>({
+      ok: false,
+      error: { code: 'document_dismissed', characters: null },
+    });
+    const { textArea, user } = setup(undefined, pdf);
+    fireEvent.change(textArea, { target: { value: 'Texto que ya estaba' } });
+    await user.click(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+    expect((textArea as HTMLTextAreaElement).value).toBe('Texto que ya estaba');
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+  });
 });
