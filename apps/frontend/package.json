@@ -1,6 +1,8 @@
 {
   "name": "@risklex/frontend",
   "version": "0.1.0",
+  "description": "Desktop app that explains the risks in terms of service and privacy policies.",
+  "author": "RiskLex project",
   "private": true,
   "type": "module",
   "main": "./out/main/index.js",

@@ -10,6 +10,8 @@ npmRebuild: false
 publish: null
 mac:
   category: public.app-category.productivity
+  identity: '-'
+  hardenedRuntime: false
   target:
     - target: dmg
       arch:
