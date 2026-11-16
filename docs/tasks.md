@@ -98,12 +98,26 @@ Verificación de la responsable del producto en su Mac, con el `.dmg` generado c
 - Cerrada TD-004. Registrada TD-005 (alertas de `npm audit` heredadas de `minimatch`).
 - No incluye: firma de Developer ID, notarización, Mac con Intel, Windows ni Linux.
 
+## Hito 3: leer PDF y enlaces
+
+Estado: **listo para la verificación con llamadas reales** (2026-11-16). Se cerrará con un análisis real desde un PDF y otro desde un enlace, cada uno autorizado por la responsable del producto (tope de 3 POST).
+
+- "Elegir un PDF…" y "Leer un enlace" rellenan la caja de texto sin enviar nada; solo "Analizar documento" envía el texto, tras el consentimiento.
+- PDF en un proceso aislado con límites de tamaño, páginas, tiempo y memoria; enlaces con protección contra peticiones a redes privadas, DNS fijado, redirecciones revalidadas y límites en streaming (ADR 0005).
+- Verificación manual hecha: PDF normal y protegido, caja conservada ante errores, enlace real y error sin red.
+- Licencias de terceros en `apps/frontend/THIRD-PARTY-NOTICES.txt`, dentro del paquete.
+
+## Mejoras pendientes
+
+| ID    | Mejora                                                                                                                                                                                                               | Estado    |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| MP-01 | Límite de 150.000 caracteres, opción B: en lugar de rechazar, ofrecer usar los primeros 150.000 caracteres con un aviso persistente en Resultados ("Analizamos solo los primeros 150.000 caracteres del documento"). | pendiente |
+
 ## Hitos siguientes
 
 | Hito   | Contenido                                                                                                                                                             | Prioridad | Motivo                                                                                            |
 | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| Hito 3 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | Soporte multiplataforma: la aplicación debe poder instalarse en Windows y Linux, además de macOS. |
-| Hito 4 | Análisis desde PDF y desde dirección web                                                                                                                              | media     | Requisito del producto aplazado en el Hito 1.                                                     |
+| Hito 4 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | Soporte multiplataforma: la aplicación debe poder instalarse en Windows y Linux, además de macOS. |
 | Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                         |
 
 ## Verificaciones pendientes en otros sistemas
