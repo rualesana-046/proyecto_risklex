@@ -1,9 +1,19 @@
 import { randomUUID } from 'node:crypto';
 import { appVersionSchema } from '@risklex/shared';
-import { app, ipcMain } from 'electron';
+import { join } from 'node:path';
+import { app, ipcMain, utilityProcess } from 'electron';
+import { PDF_READER_MAX_HEAP_MB } from '../common/document-sources.ts';
 import { readApiConfig } from './app/api-config.ts';
 import { createFixtureAnalysisClient } from './dev/fixture-analysis.client.ts';
 import { registerAnalysisIpc } from './ipc/analysis.ipc.ts';
+import { registerDocumentIpc } from './ipc/document.ipc.ts';
+import { readPdfDocument } from './modules/ingestion/application/read-pdf.use-case.ts';
+import { pickPdfFile } from './modules/ingestion/infrastructure/native-pdf-picker.ts';
+import {
+  createPdfReader,
+  type ForkWorker,
+} from './modules/ingestion/infrastructure/pdf-reader.client.ts';
+import { PDF_WORKER_FILE } from './modules/ingestion/infrastructure/pdf-worker-protocol.ts';
 import {
   createAnalysisHttpClient,
   type AnalysisClient,
@@ -31,6 +41,47 @@ function createClient(): AnalysisClient | null {
   });
 }
 
+const forkUtility: ForkWorker = (modulePath, options) => {
+  const child = utilityProcess.fork(modulePath, [], options);
+  return {
+    get pid() {
+      return child.pid;
+    },
+    postMessage: (message) => {
+      child.postMessage(message);
+    },
+    kill: () => {
+      child.kill();
+    },
+    onMessage: (listener) => {
+      child.on('message', listener);
+    },
+    onExit: (listener) => {
+      child.on('exit', () => {
+        listener();
+      });
+    },
+  };
+};
+
+function memoryUsageKb(pid: number): number | null {
+  return app.getAppMetrics().find((metric) => metric.pid === pid)?.memory.workingSetSize ?? null;
+}
+
+function createPdfReaderForApp() {
+  return createPdfReader({
+    fork: forkUtility,
+    workerPath: join(import.meta.dirname, PDF_WORKER_FILE),
+    memory: { usageKb: memoryUsageKb, limitKb: PDF_READER_MAX_HEAP_MB * 1024, intervalMs: 100 },
+  });
+}
+
 export function composeApplication(appUrl: string): void {
   registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient() });
+  const reader = createPdfReaderForApp();
+  registerDocumentIpc({
+    ipc: ipcMain,
+    appUrl,
+    readPdf: (signal) => readPdfDocument({ pick: pickPdfFile, reader }, signal),
+  });
 }
