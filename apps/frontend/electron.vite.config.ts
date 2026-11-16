@@ -18,7 +18,7 @@ function contentSecurityPolicyPlugin(mode: string): Plugin {
 
 export default defineConfig(({ mode }) => ({
   main: {
-    build: { externalizeDeps: { exclude: ['@risklex/shared'] } },
+    build: { externalizeDeps: false },
   },
   preload: {
     build: {
