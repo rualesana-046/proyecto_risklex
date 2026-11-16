@@ -77,6 +77,27 @@ Evidencia:
 
 No incluye: PDF, URL, historial, ajustes persistentes, bienvenida, glosario, inglés completo ni instaladores.
 
+## Hito 2: instalador de macOS
+
+Estado: **listo para la verificación manual** (2026-11-15). Se cerrará cuando la responsable del producto instale el `.dmg` generado con su configuración y haga la comprobación sin gasto y una llamada real.
+
+- `npm run dist:mac -w @risklex/frontend` genera un `.dmg` solo para macOS con Apple Silicon, firmado ad hoc y sin notarización, en `apps/frontend/release/` (ignorada por Git).
+- Evidencia del empaquetado de comprobación, hecho con la dirección de ejemplo:
+  - `codesign --verify --deep --strict` pasa y la firma es ad hoc del paquete completo, sin entorno endurecido;
+  - `app.asar` solo contiene `out/**` y `package.json`, con las fuentes y sin `node_modules`;
+  - el `.dmg` pesa unos 114 MB.
+- Descargas de electron-builder, solo desde GitHub Releases: Electron 45.3.2 darwin-arm64 y `dmgbuild` con checksum fijado.
+- Cerrada TD-004. Registrada TD-005 (alertas de `npm audit` heredadas de `minimatch`).
+- No incluye: firma de Developer ID, notarización, Mac con Intel, Windows ni Linux.
+
+## Hitos siguientes
+
+| Hito   | Contenido                                                                                                                                                             | Prioridad | Motivo                                                                                                                          |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Hito 3 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | La sustentación será en el Mac de la responsable, pero el docente puede probar la aplicación después en otro sistema operativo. |
+| Hito 4 | Análisis desde PDF y desde dirección web                                                                                                                              | media     | Requisito del producto aplazado en el Hito 1.                                                                                   |
+| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                                                       |
+
 ## Retoques de diseño pendientes
 
 Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
