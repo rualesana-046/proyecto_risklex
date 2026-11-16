@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AnalysisOutcome, AnalysisStage } from '../../../common/analysis-vocabulary.ts';
+import type { DocumentReadOutcome } from '../../../common/document-sources.ts';
 import { resetConsentForTests } from '../consent/use-consent.ts';
 import '../i18n/i18n.ts';
 import { AnalyzeScreen } from './analyze-screen.tsx';
@@ -31,10 +32,15 @@ const SUCCESS = {
   },
 } as unknown as AnalysisOutcome;
 
-function fakeBridge(outcome: Promise<AnalysisOutcome> = Promise.resolve(SUCCESS)) {
+function fakeBridge(
+  outcome: Promise<AnalysisOutcome> = Promise.resolve(SUCCESS),
+  pdf: Promise<DocumentReadOutcome> = new Promise(() => undefined),
+) {
   let emit: (stage: AnalysisStage) => void = () => undefined;
   return {
     bridge: {
+      pickPdf: vi.fn(() => pdf),
+      cancelDocumentRead: vi.fn(),
       analyze: vi.fn(() => outcome),
       onProgress: vi.fn((listener: (stage: AnalysisStage) => void) => {
         emit = listener;
@@ -48,8 +54,8 @@ function fakeBridge(outcome: Promise<AnalysisOutcome> = Promise.resolve(SUCCESS)
   };
 }
 
-function setup(outcome?: Promise<AnalysisOutcome>) {
-  const fake = fakeBridge(outcome);
+function setup(outcome?: Promise<AnalysisOutcome>, pdf?: Promise<DocumentReadOutcome>) {
+  const fake = fakeBridge(outcome, pdf);
   const onAnalysis = vi.fn();
   render(<AnalyzeScreen bridge={fake.bridge} onAnalysis={onAnalysis} />);
   const textArea = screen.getByLabelText('Texto del documento');
@@ -128,5 +134,44 @@ describe('sample text button (simulated preload bridge)', () => {
     expect(analyzeButton.disabled).toBe(false);
     expect(bridge.analyze).not.toHaveBeenCalled();
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});
+
+describe('pdf source on the analyze screen (simulated preload bridge)', () => {
+  it('fills the text area from a pdf without sending anything', async () => {
+    const pdf = Promise.resolve<DocumentReadOutcome>({
+      ok: true,
+      text: 'Términos extraídos del PDF',
+      source: { kind: 'pdf', name: 'contrato.pdf' },
+      characters: 26,
+    });
+    const { textArea, bridge, user } = setup(undefined, pdf);
+    await user.click(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+    expect((textArea as HTMLTextAreaElement).value).toBe('Términos extraídos del PDF');
+    expect(screen.getByText('Texto extraído de contrato.pdf · 26 caracteres')).toBeTruthy();
+    expect(bridge.analyze).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('keeps the existing text when the pdf cannot be read and returns the focus', async () => {
+    const pdf = Promise.resolve<DocumentReadOutcome>({
+      ok: false,
+      error: { code: 'pdf_no_text', characters: null },
+    });
+    const { textArea, user } = setup(undefined, pdf);
+    fireEvent.change(textArea, { target: { value: 'Texto que ya estaba' } });
+    await user.click(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+    expect((textArea as HTMLTextAreaElement).value).toBe('Texto que ya estaba');
+    expect(screen.getByRole('alert').textContent).toContain('imagen escaneada');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+  });
+
+  it('blocks analyzing while a pdf is being read and lets the person cancel', async () => {
+    const { textArea, analyzeButton, bridge, user } = setup();
+    fireEvent.change(textArea, { target: { value: 'Texto' } });
+    await user.click(screen.getByRole('button', { name: 'Elegir un PDF…' }));
+    expect(analyzeButton.disabled).toBe(true);
+    await user.click(screen.getByRole('button', { name: 'Cancelar lectura' }));
+    expect(bridge.cancelDocumentRead).toHaveBeenCalledOnce();
   });
 });
