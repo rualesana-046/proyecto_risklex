@@ -4,9 +4,9 @@ Estados posibles: **pendiente**, **en curso**, **bloqueada**, **en revisión** y
 
 ## B1 Cimientos
 
-Una tarea marcada como completada indica en la columna Entrega los commits que la contienen. Si no hay commit, la tarea no está completada.
+Una tarea marcada como completada indica en la columna Commits los commits que la contienen. Si no hay commit, la tarea no está completada.
 
-| ID    | Tarea                                                                                          | Requisitos | Estado     | Entrega           |
+| ID    | Tarea                                                                                          | Requisitos | Estado     | Commits           |
 | ----- | ---------------------------------------------------------------------------------------------- | ---------- | ---------- | ----------------- |
 | B1-01 | Convenciones de editor, finales de línea y archivos ignorados                                  | R26        | completada | 2f09a91           |
 | B1-02 | Workspaces de npm, TypeScript estricto y Prettier                                              | R26        | completada | 5b1dfca           |
@@ -100,11 +100,11 @@ Verificación de la responsable del producto en su Mac, con el `.dmg` generado c
 
 ## Hitos siguientes
 
-| Hito   | Contenido                                                                                                                                                             | Prioridad | Motivo                                                                                                                          |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Hito 3 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | La sustentación será en el Mac de la responsable, pero el docente puede probar la aplicación después en otro sistema operativo. |
-| Hito 4 | Análisis desde PDF y desde dirección web                                                                                                                              | media     | Requisito del producto aplazado en el Hito 1.                                                                                   |
-| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                                                       |
+| Hito   | Contenido                                                                                                                                                             | Prioridad | Motivo                                                                                            |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
+| Hito 3 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | Soporte multiplataforma: la aplicación debe poder instalarse en Windows y Linux, además de macOS. |
+| Hito 4 | Análisis desde PDF y desde dirección web                                                                                                                              | media     | Requisito del producto aplazado en el Hito 1.                                                     |
+| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                         |
 
 ## Retoques de diseño pendientes
 
@@ -117,7 +117,7 @@ Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se apl
 
 ## Retoques de texto pendientes
 
-Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de la entrega, no antes.
+Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de publicar una versión estable.
 
 | ID    | Observación                                                                                                                                                                                                         | Estado    |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
@@ -126,7 +126,7 @@ Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas
 | TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                          | pendiente |
 | TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                               | pendiente |
 | TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.            | pendiente |
-| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de la entrega.                                                                                                                 | pendiente |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                               | pendiente |
 | TR-07 | Unificar el registro de tratamiento: la interfaz usa "tú" y las explicaciones de la IA usan "usted". Decisión de producto pendiente; afecta al prompt y exigiría subir `PROMPT_VERSION` y repetir una comprobación. | pendiente |
 | TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                 | pendiente |
 
@@ -142,9 +142,9 @@ Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas
 
 ## Decisiones tomadas
 
-| Tema                                  | Decisión                    | Motivo                | Consecuencias                                                                                                                                                                                        |
-| ------------------------------------- | --------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Visibilidad del repositorio en GitHub | El repositorio será público | Exigencia del docente | Todo el historial de Git, incluidos los autores de los commits, será visible. Los ejecutores estándar de GitHub Actions son gratuitos en repositorios públicos. Ningún secreto entra al repositorio. |
+| Tema                                  | Decisión                    | Motivo                 | Consecuencias                                                                                                                                                                                        |
+| ------------------------------------- | --------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Visibilidad del repositorio en GitHub | El repositorio será público | Requisito del proyecto | Todo el historial de Git, incluidos los autores de los commits, será visible. Los ejecutores estándar de GitHub Actions son gratuitos en repositorios públicos. Ningún secreto entra al repositorio. |
 
 ## Decisiones pendientes
 

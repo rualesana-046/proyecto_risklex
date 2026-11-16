@@ -118,7 +118,7 @@ Es una versión de prueba firmada de forma local (ad hoc), sin firma de desarrol
 
 El entorno de ejecución endurecido (`hardenedRuntime`) está desactivado solo en esta versión de prueba, porque no se notariza. Si algún día se notariza, hay que activarlo y revisar los permisos (entitlements).
 
-> **Advertencia:** el instalador lleva dentro la dirección del backend, y cada análisis consume saldo de la cuenta de IA de quien despliega el proyecto. Entrégalo solo a las personas que vayan a evaluarlo.
+> **Advertencia:** el instalador lleva dentro la dirección del backend, y cada análisis consume saldo de la cuenta de IA de quien despliega el proyecto. Compártelo solo con personas autorizadas a usarlo.
 
 ## Cómo apagar el proyecto
 
