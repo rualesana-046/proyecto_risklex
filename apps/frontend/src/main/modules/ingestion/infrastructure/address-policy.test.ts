@@ -35,6 +35,15 @@ describe('isPublicAddress', () => {
     ['fe80::1', 'link local'],
     ['fec0::1', 'site local'],
     ['ff02::1', 'multicast'],
+    ['::7f00:1', 'ipv4 compatible loopback'],
+    ['::a00:1', 'ipv4 compatible private'],
+    ['64:ff9b:1::1', 'local use nat64'],
+    ['2001:2::1', 'benchmarking'],
+    ['2001:10::1', 'orchid'],
+    ['2001:20::1', 'orchid v2'],
+    ['3fff::1', 'documentation 3fff::/20'],
+    ['4000::1', 'outside global unicast'],
+    ['5f00::1', 'segment routing identifiers'],
     ['not an address', 'garbage'],
   ])('blocks %s (%s)', (address) => {
     expect(isPublicAddress(address)).toBe(false);
@@ -45,6 +54,7 @@ describe('isPublicAddress', () => {
     '8.8.8.8',
     '172.32.0.1',
     '2606:4700:4700::1111',
+    '2a00:1450:4001::1',
     '::ffff:93.184.215.14',
     '64:ff9b::808:808',
   ])('allows the public address %s', (address) => {

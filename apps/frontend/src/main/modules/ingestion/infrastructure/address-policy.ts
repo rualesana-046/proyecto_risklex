@@ -21,30 +21,29 @@ const BLOCKED_IPV4: readonly (readonly [string, number])[] = [
   ['240.0.0.0', 4],
 ];
 
-const BLOCKED_IPV6: readonly (readonly [string, number])[] = [
-  ['::', 96],
-  ['100::', 64],
-  ['2001::', 32],
+const GLOBAL_UNICAST_IPV6: readonly [string, number] = ['2000::', 3];
+
+const RESERVED_GLOBAL_IPV6: readonly (readonly [string, number])[] = [
+  ['2001::', 23],
   ['2001:db8::', 32],
   ['2002::', 16],
-  ['fc00::', 7],
-  ['fe80::', 10],
-  ['fec0::', 10],
-  ['ff00::', 8],
+  ['3fff::', 20],
 ];
 
-function buildBlockList(): BlockList {
+function subnets(
+  ranges: readonly (readonly [string, number])[],
+  family: 'ipv4' | 'ipv6',
+): BlockList {
   const list = new BlockList();
-  for (const [prefix, length] of BLOCKED_IPV4) {
-    list.addSubnet(prefix, length, 'ipv4');
-  }
-  for (const [prefix, length] of BLOCKED_IPV6) {
-    list.addSubnet(prefix, length, 'ipv6');
+  for (const [prefix, length] of ranges) {
+    list.addSubnet(prefix, length, family);
   }
   return list;
 }
 
-const blocked = buildBlockList();
+const blockedIpv4 = subnets(BLOCKED_IPV4, 'ipv4');
+const globalUnicastIpv6 = subnets([GLOBAL_UNICAST_IPV6], 'ipv6');
+const reservedGlobalIpv6 = subnets(RESERVED_GLOBAL_IPV6, 'ipv6');
 
 function expandIpv6(address: string): number[] {
   const [head = '', tail = ''] = address.split('::');
@@ -80,7 +79,7 @@ function embeddedIpv4(address: string): string | null {
 export function isPublicAddress(address: string): boolean {
   const family = isIP(address);
   if (family === 4) {
-    return address !== '255.255.255.255' && !blocked.check(address, 'ipv4');
+    return address !== '255.255.255.255' && !blockedIpv4.check(address, 'ipv4');
   }
   if (family !== 6) {
     return false;
@@ -89,7 +88,7 @@ export function isPublicAddress(address: string): boolean {
   if (inner !== null) {
     return isPublicAddress(inner);
   }
-  return !blocked.check(address, 'ipv6');
+  return globalUnicastIpv6.check(address, 'ipv6') && !reservedGlobalIpv6.check(address, 'ipv6');
 }
 
 export type LinkTarget =
