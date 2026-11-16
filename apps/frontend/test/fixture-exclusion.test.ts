@@ -12,6 +12,8 @@ const MARKERS = [
   'createFixtureAnalysisClient',
   'keyPhrase',
   'expectedSeverity',
+  'localServerTransport',
+  'fakeResolver',
 ];
 const BUILD_TIMEOUT_MS = 120_000;
 const EXAMPLE_URL = 'https://example-api.example-account.workers.dev';

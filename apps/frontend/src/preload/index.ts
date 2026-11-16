@@ -20,6 +20,7 @@ const api: RisklexApi = {
     ipcRenderer.send(IPC_CHANNELS.cancel);
   },
   pickPdf: () => ipcRenderer.invoke(IPC_CHANNELS.pickPdf) as Promise<DocumentReadOutcome>,
+  readLink: (url) => ipcRenderer.invoke(IPC_CHANNELS.readLink, url) as Promise<DocumentReadOutcome>,
   cancelDocumentRead: () => {
     ipcRenderer.send(IPC_CHANNELS.cancelDocument);
   },

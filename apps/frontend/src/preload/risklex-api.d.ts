@@ -12,6 +12,7 @@ export interface RisklexApi {
   onProgress(listener: (stage: AnalysisStage) => void): () => void;
   cancel(): void;
   pickPdf(): Promise<DocumentReadOutcome>;
+  readLink(url: string): Promise<DocumentReadOutcome>;
   cancelDocumentRead(): void;
 }
 
