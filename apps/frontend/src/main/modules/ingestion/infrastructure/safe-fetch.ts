@@ -120,6 +120,19 @@ async function follow(raw: string, resolve: Resolve, transport: Transport, signa
   }
 }
 
+function httpErrorCode(status: number): LinkFetchErrorCode {
+  if (status === 401 || status === 403) {
+    return 'link_forbidden';
+  }
+  if (status === 404 || status === 410) {
+    return 'link_not_found';
+  }
+  if (status === 429) {
+    return 'link_rate_limited';
+  }
+  return status >= 500 && status < 600 ? 'link_server_error' : 'link_http_error';
+}
+
 async function fetchDocument(
   raw: string,
   resolve: Resolve,
@@ -129,7 +142,7 @@ async function fetchDocument(
   const { url, response } = await follow(raw, resolve, transport, signal);
   if (response.statusCode < 200 || response.statusCode >= 300) {
     response.body.destroy();
-    throw new FetchFailure('link_http_error');
+    throw new FetchFailure(httpErrorCode(response.statusCode));
   }
   const { kind, charset } = contentKind(response);
   const body = await readLimited(response, kind === 'pdf' ? PDF_MAX_BYTES : LINK_MAX_HTML_BYTES);

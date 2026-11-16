@@ -172,7 +172,7 @@ describe('safeFetch (local test server, injected resolver and transport)', () =>
     ['https://127.0.0.1/terms', 'link_blocked', 'a loopback literal'],
     ['https://missing.test/terms', 'link_unreachable', 'a host that does not resolve'],
     ['https://example.test/image', 'link_unsupported_type', 'an image'],
-    ['https://example.test/missing', 'link_http_error', 'a missing page'],
+    ['https://example.test/missing', 'link_not_found', 'a missing page'],
     ['https://example.test/big', 'link_too_large', 'a body over the limit'],
     ['https://example.test/bomb', 'link_too_large', 'a compression bomb'],
     ['https://example.test/declared-big', 'link_too_large', 'a declared length over the limit'],
