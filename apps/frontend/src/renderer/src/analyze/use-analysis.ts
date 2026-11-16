@@ -17,7 +17,7 @@ export type AnalysisState =
   | { readonly status: 'failed'; readonly error: AnalysisFailure }
   | { readonly status: 'succeeded'; readonly analysis: VerifiedAnalysis };
 
-export type RisklexBridge = Window['risklex'];
+export type RisklexBridge = Pick<Window['risklex'], 'analyze' | 'onProgress' | 'cancel'>;
 
 const UNEXPECTED: AnalysisFailure = { code: 'unexpected', retryAfterSeconds: null };
 
