@@ -109,6 +109,13 @@ function withDependencies(roots: Set<string>): Set<string> {
   return roots;
 }
 
+function portablePath(file: string, root: string): string {
+  return file
+    .slice(root.length + 1)
+    .split(sep)
+    .join('/');
+}
+
 function licenseTexts(root: string): string[] {
   const files = readdirSync(root)
     .filter((file) => LICENSE_FILE.test(file))
@@ -117,7 +124,10 @@ function licenseTexts(root: string): string[] {
   const extra = existsSync(bundled) ? readdirSync(bundled).map((file) => join(bundled, file)) : [];
   return [...files, ...extra]
     .sort()
-    .map((file) => `--- ${file.slice(root.length + 1)} ---\n${readFileSync(file, 'utf8').trim()}`);
+    .map(
+      (file) =>
+        `--- ${portablePath(file, root)} ---\n${readFileSync(file, 'utf8').replace(/\r\n?/gu, '\n').trim()}`,
+    );
 }
 
 function notices(roots: Set<string>): string {
@@ -157,7 +167,11 @@ const content = generate();
 if (process.argv.includes('--check')) {
   const current = existsSync(OUTPUT) ? readFileSync(OUTPUT, 'utf8') : '';
   if (current !== content) {
-    process.stderr.write('THIRD-PARTY-NOTICES.txt is out of date\n');
+    const expected = content.split('\n');
+    const line = current.split('\n').findIndex((text, index) => text !== expected[index]);
+    process.stderr.write(
+      `THIRD-PARTY-NOTICES.txt is out of date at line ${String(line + 1)}: ${expected[line] ?? ''}\n`,
+    );
     process.exit(1);
   }
 } else {
