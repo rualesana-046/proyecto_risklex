@@ -8,12 +8,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 const HERE = fileURLToPath(new URL('.', import.meta.url));
 const HYGIENE = join(HERE, 'hygiene.sh');
 const COMMIT_GATE = join(HERE, 'commit-gate.sh');
-const GIT_IDENTITY = [
-  '-c',
-  'user.name=test',
-  '-c',
-  `user.email=${['test', 'example.invalid'].join('@')}`,
-];
+const TEST_EMAIL = ['test', 'example.invalid'].join('@');
+const GIT_IDENTITY = ['-c', 'user.name=test', '-c', `user.email=${TEST_EMAIL}`];
+
+const GIT_IDENTITY_ENV = {
+  GIT_AUTHOR_NAME: 'test',
+  GIT_AUTHOR_EMAIL: TEST_EMAIL,
+  GIT_COMMITTER_NAME: 'test',
+  GIT_COMMITTER_EMAIL: TEST_EMAIL,
+};
 
 let repository = '';
 
@@ -26,7 +29,11 @@ function write(name: string, content: string): void {
 }
 
 function run(script: string, args: readonly string[] = []) {
-  return spawnSync('sh', [script, ...args], { cwd: repository, encoding: 'utf8' });
+  return spawnSync('sh', [script, ...args], {
+    cwd: repository,
+    encoding: 'utf8',
+    env: { ...process.env, ...GIT_IDENTITY_ENV },
+  });
 }
 
 function packageWithValidate(command: string): void {
@@ -90,7 +97,8 @@ describe.skipIf(process.platform === 'win32')('commit-gate.sh', () => {
   it('commits exactly the listed files when validate and hygiene pass', () => {
     packageWithValidate('exit 0');
     write('clean.ts', 'export const value = 1;\n');
-    expect(run(COMMIT_GATE, ['feat: add value', 'clean.ts']).status).toBe(0);
+    const result = run(COMMIT_GATE, ['feat: add value', 'clean.ts']);
+    expect(result.status, result.stdout + result.stderr).toBe(0);
     expect(git('log', '--format=%s', '-1').trim()).toBe('feat: add value');
   });
 
