@@ -14,8 +14,17 @@ if [ "$mode" = "preview" ]; then
   exit 0
 fi
 
+if [ "$mode" = "ico" ]; then
+  sizes="$work/sizes"
+  npx --no-install electron "$root/scripts/render-icon.js" "$source_svg" "$sizes" > /dev/null
+  node "$root/scripts/pack-ico.ts" "$root/resources/icon.ico" "$sizes/icon-16.png" "$sizes/icon-24.png" "$sizes/icon-32.png" "$sizes/icon-48.png" "$sizes/icon-64.png" "$sizes/icon-128.png" "$sizes/icon-256.png"
+  cp "$sizes/icon-512.png" "$root/resources/icon.png"
+  printf '%s\n%s\n' "$root/resources/icon.ico" "$root/resources/icon.png"
+  exit 0
+fi
+
 if [ "$mode" != "icns" ]; then
-  printf 'Usage: %s [preview|icns]\n' "$0" >&2
+  printf 'Usage: %s [preview|icns|ico]\n' "$0" >&2
   exit 1
 fi
 
