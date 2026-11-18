@@ -106,6 +106,8 @@ Estado: **listo para la verificación con llamadas reales** (2026-11-16). Se cer
 - PDF en un proceso aislado con límites de tamaño, páginas, tiempo y memoria; enlaces con protección contra peticiones a redes privadas, DNS fijado, redirecciones revalidadas y límites en streaming (ADR 0005).
 - Verificación manual hecha: PDF normal y protegido, caja conservada ante errores, lectura de un enlace real (unos 51.000 caracteres, sin enviar nada a la IA) y mensaje "No pudimos conectar con esa página" sin red.
 - Licencias de terceros en `apps/frontend/THIRD-PARTY-NOTICES.txt`, dentro del paquete.
+- Llamada real con un PDF desde la aplicación instalada: PDF sintético de 2.221 caracteres, 10 tarjetas, sin avisos de citas descartadas y un coste de unos 0,06 USD. Pendiente: la llamada real con un enlace.
+- Cuenta de POST pagados: 1 de 3 en el Hito 3 y 3 de 5 en el proyecto.
 
 ## Mejoras pendientes
 
