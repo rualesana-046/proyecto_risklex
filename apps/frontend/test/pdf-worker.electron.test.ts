@@ -13,7 +13,7 @@ const MEMORY_HOG = join(ROOT, 'test', 'electron', 'memory-hog.worker.js');
 const ELECTRON = String(createRequire(import.meta.url)('electron'));
 const EXAMPLE_URL = 'https://example-api.example-account.workers.dev';
 const RUN_TIMEOUT_MS = 120_000;
-const canRunElectron = process.platform === 'darwin' && existsSync(ELECTRON);
+const canRunElectron = existsSync(ELECTRON);
 
 interface HarnessResult {
   readonly kind: 'message' | 'exit' | 'timeout' | 'killed';
