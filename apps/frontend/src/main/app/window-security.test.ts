@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events';
+import { pathToFileURL } from 'node:url';
 import type { Session, WebContents } from 'electron';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -53,18 +54,19 @@ describe('secureWebPreferences', () => {
 
 describe('rendererUrl', () => {
   const indexHtml = '/app/out/renderer/index.html';
+  const indexUrl = pathToFileURL(indexHtml).href;
 
   it('uses the development server only when the app is not packaged', () => {
     expect(rendererUrl(false, DEV_URL, indexHtml)).toBe(DEV_URL);
   });
 
   it('ignores the development variable in the packaged app', () => {
-    expect(rendererUrl(true, 'https://example.com', indexHtml)).toBe(`file://${indexHtml}`);
+    expect(rendererUrl(true, 'https://example.com', indexHtml)).toBe(indexUrl);
   });
 
   it('falls back to the bundled file without a development server', () => {
-    expect(rendererUrl(false, undefined, indexHtml)).toBe(`file://${indexHtml}`);
-    expect(rendererUrl(false, '', indexHtml)).toBe(`file://${indexHtml}`);
+    expect(rendererUrl(false, undefined, indexHtml)).toBe(indexUrl);
+    expect(rendererUrl(false, '', indexHtml)).toBe(indexUrl);
   });
 });
 
