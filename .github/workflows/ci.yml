@@ -42,6 +42,18 @@ jobs:
       - run: npx install-electron
         working-directory: apps/frontend
       - if: runner.os == 'Linux'
+        run: |
+          grep -E '^(NAME|VERSION)=' /etc/os-release
+          ls -l node_modules/electron/dist/chrome-sandbox
+          setting=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [ -f "$setting" ]; then
+            echo "before: $(cat "$setting")"
+            echo 0 | sudo tee "$setting" > /dev/null
+            echo "after: $(cat "$setting")"
+          else
+            echo "$setting does not exist"
+          fi
+      - if: runner.os == 'Linux'
         run: xvfb-run -a npm run validate
       - if: runner.os != 'Linux'
         run: npm run validate
