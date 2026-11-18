@@ -19,3 +19,20 @@ mac:
         - arm64
 dmg:
   artifactName: ${productName}-${version}-${arch}.${ext}
+win:
+  icon: resources/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  artifactName: ${productName}-Setup-${version}-${arch}.${ext}
+linux:
+  category: Office
+  icon: resources/icon.png
+  target:
+    - target: AppImage
+      arch:
+        - x64
+appImage:
+  artifactName: ${productName}-${version}-${arch}.${ext}
