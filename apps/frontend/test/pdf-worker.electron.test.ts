@@ -35,6 +35,11 @@ function harness(
     timeout: RUN_TIMEOUT_MS,
   });
   const line = result.stdout.trim().split('\n').at(-1) ?? '';
+  if (!line.startsWith('{')) {
+    throw new Error(
+      `Electron gave no result (status ${String(result.status)}, signal ${String(result.signal)}): ${result.stderr.trimEnd().split('\n').slice(-30).join('\n')}`,
+    );
+  }
   return JSON.parse(line) as HarnessResult;
 }
 

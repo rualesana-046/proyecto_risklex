@@ -74,6 +74,9 @@ function readWith(
   try {
     return JSON.parse(result.stdout.trim().split('\n').at(-1) ?? '') as { kind?: string };
   } catch {
+    process.stderr.write(
+      `Electron gave no result (status ${String(result.status)}, signal ${String(result.signal)}): ${result.stderr.trimEnd().split('\n').slice(-30).join('\n')}\n`,
+    );
     return {};
   }
 }
