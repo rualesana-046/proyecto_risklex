@@ -151,11 +151,16 @@ Solo para macOS con Apple Silicon. Necesita `apps/frontend/.env.local` con una d
 npm run dist:mac -w @risklex/frontend
 ```
 
-El instalador queda en `apps/frontend/release/RiskLex-0.1.0-arm64.dmg`. La carpeta `release/` está ignorada por Git y ningún artefacto entra en un commit.
+Es la forma de generar el instalador de macOS para probarlo: no hace falta GitHub Actions. El instalador queda en `apps/frontend/release/RiskLex-0.1.0-arm64.dmg`. La carpeta `release/` está ignorada por Git y ningún artefacto entra en un commit.
 
 ## Generar los instaladores con GitHub Actions
 
 El flujo `.github/workflows/ci.yml` valida el proyecto en macOS, Windows y Linux en cada `push` a `main` y en cada pull request. Después genera los tres instaladores y comprueba el lector de PDF dentro de cada paquete con PDF sintéticos. No publica nada, y en `push` y pull request no usa ningún secreto.
+
+Cuándo usar cada modo:
+
+- **Para probar un instalador de Windows o Linux** basta el modo `example`: sirve para comprobar la instalación, la lectura de PDF y enlaces, los ajustes y el historial vacío, sin gasto posible.
+- **Los instaladores con el backend real** se generan una sola vez, para entregar. Se descargan y se borra el artefacto enseguida.
 
 Para descargar los instaladores:
 
@@ -207,7 +212,7 @@ El entorno de ejecución endurecido (`hardenedRuntime`) está desactivado solo e
 
 ## Cómo apagar el proyecto
 
-Para que nadie pueda seguir gastando con el instalador o el backend:
+Solo cuando el proyecto deje de usarse. Así nadie puede seguir gastando con un instalador o con el backend:
 
 1. Borra la clave de la API en la consola de Anthropic (Settings, API keys). Desde ese momento ningún análisis funciona.
 2. Borra el Worker desde `apps/backend`; también desaparecen sus secretos:
@@ -221,6 +226,10 @@ Para que nadie pueda seguir gastando con el instalador o el backend:
    ```bash
    npx wrangler logout
    ```
+
+4. Borra el secreto `RISKLEX_API_URL` en GitHub: Settings → Secrets and variables → Actions → pestaña Secrets.
+5. Borra los artefactos que queden en las ejecuciones de GitHub Actions, con el icono de la papelera de cada uno.
+6. En cada equipo donde se instaló, desinstala RiskLex y borra su carpeta de datos: `~/Library/Application Support/RiskLex/` en macOS, `%APPDATA%\RiskLex\` en Windows y `~/.config/RiskLex/` en Linux.
 
 ## Estructura
 

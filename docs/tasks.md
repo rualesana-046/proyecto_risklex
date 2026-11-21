@@ -139,11 +139,12 @@ Estado: **completo en código y CI**; pendiente la verificación en la app empaq
 
 ## Mejoras pendientes
 
-| ID    | Mejora                                                                                                                                                                                                               | Estado    |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| MP-01 | Límite de 150.000 caracteres, opción B: en lugar de rechazar, ofrecer usar los primeros 150.000 caracteres con un aviso persistente en Resultados ("Analizamos solo los primeros 150.000 caracteres del documento"). | pendiente |
-| MP-02 | Tope de gasto diario en el backend. Hoy solo frenan los límites de ráfaga (3 por minuto por instalación y 5 por IP), y cualquiera con un instalador generado con la dirección real puede consumir saldo.             | pendiente |
-| MP-03 | Si el mismo texto ya se analizó en ese idioma, ofrecer ver el análisis guardado antes de gastar una llamada (caché por huella SHA-256).                                                                              | pendiente |
+| ID    | Mejora                                                                                                                                                                                                                                                                                                          | Estado    |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| MP-01 | Límite de 150.000 caracteres, opción B: en lugar de rechazar, ofrecer usar los primeros 150.000 caracteres con un aviso persistente en Resultados ("Analizamos solo los primeros 150.000 caracteres del documento").                                                                                            | pendiente |
+| MP-02 | Tope de gasto diario en el backend. Hoy solo frenan los límites de ráfaga (3 por minuto por instalación y 5 por IP), y cualquiera con un instalador generado con la dirección real puede consumir saldo. Mientras no exista, el tope real es el límite mensual de gasto configurado en la consola de Anthropic. | pendiente |
+| MP-03 | Si el mismo texto ya se analizó en ese idioma, ofrecer ver el análisis guardado antes de gastar una llamada (caché por huella SHA-256).                                                                                                                                                                         | pendiente |
+| MP-04 | Idea, sin implementar: que el backend exija un código de acceso que no vaya dentro del instalador, para que un instalador compartido no baste para gastar saldo.                                                                                                                                                | pendiente |
 
 ## Hitos siguientes
 
