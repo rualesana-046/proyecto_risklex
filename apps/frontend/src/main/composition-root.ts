@@ -32,7 +32,7 @@ function appVersion(): string {
   return appVersionSchema.safeParse(version).success ? version : FALLBACK_APP_VERSION;
 }
 
-function createClient(): AnalysisClient | null {
+function createClient(installId: string): AnalysisClient | null {
   if (import.meta.env.DEV && import.meta.env.MAIN_VITE_RISKLEX_FIXTURE === 'sample') {
     return createFixtureAnalysisClient();
   }
@@ -42,7 +42,7 @@ function createClient(): AnalysisClient | null {
   }
   return createAnalysisHttpClient({
     baseUrl: config.baseUrl,
-    installId: randomUUID(),
+    installId,
     appVersion: appVersion(),
   });
 }
@@ -94,7 +94,7 @@ export async function composeApplication(appUrl: string): Promise<void> {
     now: () => new Date(),
   });
   registerSettingsIpc({ ipc: ipcMain, appUrl, settings });
-  registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient() });
+  registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient(settings.installId) });
   const reader = createPdfReaderForApp();
   registerDocumentIpc({
     ipc: ipcMain,
