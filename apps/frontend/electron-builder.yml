@@ -28,6 +28,7 @@ win:
 nsis:
   artifactName: ${productName}-Setup-${version}-${arch}.${ext}
 linux:
+  executableName: risklex
   category: Office
   icon: resources/icon.png
   target:
