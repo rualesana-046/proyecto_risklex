@@ -3,6 +3,8 @@ import type { AnalysisLanguage } from '@risklex/shared';
 export const CONSENT_VERSION = 1;
 export const SETTINGS_VERSION = 1;
 
+export const INTERFACE_LANGUAGES = ['es', 'en'] as const satisfies readonly AnalysisLanguage[];
+
 export const THEMES = ['system', 'light', 'dark'] as const;
 export type Theme = (typeof THEMES)[number];
 
