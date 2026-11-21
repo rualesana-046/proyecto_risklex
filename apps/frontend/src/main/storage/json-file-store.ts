@@ -17,6 +17,7 @@ export interface JsonFileStoreOptions<T> {
   readonly defaults: () => T;
   readonly fileSystem?: StoreFileSystem;
   readonly retryDelayMs?: number;
+  readonly indent?: number;
 }
 
 export interface LoadedValue<T> {
@@ -27,11 +28,13 @@ export interface LoadedValue<T> {
 export interface JsonFileStore<T> {
   load(): Promise<LoadedValue<T>>;
   save(value: T): Promise<void>;
+  setAside(content: unknown): Promise<void>;
   removeSetAside(): Promise<void>;
 }
 
 const RENAME_ATTEMPTS = 4;
 const DEFAULT_RETRY_DELAY_MS = 50;
+const DEFAULT_INDENT = 2;
 const RETRYABLE_CODES = new Set(['EPERM', 'EBUSY', 'EACCES']);
 
 type StoredRead<T> = { kind: 'missing' } | { kind: 'invalid' } | { kind: 'valid'; value: T };
@@ -131,12 +134,24 @@ export function createJsonFileStore<T>(options: JsonFileStoreOptions<T>): JsonFi
     return { value: options.defaults(), recovered: stored.kind === 'invalid' };
   };
 
-  const save = (value: T): Promise<void> => {
-    const content = `${JSON.stringify(options.schema.parse(value), null, 2)}\n`;
-    const next = queue.then(() => atomicWrite(files, options.path, content, retryDelayMs));
+  const enqueue = (path: string, content: string): Promise<void> => {
+    const next = queue.then(() => atomicWrite(files, path, content, retryDelayMs));
     queue = next.catch(() => undefined);
     return next;
   };
 
-  return { load, save, removeSetAside: () => removeMatching(files, folder, setAsidePrefix) };
+  const save = (value: T): Promise<void> => {
+    const indent = options.indent ?? DEFAULT_INDENT;
+    return enqueue(options.path, `${JSON.stringify(options.schema.parse(value), null, indent)}\n`);
+  };
+
+  const setAside = (content: unknown): Promise<void> =>
+    enqueue(join(folder, `${setAsidePrefix}${String(Date.now())}.json`), JSON.stringify(content));
+
+  return {
+    load,
+    save,
+    setAside,
+    removeSetAside: () => removeMatching(files, folder, setAsidePrefix),
+  };
 }

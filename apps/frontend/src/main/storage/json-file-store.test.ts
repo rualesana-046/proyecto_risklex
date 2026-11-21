@@ -64,6 +64,26 @@ describe('json file store (real temporary folder)', () => {
     expect(filesIn(join(folder, 'data'))).toEqual(['history.corrupt-1.json', 'settings.json']);
   });
 
+  it('writes compact json when asked to', async () => {
+    const compact = createJsonFileStore({ path, schema, defaults, indent: 0 });
+    await compact.save({ version: 1, count: 2 });
+    expect(readFileSync(path, 'utf8')).toBe('{"version":1,"count":2}\n');
+  });
+
+  it('sets aside a given content next to the file with the same prefix', async () => {
+    const target = store();
+    await target.save(defaults());
+    await target.setAside({ entries: ['broken'] });
+    const names = filesIn(join(folder, 'data'));
+    const setAside = names.find((name) => name.startsWith('settings.corrupt-'));
+    expect(setAside).toBeDefined();
+    expect(JSON.parse(readFileSync(join(folder, 'data', setAside ?? ''), 'utf8'))).toEqual({
+      entries: ['broken'],
+    });
+    await target.removeSetAside();
+    expect(filesIn(join(folder, 'data'))).toEqual(['settings.json']);
+  });
+
   it('keeps the order of concurrent saves', async () => {
     const target = store();
     await Promise.all([1, 2, 3, 4, 5].map((count) => target.save({ version: 1, count })));
