@@ -30,6 +30,16 @@ describe('AnalysisErrorMessage', () => {
     expect(screen.getByRole('alert').textContent).toContain('150.000');
   });
 
+  it('explains a broken installation to the person using the app, not to a developer', () => {
+    render(
+      <AnalysisErrorMessage error={{ code: 'configuration_missing', retryAfterSeconds: null }} />,
+    );
+    const text = screen.getByRole('alert').textContent;
+    expect(text).toContain('Esta copia de RiskLex no está bien instalada.');
+    expect(text).toContain('Descarga el instalador de nuevo');
+    expect(text).not.toMatch(/README|desarroll/u);
+  });
+
   it('reports a cancellation calmly, as a status and not an alert', () => {
     render(<AnalysisErrorMessage error={{ code: 'cancelled', retryAfterSeconds: null }} />);
     expect(screen.queryByRole('alert')).toBeNull();

@@ -113,8 +113,8 @@
       "next": "Check that the text is complete and try again."
     },
     "configuration_missing": {
-      "message": "The RiskLex server address is not configured.",
-      "next": "If you develop the app, follow the README instructions and open RiskLex again."
+      "message": "This copy of RiskLex is not installed correctly.",
+      "next": "Download the installer again and reinstall RiskLex."
     },
     "analysis_in_progress": {
       "message": "An analysis is already running.",

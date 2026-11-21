@@ -113,8 +113,8 @@
       "next": "Revisa que el texto esté completo y vuelve a intentarlo."
     },
     "configuration_missing": {
-      "message": "Falta configurar la dirección del servidor de RiskLex.",
-      "next": "Si desarrollas la aplicación, sigue las instrucciones del README y vuelve a abrir RiskLex."
+      "message": "Esta copia de RiskLex no está bien instalada.",
+      "next": "Descarga el instalador de nuevo e instala RiskLex otra vez."
     },
     "analysis_in_progress": {
       "message": "Ya hay un análisis en curso.",
