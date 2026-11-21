@@ -5,6 +5,8 @@ import type {
   AnalysisStage,
   VerifiedAnalysis,
 } from '../../../common/analysis-vocabulary.ts';
+import type { DocumentSource } from '../../../common/document-sources.ts';
+import type { HistorySaveStatus } from '../../../common/history-vocabulary.ts';
 
 export interface AnalysisFailure {
   readonly code: AnalysisErrorCode;
@@ -15,7 +17,11 @@ export type AnalysisState =
   | { readonly status: 'idle' }
   | { readonly status: 'running'; readonly stage: AnalysisStage | null }
   | { readonly status: 'failed'; readonly error: AnalysisFailure }
-  | { readonly status: 'succeeded'; readonly analysis: VerifiedAnalysis };
+  | {
+      readonly status: 'succeeded';
+      readonly analysis: VerifiedAnalysis;
+      readonly history: HistorySaveStatus;
+    };
 
 export type RisklexBridge = Pick<Window['risklex'], 'analyze' | 'onProgress' | 'cancel'>;
 
@@ -25,16 +31,21 @@ export function useAnalysis(bridge: RisklexBridge) {
   const [state, setState] = useState<AnalysisState>({ status: 'idle' });
 
   const start = useCallback(
-    async (text: string, language: AnalysisLanguage): Promise<AnalysisState> => {
+    async (
+      text: string,
+      language: AnalysisLanguage,
+      source?: DocumentSource,
+    ): Promise<AnalysisState> => {
       setState({ status: 'running', stage: null });
       const unsubscribe = bridge.onProgress((stage) => {
         setState({ status: 'running', stage });
       });
       let next: AnalysisState;
       try {
-        const outcome = await bridge.analyze({ text, language });
+        const request = source === undefined ? { text, language } : { text, language, source };
+        const outcome = await bridge.analyze(request);
         next = outcome.ok
-          ? { status: 'succeeded', analysis: outcome.analysis }
+          ? { status: 'succeeded', analysis: outcome.analysis, history: outcome.history ?? 'off' }
           : { status: 'failed', error: outcome.error };
       } catch {
         next = { status: 'failed', error: UNEXPECTED };

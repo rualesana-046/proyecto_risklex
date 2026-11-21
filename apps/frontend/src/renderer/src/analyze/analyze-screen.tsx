@@ -1,7 +1,9 @@
 import type { AnalysisLanguage } from '@risklex/shared';
-import { useEffect, useRef, useState, type Ref } from 'react';
+import { useCallback, useEffect, useRef, useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { VerifiedAnalysis } from '../../../common/analysis-vocabulary.ts';
+import type { DocumentSource } from '../../../common/document-sources.ts';
+import type { HistorySaveStatus } from '../../../common/history-vocabulary.ts';
 import { ConsentDialog } from '../consent/consent-dialog.tsx';
 import { useConsent } from '../consent/use-consent.ts';
 import { AnalysisErrorMessage } from './analysis-error-message.tsx';
@@ -15,7 +17,7 @@ import './analyze.css';
 
 interface AnalyzeScreenProps {
   readonly bridge: RisklexBridge & DocumentSourceBridge;
-  readonly onAnalysis: (analysis: VerifiedAnalysis) => void;
+  readonly onAnalysis: (analysis: VerifiedAnalysis, history: HistorySaveStatus) => void;
 }
 
 interface AnalyzeActionsProps {
@@ -63,28 +65,33 @@ function AnalyzeActions({
   );
 }
 
+function useFocusOnFailure(failed: boolean) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (failed) {
+      buttonRef.current?.focus();
+    }
+  }, [failed]);
+  return buttonRef;
+}
+
 function useAnalyzeFlow(
   bridge: RisklexBridge,
   onAnalysis: AnalyzeScreenProps['onAnalysis'],
   text: string,
+  source: DocumentSource | undefined,
 ) {
   const { i18n } = useTranslation();
   const [consentOpen, setConsentOpen] = useState(false);
   const consent = useConsent();
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const { state, start, cancel } = useAnalysis(bridge);
+  const buttonRef = useFocusOnFailure(state.status === 'failed');
   const language: AnalysisLanguage = i18n.language === 'en' ? 'en' : 'es';
 
-  useEffect(() => {
-    if (state.status === 'failed') {
-      buttonRef.current?.focus();
-    }
-  }, [state.status]);
-
   const run = async () => {
-    const result = await start(text, language);
+    const result = await start(text, language, source);
     if (result.status === 'succeeded') {
-      onAnalysis(result.analysis);
+      onAnalysis(result.analysis, result.history);
     }
   };
   const requestAnalysis = () => {
@@ -119,7 +126,15 @@ function AnalyzeHero() {
 function useDocumentSources(bridge: DocumentSourceBridge, setText: (text: string) => void) {
   const pdfButtonRef = useRef<HTMLButtonElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
-  const source = useDocumentSource(bridge, setText);
+  const [loadedText, setLoadedText] = useState<string | null>(null);
+  const loadText = useCallback(
+    (loaded: string) => {
+      setText(loaded);
+      setLoadedText(loaded);
+    },
+    [setText],
+  );
+  const source = useDocumentSource(bridge, loadText);
   const previous = useRef(source.state);
   useEffect(() => {
     const before = previous.current;
@@ -129,14 +144,16 @@ function useDocumentSources(bridge: DocumentSourceBridge, setText: (text: string
     }
     (before.kind === 'link' ? linkInputRef.current : pdfButtonRef.current)?.focus();
   }, [source.state]);
-  return { pdfButtonRef, linkInputRef, ...source };
+  return { pdfButtonRef, linkInputRef, loadedText, ...source };
 }
 
 export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
   const [text, setText] = useState('');
-  const { buttonRef, state, cancel, consentOpen, requestAnalysis, accept, dismiss } =
-    useAnalyzeFlow(bridge, onAnalysis, text);
   const pdf = useDocumentSources(bridge, setText);
+  const source =
+    pdf.state.status === 'loaded' && text === pdf.loadedText ? pdf.state.source : undefined;
+  const { buttonRef, state, cancel, consentOpen, requestAnalysis, accept, dismiss } =
+    useAnalyzeFlow(bridge, onAnalysis, text, source);
   const running = state.status === 'running';
   const reading = pdf.state.status === 'reading';
   return (
