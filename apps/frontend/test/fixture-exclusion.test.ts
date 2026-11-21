@@ -159,6 +159,7 @@ describe('production build output (real electron-vite build)', () => {
       ).toEqual([]);
       expect(scan.hasPdfWorker).toBe(true);
       expect(scan.preload).not.toMatch(/zod|strictObject|unpdf|pdfjs/u);
+      expect(scan.preload).not.toMatch(/acceptedAt|historyEnabled|textSize|welcomeSeen/u);
       expect(moduleImports(scan.preload)).toEqual(['electron']);
       expect(scan.indexImports.filter((name) => name.includes('pdfjs'))).toEqual([]);
       expect(scan.absoluteReferences).toEqual([]);

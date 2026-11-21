@@ -1,6 +1,7 @@
 import type { AnalysisLanguage } from '@risklex/shared';
 import type { AnalysisOutcome, AnalysisStage } from '../common/analysis-vocabulary.ts';
 import type { DocumentReadOutcome } from '../common/document-sources.ts';
+import type { PublicSettings, SettingsUpdate } from '../common/settings-vocabulary.ts';
 
 export interface AnalyzeRequest {
   readonly text: string;
@@ -14,6 +15,8 @@ export interface RisklexApi {
   pickPdf(): Promise<DocumentReadOutcome>;
   readLink(url: string): Promise<DocumentReadOutcome>;
   cancelDocumentRead(): void;
+  getSettings(): Promise<PublicSettings>;
+  updateSettings(change: SettingsUpdate): Promise<PublicSettings>;
 }
 
 declare global {
