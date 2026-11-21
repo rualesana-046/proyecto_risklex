@@ -85,4 +85,21 @@ describe('App (simulated preload bridge)', () => {
       'Términos',
     );
   });
+
+  it('opens the settings from the sidebar and keeps the text being written', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    fireEvent.change(screen.getByLabelText('Texto del documento'), {
+      target: { value: 'Términos' },
+    });
+    await user.click(screen.getByRole('button', { name: 'Ajustes' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Ajustes' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Ajustes' }).getAttribute('aria-current')).toBe(
+      'page',
+    );
+    await user.click(screen.getByRole('button', { name: 'Analizar' }));
+    expect(screen.getByLabelText<HTMLTextAreaElement>('Texto del documento').value).toBe(
+      'Términos',
+    );
+  });
 });

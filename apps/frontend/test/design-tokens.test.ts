@@ -15,6 +15,7 @@ const ALL_STYLES = [
   'shell/shell.css',
   'analyze/analyze.css',
   'results/results.css',
+  'settings/settings.css',
 ].map((path) => [path, readRenderer(path)] as const);
 
 const tokens = readStyle('tokens.css');

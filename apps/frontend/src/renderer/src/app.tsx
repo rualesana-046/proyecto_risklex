@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { VerifiedAnalysis } from '../../common/analysis-vocabulary.ts';
 import { AnalyzeScreen } from './analyze/analyze-screen.tsx';
 import { ResultsScreen } from './results/results-screen.tsx';
+import { SettingsScreen } from './settings/settings-screen.tsx';
 import { AppShell } from './shell/app-shell.tsx';
 import type { AppView } from './shell/sidebar.tsx';
 
@@ -27,6 +28,11 @@ export function App() {
           <ResultsScreen key={shown.id} analysis={shown.analysis} />
         </div>
       )}
+      {view === 'settings' ? (
+        <div className="app-view">
+          <SettingsScreen />
+        </div>
+      ) : null}
     </AppShell>
   );
 }

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-export type AppView = 'analyze' | 'results';
+export type AppView = 'analyze' | 'results' | 'settings';
 
 interface SidebarProps {
   readonly view: AppView;
@@ -21,6 +21,7 @@ export function Sidebar({ view, hasResults, onNavigate }: SidebarProps) {
   const items: readonly { view: AppView; label: string; disabled: boolean }[] = [
     { view: 'analyze', label: t('nav.analyze'), disabled: false },
     { view: 'results', label: t('nav.results'), disabled: !hasResults },
+    { view: 'settings', label: t('nav.settings'), disabled: false },
   ];
   return (
     <aside className="sidebar" aria-label={t('nav.label')}>
