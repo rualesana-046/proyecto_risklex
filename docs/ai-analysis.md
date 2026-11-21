@@ -69,6 +69,17 @@ Ejecuciones exigidas:
 
 El español se usa para ajustar. El inglés y el adversarial solo verifican, y sus archivos esperados no se retocan según lo que responda el modelo.
 
+### Trato de "tú" (desde la versión del prompt 2026-11-21.1)
+
+En los documentos en español, las explicaciones (título, significado, consecuencia, motivo de ambigüedad y glosario) deben tratar de "tú":
+
+- **Criterio:** ninguna aparición de "usted" o "ustedes" fuera de comillas en las explicaciones. Las citas literales del documento no cuentan.
+- **Solo se informa, sin hacer fallar:** lo que aparezca entre « », " " o “ ”, porque una explicación puede citar el documento, que usa "usted".
+- La comprobación real imprime cada aparición con unas pocas palabras de contexto.
+- Otras marcas de trato formal ("su" o "sus" referidos a quien lee, "le" o "les" y verbos en tercera persona) se revisan a mano en la respuesta guardada.
+
+Verificación de este cambio: una ejecución del español y una del adversarial contra el backend local, antes de desplegarlo. Si una ejecución falla solo por los falsos positivos de ambigüedad, se repite una vez sin tocar el prompt antes de concluir.
+
 ## Presupuesto
 
 La calibración completa tiene un tope de 1,00 USD. Se detiene al llegar a 0,80 USD de gasto real acumulado. Solo se lanza una llamada si el gasto real acumulado más el tope del peor caso de esa llamada (0,212 USD con los documentos actuales) no supera 1,00 USD. Cada llamada exige el permiso explícito de la responsable del producto.

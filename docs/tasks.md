@@ -135,7 +135,19 @@ Estado: **completo en código y CI**; pendiente la verificación en la app empaq
 - Verificación manual hecha por la responsable del producto en modo de resultado de prueba: rebanadas D y E.
 - Ningún POST pagado en este hito. Acumulado del proyecto: 3 de 5.
 - Commits: 4b1d18e, ec4cd7b, a5df029, 9a22e47, 874d896, da90dfc, 783a9c7, 97bd6bb, ad82d6b, de2e5bc, 92a7463, 5636ac0, 324a34e, c169582, 3c9be33, 4e1dd00, 1a1442a, f790cc8, b93a9ba, 9008adc, 5fbb128, 3e3fe9f, 83ec6a1, 318ca9c, 2323899, b3d386f, 7b26730, b1863d9, c565b69, 2c07871, 8e4440f, cb14a87, 12e1798, f1f28f6, 5e70444, 389d5d9, c24ce19, 6df1f26, 90f36ff, e4e49a5, d77c8d2 y 5239fc6, más el de esta documentación.
-- Pendiente: la verificación en la app empaquetada y una llamada real con un documento en inglés, el historial activado y el glosario a la vista (4 de 5).
+- Pendiente: la verificación en la app empaquetada y una llamada real con un documento en inglés, el historial activado y el glosario a la vista (6 de 8).
+
+## Presupuesto de POST pagados del proyecto
+
+El tope pasa de 5 a 8. El límite mensual de gasto de la consola de Anthropic sigue siendo el tope real.
+
+| Nº  | Uso                                                                                                         | Estado    |
+| --- | ----------------------------------------------------------------------------------------------------------- | --------- |
+| 1–3 | Hitos 1 a 3                                                                                                 | usados    |
+| 4   | TR-07, comprobación en español                                                                              | pendiente |
+| 5   | TR-07, comprobación adversarial                                                                             | pendiente |
+| 6   | Cierre: instalador de macOS con un documento en inglés, el historial activado y el glosario a la vista      | pendiente |
+| 7–8 | Reserva: como máximo una repetición por fallo externo o un ajuste del prompt, siempre con permiso explícito | reserva   |
 
 ## Mejoras pendientes
 
@@ -150,7 +162,7 @@ Estado: **completo en código y CI**; pendiente la verificación en la app empaq
 
 | Hito   | Contenido                                                                                                                                                      | Prioridad | Motivo                                                |
 | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------------------------------- |
-| Cierre | Instaladores definitivos con la dirección real, pruebas en Windows y macOS y una llamada real con un documento en inglés y el historial activado (4 de 5 POST) | alta      | Verificar de punta a punta la versión que se entrega. |
+| Cierre | Instaladores definitivos con la dirección real, pruebas en Windows y macOS y una llamada real con un documento en inglés y el historial activado (6 de 8 POST) | alta      | Verificar de punta a punta la versión que se entrega. |
 
 ## Verificaciones pendientes en otros sistemas
 
@@ -173,16 +185,16 @@ Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se apl
 
 Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de publicar una versión estable.
 
-| ID    | Observación                                                                                                                                                                                                         | Estado     |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                 | completada |
-| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                              | completada |
-| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                          | completada |
-| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                               | completada |
-| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.            | completada |
-| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                               | pendiente  |
-| TR-07 | Unificar el registro de tratamiento: la interfaz usa "tú" y las explicaciones de la IA usan "usted". Decisión de producto pendiente; afecta al prompt y exigiría subir `PROMPT_VERSION` y repetir una comprobación. | pendiente  |
-| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                 | pendiente  |
+| ID    | Observación                                                                                                                                                                                                                          | Estado     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                                  | completada |
+| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                                               | completada |
+| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                                           | completada |
+| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                                                | completada |
+| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.                             | completada |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                                                | pendiente  |
+| TR-07 | Las explicaciones de la IA deben tratar de "tú", como la interfaz. Hecho en el prompt (versión 2026-11-21.1) y medido en la comprobación real; falta verificarlo con una llamada en español y otra adversarial antes de desplegarlo. | en curso   |
+| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                                  | pendiente  |
 
 ## B5 Cierre
 
