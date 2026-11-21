@@ -21,7 +21,7 @@
     "session": "Recordaremos tu respuesta en este equipo. Si este aviso cambia, te lo volveremos a preguntar.",
     "accept": "Aceptar y analizar",
     "dismiss": "Cancelar",
-    "history": "Si el historial está activado, el resultado, con sus citas del documento, se guarda en este equipo. Puedes borrarlo en Historial o desactivar el historial en Ajustes."
+    "history": "Si el historial está activado, el resultado, con sus citas del documento y el nombre del archivo o del sitio de origen, se guarda en este equipo. Puedes borrarlo en Historial o desactivar el historial en Ajustes."
   },
   "analyze": {
     "input": {

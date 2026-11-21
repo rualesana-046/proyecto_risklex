@@ -21,7 +21,7 @@
     "session": "We will remember your answer on this computer. If this notice changes, we will ask you again.",
     "accept": "Accept and analyze",
     "dismiss": "Cancel",
-    "history": "If the history is on, the result, with its quotes from the document, is saved on this computer. You can delete it in History or turn the history off in Settings."
+    "history": "If the history is on, the result, with its quotes from the document and the name of the source file or site, is saved on this computer. You can delete it in History or turn the history off in Settings."
   },
   "analyze": {
     "input": {

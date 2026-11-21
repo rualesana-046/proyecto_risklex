@@ -82,6 +82,7 @@ export function ConsentDialog(props: ConsentDialogProps) {
       <p id="consent-what">{t('consent.what')}</p>
       <p>{t('consent.retention')}</p>
       <p>{t('consent.link')}</p>
+      <p>{t('consent.history')}</p>
       <p>{t('consent.advice')}</p>
       <p className="consent-session">{t('consent.session')}</p>
       <ConsentActions initialFocusRef={initialFocusRef} close={close} />

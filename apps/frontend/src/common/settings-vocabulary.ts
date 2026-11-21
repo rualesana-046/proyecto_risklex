@@ -1,6 +1,6 @@
 import type { AnalysisLanguage } from '@risklex/shared';
 
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 export const SETTINGS_VERSION = 1;
 
 export const INTERFACE_LANGUAGES = ['es', 'en'] as const satisfies readonly AnalysisLanguage[];

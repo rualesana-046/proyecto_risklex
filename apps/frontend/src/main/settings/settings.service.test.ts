@@ -30,8 +30,8 @@ function stored(): unknown {
 }
 
 describe('settings service (real temporary folder)', () => {
-  it('asks for consent with the first version of the privacy text', () => {
-    expect(CONSENT_VERSION).toBe(1);
+  it('asks for consent with the privacy text that mentions the local history', () => {
+    expect(CONSENT_VERSION).toBe(2);
   });
 
   it('starts with Spanish, the system theme, history on and no consent', async () => {
@@ -74,6 +74,15 @@ describe('settings service (real temporary folder)', () => {
     const consent = { version: CONSENT_VERSION + 1, acceptedAt: NOW.toISOString() };
     writeFileSync(path, JSON.stringify({ ...defaultSettings(FIRST_ID), consent }));
     expect((await load()).current().consentGranted).toBe(false);
+  });
+
+  it('asks once more after the privacy text changes and then remembers the new answer', async () => {
+    const consent = { version: 1, acceptedAt: NOW.toISOString() };
+    writeFileSync(path, JSON.stringify({ ...defaultSettings(FIRST_ID), consent }));
+    const service = await load();
+    expect(service.current().consentGranted).toBe(false);
+    await service.update({ consent: 'granted' });
+    expect((await load()).current().consentGranted).toBe(true);
   });
 
   it('recovers from a damaged file with a new id and keeps the damaged copy', async () => {

@@ -49,6 +49,10 @@ describe('ConsentDialog (simulated native dialog)', () => {
     expect(dialog.textContent).toContain('hasta 30 días');
     expect(dialog.textContent).toContain('RiskLex no guarda copias en sus servidores');
     expect(dialog.textContent).toContain('Recordaremos tu respuesta en este equipo');
+    expect(dialog.textContent).toContain(
+      'con sus citas del documento y el nombre del archivo o del sitio de origen, se guarda en este equipo',
+    );
+    expect(dialog.textContent).toContain('Puedes borrarlo en Historial');
     expect(dialog.textContent).toContain('la página se descargó desde tu equipo');
     expect(dialog.textContent).toContain('dirección IP');
     expect(dialog.textContent).toContain('A la IA solo se envía el texto');
