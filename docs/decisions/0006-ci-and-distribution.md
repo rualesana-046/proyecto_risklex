@@ -12,7 +12,7 @@ El instalador de macOS se generaba a mano en un Mac con Apple Silicon. RiskLex d
 ### Flujo
 
 - Un solo flujo, `.github/workflows/ci.yml`, que se ejecuta en `push` a `main`, en `pull_request` y a mano con `workflow_dispatch`.
-- `permissions: contents: read`, sin secretos, `checkout` con `persist-credentials: false`, `concurrency` con cancelación de ejecuciones anteriores y tiempo límite en cada trabajo.
+- `permissions: contents: read`, ningún secreto salvo el de la dirección real (ver más abajo), `checkout` con `persist-credentials: false`, `concurrency` con cancelación de ejecuciones anteriores y tiempo límite en cada trabajo.
 - Acciones fijadas por hash de commit: `actions/checkout` v7.0.1, `actions/setup-node` v7.1.0 y `actions/upload-artifact` v7.0.2.
 - Node desde `.nvmrc` y `shell: bash` en todos los pasos, también en Windows (el bash de Git del ejecutor).
 - Sistemas: `macos-15` (arm64), `windows-latest` y `ubuntu-latest`. `macos-14` ya no está disponible en GitHub Actions y la primera ejecución falló con `The configuration 'macos-14-arm64-us-default' is not supported`.
@@ -32,8 +32,11 @@ El instalador de macOS se generaba a mano en un Mac con Apple Silicon. RiskLex d
 ### Dirección del backend
 
 - Por defecto, la dirección de ejemplo: los instaladores sirven para probar la instalación, el PDF y los enlaces, pero no pueden gastar.
-- La entrada `backend: real` de `workflow_dispatch` usa la variable del repositorio `RISKLEX_API_URL`. Solo la puede lanzar quien tenga permiso de escritura.
-- La dirección se elige en un paso de bash, no con una expresión `&&`/`||`, porque esa expresión cambiaría en silencio una variable vacía por la de ejemplo. Una variable vacía llega vacía al modo `release`, que falla con su mensaje fijo. Una dirección con saltos de línea se rechaza antes de escribirla en `GITHUB_ENV`.
+- La entrada `backend: real` de `workflow_dispatch` usa el secreto del repositorio `RISKLEX_API_URL`. Solo la puede lanzar quien tenga permiso de escritura.
+- **Secreto y no variable:** la cabecera de cada paso del registro muestra su bloque `env:` con los valores, y GitHub solo oculta los secretos. Una variable habría mostrado la dirección en todas las ejecuciones. El secreto no es una credencial: solo se usa para que GitHub oculte el valor, también después de escribirlo en `GITHUB_ENV`. Protege los registros, no el instalador, que sigue llevando la dirección dentro. Una vez guardado, GitHub no permite leerlo.
+- El secreto solo entra en el paso cuando `backend` es `real` (`inputs.backend == 'real' && secrets.RISKLEX_API_URL || ''`); en `push` y `pull_request` vale una cadena vacía.
+- La elección entre la dirección real y la de ejemplo se hace en bash, para que un secreto vacío nunca se sustituya en silencio por la de ejemplo. Un secreto vacío llega vacío al modo `release`, que falla con su mensaje fijo. Una dirección con saltos de línea se rechaza antes de escribirla en `GITHUB_ENV`.
+- Revisado que nada más imprime la dirección: el mensaje del modo `release` es fijo, la configuración de electron-vite no registra nada, los archivos de diagnóstico de electron-builder quedan en `release/` sin subirse y el nombre del artefacto solo lleva el modo.
 - El flujo nunca imprime la dirección; solo `Backend: example` o `Backend: real`. El nombre del artefacto lleva el modo.
 
 ### Linux

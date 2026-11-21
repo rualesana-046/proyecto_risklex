@@ -124,13 +124,15 @@ El instalador queda en `apps/frontend/release/RiskLex-0.1.0-arm64.dmg`. La carpe
 
 ## Generar los instaladores con GitHub Actions
 
-El flujo `.github/workflows/ci.yml` valida el proyecto en macOS, Windows y Linux en cada `push` a `main` y en cada pull request. Después genera los tres instaladores y comprueba el lector de PDF dentro de cada paquete con PDF sintéticos. No usa secretos y no publica nada.
+El flujo `.github/workflows/ci.yml` valida el proyecto en macOS, Windows y Linux en cada `push` a `main` y en cada pull request. Después genera los tres instaladores y comprueba el lector de PDF dentro de cada paquete con PDF sintéticos. No publica nada, y en `push` y pull request no usa ningún secreto.
 
 Para descargar los instaladores:
 
 1. En GitHub, abre la pestaña Actions, elige el flujo CI y pulsa "Run workflow" en la rama `main`.
-2. En `backend`, deja `example` para probar la instalación sin gasto: el análisis responderá "No pudimos conectar". `real` usa la variable del repositorio `RISKLEX_API_URL` (Settings → Secrets and variables → Actions → Variables); si falta o no es válida, la compilación falla sin mostrar el valor.
+2. En `backend`, deja `example` para probar la instalación sin gasto: el análisis responderá "No pudimos conectar". `real` usa el secreto del repositorio `RISKLEX_API_URL` (ver más abajo); si falta o no es válido, la compilación falla sin mostrar el valor.
 3. Al terminar, descarga `RiskLex-windows-…`, `RiskLex-linux-…` o `RiskLex-macos-…` desde la página de la ejecución.
+
+Para crear el secreto, una sola vez y solo cuando vayas a generar instaladores reales: en el repositorio, Settings → Secrets and variables → Actions → pestaña Secrets → New repository secret, con el nombre `RISKLEX_API_URL` y la dirección `https://<tu-worker>.workers.dev` como valor. No crees una variable con ese nombre: GitHub muestra los valores de las variables en los registros y solo oculta los secretos. Después de guardarlo, GitHub no permite volver a leer el secreto; para cambiarlo hay que escribirlo de nuevo. El secreto protege los registros, pero no el instalador: la dirección sigue dentro de la app.
 
 Los artefactos solo se suben en ejecuciones manuales y duran un día. En un repositorio público cualquiera puede descargarlos mientras existan, y un instalador generado con `real` lleva dentro la dirección del backend. Después de descargarlo, bórralo desde la página de la ejecución con el icono de la papelera.
 

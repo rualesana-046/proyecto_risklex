@@ -117,7 +117,7 @@ Estado: **completo** (2026-11-21), salvo la verificación manual del instalador 
 - Cada paquete supera una prueba de humo: el lector de PDF dentro del `app.asar` lee cuatro PDF sintéticos con el resultado esperado.
 - Primera ejecución en verde de los seis trabajos (`validate` y `package` en los tres sistemas): ejecución 44930410296, tras el commit c3550ef.
 - Fallos de CI corregidos, cada uno con un solo intento fallido: imagen `macos-14` retirada, rutas de Windows en una prueba y en los avisos de licencias, identidad de Git en la prueba del script de commits, AppArmor en Ubuntu (causa inferida por contraste) y nombre del ejecutable de Linux.
-- Artefactos solo en ejecuciones manuales, con un día de retención. La entrada `backend: real` usa la variable `RISKLEX_API_URL`; no se ha ejecutado.
+- Artefactos solo en ejecuciones manuales, con un día de retención. La entrada `backend: real` usa el secreto `RISKLEX_API_URL`, que se creará al generar los instaladores definitivos; no se ha ejecutado.
 - Ningún POST pagado en este hito. Acumulado del proyecto: 3 de 5.
 - Commits: 1e2e140, 2cd3530, 111501e, b8e9d0d, 91500d4, 8a38a2c, 93d24cc, 1c92a84, f5bb3b3, 2d61746, 0ef4c63, 9dfb226, 99e3ca3, bc60674, bbcf792, c3550ef y e74993b.
 - Pendiente: instalar y probar a mano el instalador de Windows con la versión definitiva; abrir el AppImage en un escritorio Linux.
