@@ -11,6 +11,26 @@ describe('PROMPT_VERSION', () => {
   it('follows the date and revision format', () => {
     expect(PROMPT_VERSION).toMatch(/^\d{4}-\d{2}-\d{2}\.\d+$/u);
   });
+
+  it('names the revision that asks for informal Spanish', () => {
+    expect(PROMPT_VERSION).toBe('2026-11-21.1');
+  });
+});
+
+describe('informal address', () => {
+  it('asks Spanish explanations to address the reader as tú and keeps quotes untouched', () => {
+    const prompt = buildSystemPrompt('es');
+    expect(prompt).toContain('second person singular (tú), never with usted');
+    expect(prompt).toContain('Quotes stay exactly as in the document.');
+  });
+
+  it('leaves the English prompt without the Spanish instruction', () => {
+    expect(buildSystemPrompt('en')).not.toContain('second person singular (tú)');
+  });
+
+  it('adds no quoted example that could leak into the evaluation documents', () => {
+    expect(PROMPT_EXAMPLES.some((example) => /usted|tú/u.test(example))).toBe(false);
+  });
 });
 
 describe('buildSystemPrompt', () => {

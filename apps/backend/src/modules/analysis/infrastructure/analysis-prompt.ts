@@ -5,7 +5,7 @@ import {
   type AnalysisLanguage,
 } from '@risklex/shared';
 
-export const PROMPT_VERSION = '2026-11-14.1';
+export const PROMPT_VERSION = '2026-11-21.1';
 
 const SIMPLE_ACTION_EXAMPLES = [
   'turning off a setting in the app',
@@ -101,11 +101,15 @@ function ambiguitySection(): string[] {
   ];
 }
 
+const INFORMAL_SPANISH =
+  'When writing in Spanish, address the reader informally in the second person singular (tú), never with usted. Quotes stay exactly as in the document.';
+
 function styleSection(language: AnalysisLanguage): string[] {
   const name = LANGUAGE_NAMES[language];
   return [
     `Write title, meaning, consequence, ambiguityReason and the glossary in ${name}, even if the document uses another language. Keep quotes in the original language of the document.`,
     'Use everyday words, short sentences and a calm tone. Avoid legal jargon; when a legal term is unavoidable, add it to the glossary with a plain explanation.',
+    ...(language === 'es' ? [INFORMAL_SPANISH] : []),
   ];
 }
 
