@@ -234,7 +234,7 @@
       "next": "Check that it is a full web address, for example https://example.com/terms."
     },
     "link_blocked": {
-      "message": "For safety, RiskLex does not read addresses on private or local networks.",
+      "message": "For safety, RiskLex does not read internal addresses of a home or a company.",
       "next": "Use the public address of the page or paste the text."
     },
     "link_unreachable": {

@@ -234,7 +234,7 @@
       "next": "Revisa que sea una dirección web completa, por ejemplo https://ejemplo.com/terminos."
     },
     "link_blocked": {
-      "message": "Por seguridad, RiskLex no lee direcciones de redes privadas o locales.",
+      "message": "Por seguridad, RiskLex no lee direcciones internas de una casa o de una empresa.",
       "next": "Usa la dirección pública de la página o pega el texto."
     },
     "link_unreachable": {
