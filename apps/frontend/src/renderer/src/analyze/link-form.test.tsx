@@ -21,7 +21,11 @@ function renderForm(busy = false) {
 describe('LinkForm', () => {
   it('always tells that the site will see the IP address before anything is downloaded', () => {
     const { input } = renderForm();
-    expect(screen.getByText(/el sitio verá tu dirección IP/u)).toBeTruthy();
+    expect(
+      screen.getByText(
+        /el sitio verá la dirección de internet de tu conexión \(tu dirección IP\)/u,
+      ),
+    ).toBeTruthy();
     expect(input.getAttribute('aria-describedby')).toBe('link-notice');
   });
 

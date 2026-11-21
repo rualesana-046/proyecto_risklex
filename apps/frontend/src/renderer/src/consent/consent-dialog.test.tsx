@@ -42,19 +42,24 @@ describe('ConsentDialog (simulated native dialog)', () => {
     renderDialog();
     const dialog = screen.getByRole('dialog', { name: 'Antes de analizar' });
     expect(dialog.textContent).toContain('el texto del documento');
-    expect(dialog.textContent).toContain('backend de RiskLex');
-    expect(dialog.textContent).toContain('Anthropic, su proveedor de inteligencia artificial');
-    expect(dialog.textContent).toContain('identificador aleatorio de esta instalación');
+    expect(dialog.textContent).toContain('un servicio de RiskLex en internet');
+    expect(dialog.textContent).toContain(
+      'Anthropic, la empresa de inteligencia artificial que lo analiza',
+    );
+    expect(dialog.textContent).toContain('un código aleatorio que identifica esta instalación');
+    expect(dialog.textContent).not.toMatch(/backend|servidor/u);
     expect(dialog.textContent).toContain('la versión de la app');
     expect(dialog.textContent).toContain('hasta 30 días');
-    expect(dialog.textContent).toContain('RiskLex no guarda copias en sus servidores');
+    expect(dialog.textContent).toContain('El servicio de RiskLex en internet no guarda copias');
     expect(dialog.textContent).toContain('Recordaremos tu respuesta en este equipo');
     expect(dialog.textContent).toContain(
       'con sus citas del documento y el nombre del archivo o del sitio de origen, se guarda en este equipo',
     );
     expect(dialog.textContent).toContain('Puedes borrarlo en Historial');
     expect(dialog.textContent).toContain('la página se descargó desde tu equipo');
-    expect(dialog.textContent).toContain('dirección IP');
+    expect(dialog.textContent).toContain(
+      'la dirección de internet de tu conexión (tu dirección IP)',
+    );
     expect(dialog.textContent).toContain('A la IA solo se envía el texto');
   });
 

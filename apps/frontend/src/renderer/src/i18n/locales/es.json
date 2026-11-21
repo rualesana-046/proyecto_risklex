@@ -14,9 +14,9 @@
   },
   "consent": {
     "title": "Antes de analizar",
-    "what": "Para analizarlo, RiskLex enviará el texto del documento al backend de RiskLex, que lo pasa a Anthropic, su proveedor de inteligencia artificial. Junto al texto se envían un identificador aleatorio de esta instalación y la versión de la app, sin datos personales.",
-    "retention": "Anthropic puede conservar los datos temporalmente: hasta 30 días, o más tiempo si algún contenido se marca para revisión. RiskLex no guarda copias en sus servidores.",
-    "link": "Si leíste un enlace, la página se descargó desde tu equipo y el sitio pudo ver tu dirección IP. A la IA solo se envía el texto, no la dirección del enlace ni el nombre del archivo.",
+    "what": "Para analizarlo, RiskLex enviará el texto del documento a un servicio de RiskLex en internet, que lo pasa a Anthropic, la empresa de inteligencia artificial que lo analiza. Junto al texto se envían un código aleatorio que identifica esta instalación y la versión de la app, sin datos personales.",
+    "retention": "Anthropic puede conservar los datos temporalmente: hasta 30 días, o más tiempo si algún contenido se marca para revisión. El servicio de RiskLex en internet no guarda copias.",
+    "link": "Si leíste un enlace, la página se descargó desde tu equipo y el sitio pudo ver la dirección de internet de tu conexión (tu dirección IP). A la IA solo se envía el texto, no la dirección del enlace ni el nombre del archivo.",
     "advice": "No pegues información que no quieras compartir, como contraseñas o datos de salud.",
     "session": "Recordaremos tu respuesta en este equipo. Si este aviso cambia, te lo volveremos a preguntar.",
     "accept": "Aceptar y analizar",
@@ -62,7 +62,7 @@
       "link": "Leer un enlace",
       "linkLabel": "Dirección del enlace",
       "linkSubmit": "Leer enlace",
-      "linkNotice": "RiskLex descargará esta página desde tu equipo, así que el sitio verá tu dirección IP. No se envía nada a la IA hasta que pulses Analizar.",
+      "linkNotice": "RiskLex descargará esta página desde tu equipo, así que el sitio verá la dirección de internet de tu conexión (tu dirección IP). No se envía nada a la IA hasta que pulses Analizar.",
       "readingLink": "Descargando la página…"
     }
   },
@@ -214,7 +214,7 @@
       "next": "Busca una versión del documento con texto o copia y pega el texto."
     },
     "pdf_timeout": {
-      "message": "Leer este PDF exige demasiado tiempo o memoria.",
+      "message": "Este PDF es demasiado pesado para leerlo.",
       "next": "Prueba con otro archivo o pega el texto."
     },
     "document_too_long": {
@@ -246,7 +246,7 @@
       "next": "Vuelve a intentarlo más tarde o pega el texto."
     },
     "link_too_many_redirects": {
-      "message": "La página redirige demasiadas veces.",
+      "message": "La página nos lleva de una dirección a otra demasiadas veces.",
       "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
     },
     "link_http_error": {
@@ -266,7 +266,7 @@
       "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
     },
     "link_needs_javascript": {
-      "message": "Esta página necesita JavaScript para mostrar el texto.",
+      "message": "Esta página solo muestra su texto cuando se abre en un navegador.",
       "next": "Ábrela en tu navegador, copia el texto y pégalo aquí."
     },
     "link_forbidden": {
@@ -290,7 +290,7 @@
     "title": "Ajustes",
     "language": {
       "legend": "Idioma",
-      "hint": "Cambia la interfaz y el idioma de los próximos análisis. Los análisis que ya hiciste se quedan en su idioma."
+      "hint": "Cambia el idioma de las pantallas y de los próximos análisis. Los análisis que ya hiciste se quedan en su idioma."
     },
     "theme": {
       "legend": "Tema",

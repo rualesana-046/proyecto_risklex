@@ -14,9 +14,9 @@
   },
   "consent": {
     "title": "Before analyzing",
-    "what": "To analyze it, RiskLex will send the text of the document to the RiskLex backend, which passes it to Anthropic, its artificial intelligence provider. A random identifier for this installation and the app version are sent with the text, with no personal data.",
-    "retention": "Anthropic may keep the data temporarily: up to 30 days, or longer if some content is flagged for review. RiskLex does not keep copies on its servers.",
-    "link": "If you read a link, the page was downloaded from your computer and the site could see your IP address. Only the text is sent to the AI, not the link address or the file name.",
+    "what": "To analyze it, RiskLex will send the text of the document to a RiskLex service on the internet, which passes it to Anthropic, the artificial intelligence company that analyzes it. A random code that identifies this installation and the app version are sent with the text, with no personal data.",
+    "retention": "Anthropic may keep the data temporarily: up to 30 days, or longer if some content is flagged for review. The RiskLex service on the internet does not keep copies.",
+    "link": "If you read a link, the page was downloaded from your computer and the site could see the internet address of your connection (your IP address). Only the text is sent to the AI, not the link address or the file name.",
     "advice": "Do not paste information you do not want to share, such as passwords or health data.",
     "session": "We will remember your answer on this computer. If this notice changes, we will ask you again.",
     "accept": "Accept and analyze",
@@ -62,7 +62,7 @@
       "link": "Read a link",
       "linkLabel": "Link address",
       "linkSubmit": "Read link",
-      "linkNotice": "RiskLex will download this page from your computer, so the site will see your IP address. Nothing is sent to the AI until you press Analyze.",
+      "linkNotice": "RiskLex will download this page from your computer, so the site will see the internet address of your connection (your IP address). Nothing is sent to the AI until you press Analyze.",
       "readingLink": "Downloading the page…"
     }
   },
@@ -214,7 +214,7 @@
       "next": "Look for a version of the document with text or copy and paste the text."
     },
     "pdf_timeout": {
-      "message": "Reading this PDF takes too much time or memory.",
+      "message": "This PDF is too heavy to read.",
       "next": "Try another file or paste the text."
     },
     "document_too_long": {
@@ -246,7 +246,7 @@
       "next": "Try again later or paste the text."
     },
     "link_too_many_redirects": {
-      "message": "The page redirects too many times.",
+      "message": "The page sends us from one address to another too many times.",
       "next": "Open it in your browser, copy the text and paste it here."
     },
     "link_http_error": {
@@ -266,7 +266,7 @@
       "next": "Open it in your browser, copy the text and paste it here."
     },
     "link_needs_javascript": {
-      "message": "This page needs JavaScript to show its text.",
+      "message": "This page only shows its text when it is opened in a web browser.",
       "next": "Open it in your browser, copy the text and paste it here."
     },
     "link_forbidden": {
@@ -290,7 +290,7 @@
     "title": "Settings",
     "language": {
       "legend": "Language",
-      "hint": "Changes the interface and the language of your next analyses. Analyses you already made stay in their language."
+      "hint": "Changes the language of the screens and of your next analyses. Analyses you already made stay in their language."
     },
     "theme": {
       "legend": "Theme",
