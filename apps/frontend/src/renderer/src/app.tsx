@@ -9,6 +9,8 @@ import { SettingsScreen } from './settings/settings-screen.tsx';
 import { useSettings } from './settings/settings-store.ts';
 import { AppShell } from './shell/app-shell.tsx';
 import type { AppView } from './shell/sidebar.tsx';
+import { useWelcome } from './welcome/use-welcome.ts';
+import { WelcomeScreen } from './welcome/welcome-screen.tsx';
 
 interface ShownAnalysis {
   readonly id: number;
@@ -35,30 +37,34 @@ export function App() {
   const [view, setView] = useState<AppView>('analyze');
   const { shown, showNew, showSaved } = useShownAnalysis(setView);
   const settings = useSettings();
+  const welcome = useWelcome();
   return (
-    <AppShell view={view} hasResults={shown !== null} onNavigate={setView}>
-      <div hidden={view !== 'analyze'} className="app-view">
-        <AnalyzeScreen bridge={window.risklex} onAnalysis={showNew} />
-      </div>
-      {shown === null ? null : (
-        <div hidden={view !== 'results'} className="app-view">
-          <ResultsScreen key={shown.id} analysis={shown.analysis} origin={shown.origin} />
+    <>
+      <AppShell view={view} hasResults={shown !== null} onNavigate={setView} inert={welcome.open}>
+        <div hidden={view !== 'analyze'} className="app-view">
+          <AnalyzeScreen bridge={window.risklex} onAnalysis={showNew} />
         </div>
-      )}
-      {view === 'history' ? (
-        <div className="app-view">
-          <HistoryScreen
-            bridge={window.risklex}
-            historyEnabled={settings.historyEnabled}
-            onOpen={showSaved}
-          />
-        </div>
-      ) : null}
-      {view === 'settings' ? (
-        <div className="app-view">
-          <SettingsScreen bridge={window.risklex} />
-        </div>
-      ) : null}
-    </AppShell>
+        {shown === null ? null : (
+          <div hidden={view !== 'results'} className="app-view">
+            <ResultsScreen key={shown.id} analysis={shown.analysis} origin={shown.origin} />
+          </div>
+        )}
+        {view === 'history' ? (
+          <div className="app-view">
+            <HistoryScreen
+              bridge={window.risklex}
+              historyEnabled={settings.historyEnabled}
+              onOpen={showSaved}
+            />
+          </div>
+        ) : null}
+        {view === 'settings' ? (
+          <div className="app-view">
+            <SettingsScreen bridge={window.risklex} />
+          </div>
+        ) : null}
+      </AppShell>
+      {welcome.open ? <WelcomeScreen onClose={welcome.close} /> : null}
+    </>
   );
 }

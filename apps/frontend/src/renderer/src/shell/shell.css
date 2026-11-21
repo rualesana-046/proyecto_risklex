@@ -88,6 +88,10 @@
   min-width: 0;
 }
 
+.app-main:focus {
+  outline: none;
+}
+
 .app-main {
   display: flex;
   flex: 1;

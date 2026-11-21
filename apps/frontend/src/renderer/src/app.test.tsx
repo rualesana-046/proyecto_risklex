@@ -5,6 +5,8 @@ import type { AnalysisOutcome, VerifiedAnalysis } from '../../common/analysis-vo
 import { App } from './app.tsx';
 import { resetConsentForTests } from './consent/use-consent.ts';
 import './i18n/i18n.ts';
+import { DEFAULT_SETTINGS } from './settings/appearance.ts';
+import { initializeSettings, resetSettingsForTests } from './settings/settings-store.ts';
 
 const ANALYSIS: VerifiedAnalysis = {
   clauses: [],
@@ -48,6 +50,12 @@ beforeAll(() => {
 
 beforeEach(() => {
   resetConsentForTests();
+  initializeSettings(
+    { ...DEFAULT_SETTINGS, welcomeSeen: true },
+    {
+      updateSettings: () => Promise.resolve({ ...DEFAULT_SETTINGS, welcomeSeen: true }),
+    },
+  );
   analyze.mockReset();
   analyze.mockResolvedValue(SUCCESS);
   Object.defineProperty(window, 'risklex', {
@@ -64,7 +72,10 @@ beforeEach(() => {
   });
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  resetSettingsForTests();
+});
 
 describe('App (simulated preload bridge)', () => {
   it('opens on the analyze screen with the sidebar and the persistent legal notice', () => {

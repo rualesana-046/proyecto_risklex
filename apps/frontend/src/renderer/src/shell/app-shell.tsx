@@ -7,15 +7,18 @@ interface AppShellProps {
   readonly view: AppView;
   readonly hasResults: boolean;
   readonly onNavigate: (view: AppView) => void;
+  readonly inert?: boolean;
   readonly children: ReactNode;
 }
 
-export function AppShell({ view, hasResults, onNavigate, children }: AppShellProps) {
+export function AppShell({ view, hasResults, onNavigate, inert, children }: AppShellProps) {
   return (
-    <div className="app-shell">
+    <div className="app-shell" inert={inert}>
       <Sidebar view={view} hasResults={hasResults} onNavigate={onNavigate} />
       <div className="app-content">
-        <main className="app-main">{children}</main>
+        <main className="app-main" tabIndex={-1}>
+          {children}
+        </main>
         <LegalNotice />
       </div>
     </div>
