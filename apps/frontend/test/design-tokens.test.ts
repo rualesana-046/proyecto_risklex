@@ -33,7 +33,7 @@ function readTokens(block: string): Theme {
   return theme;
 }
 
-const darkStart = tokens.indexOf('@media (prefers-color-scheme: dark)');
+const darkStart = tokens.indexOf(":root[data-theme='dark']");
 const LIGHT = readTokens(tokens.slice(0, darkStart));
 const DARK = { ...LIGHT, ...readTokens(tokens.slice(darkStart)) };
 
@@ -91,6 +91,22 @@ describe.each([
 });
 
 describe('design rules', () => {
+  it('applies the dark tokens only through the theme attribute', () => {
+    expect(darkStart).toBeGreaterThan(0);
+    expect(Object.keys(DARK).length).toBeGreaterThan(Object.keys(LIGHT).length / 2);
+    for (const [path, css] of ALL_STYLES) {
+      expect(css, path).not.toContain('prefers-color-scheme');
+    }
+  });
+
+  it('scales every rem-based size with the text size attribute', () => {
+    expect(base).toMatch(/:root\[data-text-size='large'\]\s*\{\s*font-size:\s*115%/u);
+    expect(base).toMatch(/:root\[data-text-size='larger'\]\s*\{\s*font-size:\s*130%/u);
+    for (const [path, css] of ALL_STYLES) {
+      expect(css, path).not.toMatch(/font-size:\s*[0-9.]+px/u);
+    }
+  });
+
   it('defines a visible focus style for every control', () => {
     expect(base).toMatch(/:focus-visible\s*\{\s*outline:\s*3px solid var\(--focus\)/u);
   });

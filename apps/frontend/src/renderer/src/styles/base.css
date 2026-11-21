@@ -4,6 +4,18 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 100%;
+}
+
+:root[data-text-size='large'] {
+  font-size: 115%;
+}
+
+:root[data-text-size='larger'] {
+  font-size: 130%;
+}
+
 html,
 body,
 #root {
