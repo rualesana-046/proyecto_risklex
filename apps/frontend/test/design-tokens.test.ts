@@ -17,6 +17,7 @@ const ALL_STYLES = [
   'results/results.css',
   'settings/settings.css',
   'history/history.css',
+  'welcome/welcome.css',
 ].map((path) => [path, readRenderer(path)] as const);
 
 const tokens = readStyle('tokens.css');
