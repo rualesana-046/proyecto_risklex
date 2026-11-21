@@ -7,6 +7,7 @@ import { CategoryFilter } from './category-filter.tsx';
 import { ClauseCard } from './clause-card.tsx';
 import { Essentials } from './essentials.tsx';
 import { ProfileSelector } from './profile-selector.tsx';
+import { ResultsOriginNotice, type ResultsOrigin } from './results-origin.tsx';
 import {
   presentCategories,
   visibleClauses,
@@ -43,7 +44,12 @@ function ClauseList({ analysis, profile }: ClauseListProps) {
   );
 }
 
-export function ResultsScreen({ analysis }: { readonly analysis: VerifiedAnalysis }) {
+interface ResultsScreenProps {
+  readonly analysis: VerifiedAnalysis;
+  readonly origin?: ResultsOrigin;
+}
+
+export function ResultsScreen({ analysis, origin }: ResultsScreenProps) {
   const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfile>('free_user');
   return (
@@ -51,6 +57,7 @@ export function ResultsScreen({ analysis }: { readonly analysis: VerifiedAnalysi
       <section className="results-head">
         <h1>{t('results.title')}</h1>
         <p>{t('results.summary', { total: analysis.clauses.length })}</p>
+        {origin === undefined ? null : <ResultsOriginNotice origin={origin} />}
         <ProfileSelector value={profile} onChange={setProfile} />
       </section>
       <AnalysisNotices analysis={analysis} />

@@ -333,3 +333,15 @@
   color: var(--text);
   font-weight: 500;
 }
+
+.results-origin {
+  margin: 0;
+  color: var(--muted);
+}
+
+.results-origin-warning {
+  padding: 10px 14px;
+  border-radius: var(--radius-s);
+  background: var(--wa-bg);
+  color: var(--wa);
+}
