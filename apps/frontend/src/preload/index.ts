@@ -1,11 +1,13 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
 import type { AnalysisOutcome, AnalysisStage } from '../common/analysis-vocabulary.ts';
 import type { DocumentReadOutcome } from '../common/document-sources.ts';
+import { decodeInitialSettings } from '../common/initial-settings.ts';
 import type { PublicSettings } from '../common/settings-vocabulary.ts';
 import { IPC_CHANNELS } from '../common/ipc-channels.ts';
 import type { RisklexApi } from './risklex-api.d.ts';
 
 const api: RisklexApi = {
+  initialSettings: decodeInitialSettings(process.argv),
   analyze: (request) =>
     ipcRenderer.invoke(IPC_CHANNELS.analyze, request) as Promise<AnalysisOutcome>,
   onProgress: (listener) => {

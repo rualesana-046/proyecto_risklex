@@ -3,6 +3,9 @@ import { createMainWindow, resolveRendererUrl } from './app/create-window.ts';
 import { userDataPath } from './app/user-data.ts';
 import { denyAllPermissions, denyNewWindowsAndWebviews } from './app/window-security.ts';
 import { composeApplication } from './composition-root.ts';
+import type { SettingsService } from './settings/settings.service.ts';
+
+let settings: SettingsService | null = null;
 
 app.enableSandbox();
 app.setPath('userData', userDataPath(app.getPath('appData'), app.isPackaged));
@@ -18,14 +21,14 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    void createMainWindow(resolveRendererUrl());
+  if (BrowserWindow.getAllWindows().length === 0 && settings !== null) {
+    void createMainWindow(resolveRendererUrl(), settings.current());
   }
 });
 
 void app.whenReady().then(async () => {
   denyAllPermissions(session.defaultSession);
   const url = resolveRendererUrl();
-  await composeApplication(url);
-  await createMainWindow(url);
+  settings = await composeApplication(url);
+  await createMainWindow(url, settings.current());
 });

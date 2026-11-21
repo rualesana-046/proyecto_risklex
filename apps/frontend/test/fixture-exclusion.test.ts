@@ -27,6 +27,7 @@ interface Scan {
   readonly indexImports: string[];
   readonly hasPdfWorker: boolean;
   readonly preload: string;
+  readonly rendererScripts: string;
   readonly absoluteReferences: string[];
   readonly fonts: number;
   readonly policy: string;
@@ -68,6 +69,9 @@ function inspect(outDir: string) {
     indexImports: moduleImports(readFileSync(join(outDir, 'main', 'index.js'), 'utf8')),
     hasPdfWorker: filesUnder(join(outDir, 'main'), 'pdf-text.worker.js').length === 1,
     preload: readFileSync(join(outDir, 'preload', 'index.cjs'), 'utf8'),
+    rendererScripts: filesUnder(renderer, '.js')
+      .map((file) => readFileSync(file, 'utf8'))
+      .join('\n'),
     absoluteReferences: absoluteReferences(renderer),
     fonts: filesUnder(renderer, '.woff2').length,
     policy: (
@@ -159,7 +163,10 @@ describe('production build output (real electron-vite build)', () => {
       ).toEqual([]);
       expect(scan.hasPdfWorker).toBe(true);
       expect(scan.preload).not.toMatch(/zod|strictObject|unpdf|pdfjs/u);
-      expect(scan.preload).not.toMatch(/acceptedAt|historyEnabled|textSize|welcomeSeen/u);
+      expect(scan.preload).not.toMatch(/Invalid input|Unrecognized key|strict\(\)/u);
+      expect(scan.preload).not.toMatch(/installId|acceptedAt/u);
+      expect(scan.rendererScripts.length).toBeGreaterThan(0);
+      expect(scan.rendererScripts).not.toMatch(/installId|acceptedAt/u);
       expect(moduleImports(scan.preload)).toEqual(['electron']);
       expect(scan.indexImports.filter((name) => name.includes('pdfjs'))).toEqual([]);
       expect(scan.absoluteReferences).toEqual([]);

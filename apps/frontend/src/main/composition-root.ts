@@ -19,7 +19,11 @@ import {
 } from './modules/ingestion/infrastructure/pdf-reader.client.ts';
 import { PDF_WORKER_FILE } from './modules/ingestion/infrastructure/pdf-worker-protocol.ts';
 import { safeFetch, type Resolve } from './modules/ingestion/infrastructure/safe-fetch.ts';
-import { loadSettingsService, SETTINGS_FILE } from './settings/settings.service.ts';
+import {
+  loadSettingsService,
+  SETTINGS_FILE,
+  type SettingsService,
+} from './settings/settings.service.ts';
 import {
   createAnalysisHttpClient,
   type AnalysisClient,
@@ -87,7 +91,7 @@ const resolveAll: Resolve = async (hostname) => {
   return addresses.map((entry) => ({ address: entry.address, family: entry.family === 6 ? 6 : 4 }));
 };
 
-export async function composeApplication(appUrl: string): Promise<void> {
+export async function composeApplication(appUrl: string): Promise<SettingsService> {
   const settings = await loadSettingsService({
     path: join(app.getPath('userData'), SETTINGS_FILE),
     newInstallId: randomUUID,
@@ -110,4 +114,5 @@ export async function composeApplication(appUrl: string): Promise<void> {
         signal,
       ),
   });
+  return settings;
 }

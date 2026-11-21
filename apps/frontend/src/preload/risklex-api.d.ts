@@ -9,6 +9,7 @@ export interface AnalyzeRequest {
 }
 
 export interface RisklexApi {
+  readonly initialSettings: PublicSettings | null;
   analyze(request: AnalyzeRequest): Promise<AnalysisOutcome>;
   onProgress(listener: (stage: AnalysisStage) => void): () => void;
   cancel(): void;
