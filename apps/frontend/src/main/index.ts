@@ -1,9 +1,11 @@
 import { app, BrowserWindow, session } from 'electron';
 import { createMainWindow, resolveRendererUrl } from './app/create-window.ts';
+import { userDataPath } from './app/user-data.ts';
 import { denyAllPermissions, denyNewWindowsAndWebviews } from './app/window-security.ts';
 import { composeApplication } from './composition-root.ts';
 
 app.enableSandbox();
+app.setPath('userData', userDataPath(app.getPath('appData'), app.isPackaged));
 
 app.on('web-contents-created', (_event, contents) => {
   denyNewWindowsAndWebviews(contents);
