@@ -1,31 +1,38 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AnalysisOutcome } from '../../common/analysis-vocabulary.ts';
+import type { AnalysisOutcome, VerifiedAnalysis } from '../../common/analysis-vocabulary.ts';
 import { App } from './app.tsx';
 import { resetConsentForTests } from './consent/use-consent.ts';
 import './i18n/i18n.ts';
 
-const SUCCESS: AnalysisOutcome = {
-  ok: true,
-  analysis: {
-    clauses: [],
-    glossary: [],
-    meta: {
-      promptVersion: '2026-11-14.1',
-      model: 'claude-sonnet-5-5',
-      language: 'es',
-      moreClausesLikely: false,
-      usage: { inputTokens: 1, outputTokens: 1 },
-    },
-    reliability: 'normal',
-    totalClauses: 0,
-    discardedClauses: 0,
-    attempts: 1,
+const ANALYSIS: VerifiedAnalysis = {
+  clauses: [],
+  glossary: [],
+  meta: {
+    promptVersion: '2026-11-14.1',
+    model: 'claude-sonnet-5-5',
+    language: 'es',
+    moreClausesLikely: false,
+    usage: { inputTokens: 1, outputTokens: 1 },
   },
+  reliability: 'normal',
+  totalClauses: 0,
+  discardedClauses: 0,
+  attempts: 1,
 };
 
+const SUCCESS: AnalysisOutcome = { ok: true, analysis: ANALYSIS };
+
 const analyze = vi.fn<Window['risklex']['analyze']>();
+const SAVED = {
+  id: '6f1c1e9e-3b0a-4c47-9d61-000000000001',
+  savedAt: '2026-11-21T10:00:00.000Z',
+  source: { kind: 'link' as const, name: 'ejemplo.com' },
+  characters: 2221,
+  language: 'es' as const,
+  counts: { high_risk: 0, warning: 0, neutral: 0 },
+};
 
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
@@ -45,7 +52,15 @@ beforeEach(() => {
   analyze.mockResolvedValue(SUCCESS);
   Object.defineProperty(window, 'risklex', {
     configurable: true,
-    value: { analyze, onProgress: vi.fn(() => () => undefined), cancel: vi.fn() },
+    value: {
+      analyze,
+      onProgress: vi.fn(() => () => undefined),
+      cancel: vi.fn(),
+      listHistory: () => Promise.resolve([SAVED]),
+      getHistory: () => Promise.resolve({ summary: SAVED, analysis: ANALYSIS }),
+      deleteHistory: () => Promise.resolve(),
+      clearHistory: () => Promise.resolve(),
+    },
   });
 });
 
@@ -100,6 +115,20 @@ describe('App (simulated preload bridge)', () => {
     await user.click(screen.getByRole('button', { name: 'Analizar' }));
     expect(screen.getByLabelText<HTMLTextAreaElement>('Texto del documento').value).toBe(
       'Términos',
+    );
+  });
+
+  it('opens a saved analysis from the history in the results', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: 'Historial' }));
+    await user.click(
+      await screen.findByRole('button', { name: 'Abrir el análisis de Enlace: ejemplo.com' }),
+    );
+    expect(screen.getByRole('heading', { level: 1, name: 'Resultados del análisis' })).toBeTruthy();
+    expect(screen.getByText(/^Análisis guardado el /u)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Resultados' }).getAttribute('aria-current')).toBe(
+      'page',
     );
   });
 });
