@@ -113,7 +113,7 @@ jobs:
       - name: Choose the backend address
         env:
           EXAMPLE_URL: https://example-api.example-account.workers.dev
-          REAL_URL: ${{ vars.RISKLEX_API_URL }}
+          REAL_URL: ${{ inputs.backend == 'real' && secrets.RISKLEX_API_URL || '' }}
         run: |
           if [ "$BACKEND" = real ]; then
             address="$REAL_URL"
