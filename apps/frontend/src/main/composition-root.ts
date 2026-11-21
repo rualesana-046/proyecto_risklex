@@ -8,6 +8,7 @@ import { readApiConfig } from './app/api-config.ts';
 import { createFixtureAnalysisClient } from './dev/fixture-analysis.client.ts';
 import { registerAnalysisIpc } from './ipc/analysis.ipc.ts';
 import { registerDocumentIpc } from './ipc/document.ipc.ts';
+import { registerSettingsIpc } from './ipc/settings.ipc.ts';
 import { readLinkDocument } from './modules/ingestion/application/read-link.use-case.ts';
 import { readPdfDocument } from './modules/ingestion/application/read-pdf.use-case.ts';
 import { httpsTransport } from './modules/ingestion/infrastructure/https-transport.ts';
@@ -18,6 +19,7 @@ import {
 } from './modules/ingestion/infrastructure/pdf-reader.client.ts';
 import { PDF_WORKER_FILE } from './modules/ingestion/infrastructure/pdf-worker-protocol.ts';
 import { safeFetch, type Resolve } from './modules/ingestion/infrastructure/safe-fetch.ts';
+import { loadSettingsService, SETTINGS_FILE } from './settings/settings.service.ts';
 import {
   createAnalysisHttpClient,
   type AnalysisClient,
@@ -85,7 +87,13 @@ const resolveAll: Resolve = async (hostname) => {
   return addresses.map((entry) => ({ address: entry.address, family: entry.family === 6 ? 6 : 4 }));
 };
 
-export function composeApplication(appUrl: string): void {
+export async function composeApplication(appUrl: string): Promise<void> {
+  const settings = await loadSettingsService({
+    path: join(app.getPath('userData'), SETTINGS_FILE),
+    newInstallId: randomUUID,
+    now: () => new Date(),
+  });
+  registerSettingsIpc({ ipc: ipcMain, appUrl, settings });
   registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient() });
   const reader = createPdfReaderForApp();
   registerDocumentIpc({

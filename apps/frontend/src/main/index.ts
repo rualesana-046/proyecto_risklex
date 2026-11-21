@@ -26,6 +26,6 @@ app.on('activate', () => {
 void app.whenReady().then(async () => {
   denyAllPermissions(session.defaultSession);
   const url = resolveRendererUrl();
-  composeApplication(url);
+  await composeApplication(url);
   await createMainWindow(url);
 });

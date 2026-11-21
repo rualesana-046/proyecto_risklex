@@ -5,4 +5,6 @@ export const IPC_CHANNELS = {
   pickPdf: 'document:pick-pdf',
   readLink: 'document:read-link',
   cancelDocument: 'document:cancel',
+  settingsGet: 'settings:get',
+  settingsUpdate: 'settings:update',
 } as const;
