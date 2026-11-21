@@ -7,4 +7,8 @@ export const IPC_CHANNELS = {
   cancelDocument: 'document:cancel',
   settingsGet: 'settings:get',
   settingsUpdate: 'settings:update',
+  historyList: 'history:list',
+  historyGet: 'history:get',
+  historyDelete: 'history:delete',
+  historyClear: 'history:clear',
 } as const;

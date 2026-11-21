@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { appVersionSchema } from '@risklex/shared';
 import { lookup } from 'node:dns/promises';
 import { join } from 'node:path';
@@ -8,9 +8,15 @@ import { readApiConfig } from './app/api-config.ts';
 import { createFixtureAnalysisClient } from './dev/fixture-analysis.client.ts';
 import { registerAnalysisIpc } from './ipc/analysis.ipc.ts';
 import { registerDocumentIpc } from './ipc/document.ipc.ts';
+import { registerHistoryIpc } from './ipc/history.ipc.ts';
 import { registerSettingsIpc } from './ipc/settings.ipc.ts';
 import { readLinkDocument } from './modules/ingestion/application/read-link.use-case.ts';
 import { readPdfDocument } from './modules/ingestion/application/read-pdf.use-case.ts';
+import { createHistoryService } from './modules/history/application/history.service.ts';
+import {
+  createHistoryFileRepository,
+  HISTORY_FILE,
+} from './modules/history/infrastructure/history-file.repository.ts';
 import { httpsTransport } from './modules/ingestion/infrastructure/https-transport.ts';
 import { pickPdfFile } from './modules/ingestion/infrastructure/native-pdf-picker.ts';
 import {
@@ -98,7 +104,20 @@ export async function composeApplication(appUrl: string): Promise<SettingsServic
     now: () => new Date(),
   });
   registerSettingsIpc({ ipc: ipcMain, appUrl, settings });
-  registerAnalysisIpc({ ipc: ipcMain, appUrl, client: createClient(settings.installId) });
+  const history = createHistoryService({
+    repository: createHistoryFileRepository({ path: join(app.getPath('userData'), HISTORY_FILE) }),
+    isEnabled: () => settings.current().historyEnabled,
+    now: () => new Date(),
+    newId: randomUUID,
+    fingerprint: (text) => createHash('sha256').update(text, 'utf8').digest('hex'),
+  });
+  registerHistoryIpc({ ipc: ipcMain, appUrl, history });
+  registerAnalysisIpc({
+    ipc: ipcMain,
+    appUrl,
+    client: createClient(settings.installId),
+    recordAnalysis: (record) => history.record(record),
+  });
   const reader = createPdfReaderForApp();
   registerDocumentIpc({
     ipc: ipcMain,

@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
 import type { AnalysisOutcome, AnalysisStage } from '../common/analysis-vocabulary.ts';
 import type { DocumentReadOutcome } from '../common/document-sources.ts';
+import type { HistoryEntryView, HistorySummary } from '../common/history-vocabulary.ts';
 import { decodeInitialSettings } from '../common/initial-settings.ts';
 import type { PublicSettings } from '../common/settings-vocabulary.ts';
 import { IPC_CHANNELS } from '../common/ipc-channels.ts';
@@ -30,6 +31,11 @@ const api: RisklexApi = {
   getSettings: () => ipcRenderer.invoke(IPC_CHANNELS.settingsGet) as Promise<PublicSettings>,
   updateSettings: (change) =>
     ipcRenderer.invoke(IPC_CHANNELS.settingsUpdate, change) as Promise<PublicSettings>,
+  listHistory: () => ipcRenderer.invoke(IPC_CHANNELS.historyList) as Promise<HistorySummary[]>,
+  getHistory: (id) =>
+    ipcRenderer.invoke(IPC_CHANNELS.historyGet, id) as Promise<HistoryEntryView | null>,
+  deleteHistory: (id) => ipcRenderer.invoke(IPC_CHANNELS.historyDelete, id) as Promise<void>,
+  clearHistory: () => ipcRenderer.invoke(IPC_CHANNELS.historyClear) as Promise<void>,
 };
 
 contextBridge.exposeInMainWorld('risklex', api);
