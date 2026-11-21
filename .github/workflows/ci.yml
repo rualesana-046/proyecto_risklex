@@ -57,3 +57,60 @@ jobs:
         run: xvfb-run -a npm run validate
       - if: runner.os != 'Linux'
         run: npm run validate
+
+  package:
+    name: package (${{ matrix.os }})
+    needs: validate
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            target: mac
+            artifact: RiskLex-macos
+            files: apps/frontend/release/RiskLex-*.dmg
+          - os: windows-latest
+            target: win
+            artifact: RiskLex-windows
+            files: apps/frontend/release/RiskLex-Setup-*.exe
+          - os: ubuntu-latest
+            target: linux
+            artifact: RiskLex-linux
+            files: apps/frontend/release/RiskLex-*.AppImage
+    env:
+      MAIN_VITE_RISKLEX_API_URL: https://example-api.example-account.workers.dev
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx install-electron
+        working-directory: apps/frontend
+      - if: runner.os == 'Linux'
+        run: |
+          setting=/proc/sys/kernel/apparmor_restrict_unprivileged_userns
+          if [ -f "$setting" ]; then
+            echo "before: $(cat "$setting")"
+            echo 0 | sudo tee "$setting" > /dev/null
+            echo "after: $(cat "$setting")"
+          else
+            echo "$setting does not exist"
+          fi
+      - run: npm run dist:${{ matrix.target }} -w @risklex/frontend
+      - if: runner.os == 'Linux'
+        run: xvfb-run -a node apps/frontend/scripts/smoke-packaged-reader.ts
+      - if: runner.os != 'Linux'
+        run: node apps/frontend/scripts/smoke-packaged-reader.ts
+      - if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+          retention-days: 1
