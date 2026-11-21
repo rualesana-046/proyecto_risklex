@@ -6,6 +6,14 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+    inputs:
+      backend:
+        description: Backend address built into the installers
+        type: choice
+        options:
+          - example
+          - real
+        default: example
 
 permissions:
   contents: read
@@ -80,7 +88,7 @@ jobs:
             artifact: RiskLex-linux
             files: apps/frontend/release/RiskLex-*.AppImage
     env:
-      MAIN_VITE_RISKLEX_API_URL: https://example-api.example-account.workers.dev
+      BACKEND: ${{ inputs.backend || 'example' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -102,6 +110,24 @@ jobs:
           else
             echo "$setting does not exist"
           fi
+      - name: Choose the backend address
+        env:
+          EXAMPLE_URL: https://example-api.example-account.workers.dev
+          REAL_URL: ${{ vars.RISKLEX_API_URL }}
+        run: |
+          if [ "$BACKEND" = real ]; then
+            address="$REAL_URL"
+          else
+            address="$EXAMPLE_URL"
+          fi
+          case "$address" in
+            *$'\n'* | *$'\r'*)
+              echo "The backend address must be a single line"
+              exit 1
+              ;;
+          esac
+          echo "MAIN_VITE_RISKLEX_API_URL=$address" >> "$GITHUB_ENV"
+          echo "Backend: $BACKEND"
       - run: npm run dist:${{ matrix.target }} -w @risklex/frontend
       - if: runner.os == 'Linux'
         run: xvfb-run -a node apps/frontend/scripts/smoke-packaged-reader.ts
@@ -110,7 +136,7 @@ jobs:
       - if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: ${{ matrix.artifact }}
+          name: ${{ matrix.artifact }}-${{ env.BACKEND }}
           path: ${{ matrix.files }}
           if-no-files-found: error
           retention-days: 1
