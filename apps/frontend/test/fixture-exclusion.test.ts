@@ -4,17 +4,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { BUILD_MARKERS as MARKERS } from './support/build-markers.ts';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const FIXTURE_VARIABLE = 'MAIN_VITE_RISKLEX_FIXTURE';
-const MARKERS = [
-  'risklex-development-fixture',
-  'createFixtureAnalysisClient',
-  'keyPhrase',
-  'expectedSeverity',
-  'localServerTransport',
-  'fakeResolver',
-];
 const BUILD_TIMEOUT_MS = 120_000;
 const EXAMPLE_URL = 'https://example-api.example-account.workers.dev';
 const RELEASE_URL_ERROR = 'MAIN_VITE_RISKLEX_API_URL is missing or invalid for a release build';
