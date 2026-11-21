@@ -69,14 +69,15 @@ npm run dev -w @risklex/frontend
 
 ## Comandos
 
-| Comando                | Qué hace                                                         |
-| ---------------------- | ---------------------------------------------------------------- |
-| `npm run format`       | Aplica el formato de Prettier a todo el repositorio.             |
-| `npm run format:check` | Comprueba el formato sin cambiar archivos.                       |
-| `npm run lint`         | Ejecuta ESLint con reglas estrictas, incluida la de no comentar. |
-| `npm run typecheck`    | Verifica los tipos de TypeScript.                                |
-| `npm run test`         | Ejecuta las pruebas con Vitest.                                  |
-| `npm run validate`     | Ejecuta las cuatro comprobaciones anteriores en orden.           |
+| Comando                | Qué hace                                                          |
+| ---------------------- | ----------------------------------------------------------------- |
+| `npm run format`       | Aplica el formato de Prettier a todo el repositorio.              |
+| `npm run format:check` | Comprueba el formato sin cambiar archivos.                        |
+| `npm run lint`         | Ejecuta ESLint con reglas estrictas, incluida la de no comentar.  |
+| `npm run typecheck`    | Verifica los tipos de TypeScript.                                 |
+| `npm run test`         | Ejecuta las pruebas con Vitest.                                   |
+| `npm run validate`     | Ejecuta las cuatro comprobaciones anteriores en orden.            |
+| `npm run check:push`   | Comprueba el repositorio antes de subir y solo muestra recuentos. |
 
 Comandos de la app de escritorio, con `-w @risklex/frontend`: `dev` (desarrollo), `build` y `preview` (compilación de producción) y `dist:mac`, `dist:win` y `dist:linux` (instaladores de cada sistema, cada uno en su propio sistema).
 
@@ -97,6 +98,35 @@ node apps/frontend/scripts/write-sample-pdfs.ts
 
 Las decisiones de seguridad están en `docs/decisions/0005-isolated-document-reading.md`. Las licencias del software de terceros incluido en la app están en `apps/frontend/THIRD-PARTY-NOTICES.txt`, que también viaja dentro del paquete.
 
+## Ajustes
+
+En Ajustes se eligen el idioma (español o inglés), el tema (como el sistema, claro u oscuro), el tamaño del texto, si se guarda el historial y se puede volver a ver la bienvenida. El idioma cambia la interfaz y el de los próximos análisis; los análisis ya hechos se quedan en su idioma. Todo se guarda en el equipo y se aplica desde el primer momento al abrir la app.
+
+La primera vez que se abre RiskLex muestra una bienvenida que se cierra con Comenzar, Saltar o Escape.
+
+## Historial
+
+Cada análisis correcto se guarda en el equipo si el historial está activado (lo está por defecto). Se guardan el resultado con sus citas del documento, la fecha, el nombre del archivo o el dominio del enlace, el número de caracteres, el idioma y una huella SHA-256 del texto. Nunca el documento completo, la ruta del archivo ni la dirección completa del enlace.
+
+- En Historial se puede abrir un análisis, borrarlo o borrar todo. Desactivar el historial en Ajustes no borra nada, pero ofrece borrar lo guardado.
+- **Los archivos no los cifra la aplicación.** Su protección depende del cifrado de disco del sistema (FileVault, BitLocker o el equivalente en Linux).
+- **La huella SHA-256 permite comprobar si un texto concreto fue analizado** en este equipo, aunque no permite reconstruir el texto.
+
+### Dónde se guardan los datos
+
+| Sistema | Carpeta                                  |
+| ------- | ---------------------------------------- |
+| macOS   | `~/Library/Application Support/RiskLex/` |
+| Windows | `%APPDATA%\RiskLex\`                     |
+| Linux   | `~/.config/RiskLex/`                     |
+
+Contiene `settings.json` (ajustes, consentimiento e identificador aleatorio de la instalación), `history.json` (historial) y, si algún archivo se dañó, copias apartadas con el nombre `*.corrupt-*.json`. En desarrollo la carpeta se llama `RiskLex Dev`.
+
+### Cómo borrarlo todo
+
+1. En la app: Historial → "Borrar todo el historial". Borra también las copias apartadas.
+2. Para borrar además los ajustes, el consentimiento y el identificador, cierra RiskLex y borra la carpeta de datos de tu sistema (tabla anterior). Al abrir de nuevo, la app empieza desde cero y vuelve a pedir el consentimiento.
+
 ## Resultado de prueba (solo desarrollo)
 
 Para revisar la pantalla de resultados sin llamar al backend ni gastar:
@@ -109,6 +139,7 @@ MAIN_VITE_RISKLEX_FIXTURE=sample npm run dev -w @risklex/frontend
 - No hace ninguna petición de red. Construye el resultado con las frases del documento sintético de `docs/ai-evaluation/`.
 - Usa la verificación de citas real: con el texto de ejemplo todo se verifica; con otro texto, las citas se descartan como en un análisis real.
 - La pantalla muestra siempre el aviso "Resultado de prueba, no es un análisis real".
+- El resultado se guarda en el historial de la carpeta `RiskLex Dev`, con el mismo aviso al abrirlo, para poder revisar el historial sin gastar.
 
 Los detalles están en `docs/decisions/0004-desktop-app-security-and-ipc.md`.
 

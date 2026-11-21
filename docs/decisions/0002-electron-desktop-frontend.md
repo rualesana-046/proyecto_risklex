@@ -1,6 +1,6 @@
 # 0002. Aplicación de escritorio con Electron, electron-vite y React
 
-- Estado: aceptada
+- Estado: aceptada; la parte del historial en SQLite la sustituye ADR 0007
 - Fecha: 2026-11-07
 
 ## Contexto

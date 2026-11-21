@@ -39,13 +39,13 @@ R01 solo está cubierto en parte: falta el contrato del análisis, que correspon
 
 ## B3 Servicios locales
 
-| ID    | Tarea                                                                          | Requisitos    | Estado    |
-| ----- | ------------------------------------------------------------------------------ | ------------- | --------- |
-| B3-01 | Ingesta de URL con protecciones de red                                         | R03, R04      | pendiente |
-| B3-02 | Ingesta de PDF con límites, fuera del hilo principal                           | R02, R04      | pendiente |
-| B3-03 | Historial en SQLite con caché por huella                                       | R11           | pendiente |
-| B3-04 | Persistencia de ajustes: idioma, tema, tamaño de texto e identificador anónimo | R13           | pendiente |
-| B3-05 | Cliente de análisis, IPC validado y consentimiento                             | R06, R19, R21 | pendiente |
+| ID    | Tarea                                                                             | Requisitos    | Estado     |
+| ----- | --------------------------------------------------------------------------------- | ------------- | ---------- |
+| B3-01 | Ingesta de URL con protecciones de red                                            | R03, R04      | pendiente  |
+| B3-02 | Ingesta de PDF con límites, fuera del hilo principal                              | R02, R04      | pendiente  |
+| B3-03 | Historial local en JSON validado (ADR 0007); la caché por huella queda como MP-03 | R11           | completada |
+| B3-04 | Persistencia de ajustes: idioma, tema, tamaño de texto e identificador anónimo    | R13           | completada |
+| B3-05 | Cliente de análisis, IPC validado y consentimiento                                | R06, R19, R21 | pendiente  |
 
 ### Tiempos límite del análisis
 
@@ -54,13 +54,13 @@ R01 solo está cubierto en parte: falta el contrato del análisis, que correspon
 
 ## B4 Interfaz
 
-| ID    | Tarea                                                                                   | Requisitos    | Estado    |
-| ----- | --------------------------------------------------------------------------------------- | ------------- | --------- |
-| B4-01 | Pantalla Analizar completa, con progreso por etapas y ejemplo grabado                   | R02, R03, R20 | pendiente |
-| B4-02 | Pantalla Resultados: perfiles, "Lo esencial", filtros, tarjetas, glosario y aviso legal | R07–R10, R15  | pendiente |
-| B4-03 | Pantallas Historial y Ajustes completas                                                 | R11, R13, R19 | pendiente |
-| B4-04 | Bienvenida animada, con pausa, opción de saltar y opción de volver a verla              | R14           | pendiente |
-| B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | pendiente |
+| ID    | Tarea                                                                                   | Requisitos    | Estado     |
+| ----- | --------------------------------------------------------------------------------------- | ------------- | ---------- |
+| B4-01 | Pantalla Analizar completa, con progreso por etapas y ejemplo grabado                   | R02, R03, R20 | pendiente  |
+| B4-02 | Pantalla Resultados: perfiles, "Lo esencial", filtros, tarjetas, glosario y aviso legal | R07–R10, R15  | completada |
+| B4-03 | Pantallas Historial y Ajustes completas                                                 | R11, R13, R19 | completada |
+| B4-04 | Bienvenida sin cierre automático, con opción de saltar y de volver a verla              | R14           | completada |
+| B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | pendiente  |
 
 ## Hito 1: app de escritorio mínima
 
@@ -122,18 +122,34 @@ Estado: **completo** (2026-11-21), salvo la verificación manual del instalador 
 - Commits: 1e2e140, 2cd3530, 111501e, b8e9d0d, 91500d4, 8a38a2c, 93d24cc, 1c92a84, f5bb3b3, 2d61746, 0ef4c63, 9dfb226, 99e3ca3, bc60674, bbcf792, c3550ef y e74993b.
 - Pendiente: instalar y probar a mano el instalador de Windows con la versión definitiva; abrir el AppImage en un escritorio Linux.
 
+## Hito 5: terminar el frente de la aplicación
+
+Estado: **completo en código y CI**; pendiente la verificación en la app empaquetada y la llamada real en inglés.
+
+- Ajustes guardados en el equipo: idioma, tema, tamaño de texto, bienvenida, historial y consentimiento por versión del texto de privacidad (`CONSENT_VERSION` 2). El identificador de instalación ya no cambia en cada arranque.
+- Los ajustes llegan a la ventana antes del primer render; una prueba con Electron real lo comprueba en los tres sistemas.
+- Historial local en JSON validado, con tope de 100 entradas, entradas inválidas apartadas y borrado total (ADR 0007). Medido con 100 resultados de 10 cláusulas: de 2,62 a 3,23 MB.
+- Glosario en Resultados, bienvenida sin cierre automático, retoques DR-01 a DR-03 y textos TR-01 a TR-05.
+- La dirección real del backend en CI pasa de variable a secreto, porque GitHub muestra los valores de las variables en los registros (ADR 0006).
+- `npm run check:push` comprueba el repositorio antes de subir y solo muestra recuentos y nombres de archivo.
+- Verificación manual hecha por la responsable del producto en modo de resultado de prueba: rebanadas D y E.
+- Ningún POST pagado en este hito. Acumulado del proyecto: 3 de 5.
+- Commits: 4b1d18e, ec4cd7b, a5df029, 9a22e47, 874d896, da90dfc, 783a9c7, 97bd6bb, ad82d6b, de2e5bc, 92a7463, 5636ac0, 324a34e, c169582, 3c9be33, 4e1dd00, 1a1442a, f790cc8, b93a9ba, 9008adc, 5fbb128, 3e3fe9f, 83ec6a1, 318ca9c, 2323899, b3d386f, 7b26730, b1863d9, c565b69, 2c07871, 8e4440f, cb14a87, 12e1798, f1f28f6, 5e70444, 389d5d9, c24ce19, 6df1f26, 90f36ff, e4e49a5, d77c8d2 y 5239fc6, más el de esta documentación.
+- Pendiente: la verificación en la app empaquetada y una llamada real con un documento en inglés, el historial activado y el glosario a la vista (4 de 5).
+
 ## Mejoras pendientes
 
 | ID    | Mejora                                                                                                                                                                                                               | Estado    |
 | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | MP-01 | Límite de 150.000 caracteres, opción B: en lugar de rechazar, ofrecer usar los primeros 150.000 caracteres con un aviso persistente en Resultados ("Analizamos solo los primeros 150.000 caracteres del documento"). | pendiente |
 | MP-02 | Tope de gasto diario en el backend. Hoy solo frenan los límites de ráfaga (3 por minuto por instalación y 5 por IP), y cualquiera con un instalador generado con la dirección real puede consumir saldo.             | pendiente |
+| MP-03 | Si el mismo texto ya se analizó en ese idioma, ofrecer ver el análisis guardado antes de gastar una llamada (caché por huella SHA-256).                                                                              | pendiente |
 
 ## Hitos siguientes
 
-| Hito   | Contenido                                                                    | Prioridad | Motivo                                                    |
-| ------ | ---------------------------------------------------------------------------- | --------- | --------------------------------------------------------- |
-| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas | media     | Requisitos del producto; cambia los textos TR-03 y TR-04. |
+| Hito   | Contenido                                                                                                                                                      | Prioridad | Motivo                                                |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------------------------------- |
+| Cierre | Instaladores definitivos con la dirección real, pruebas en Windows y macOS y una llamada real con un documento en inglés y el historial activado (4 de 5 POST) | alta      | Verificar de punta a punta la versión que se entrega. |
 
 ## Verificaciones pendientes en otros sistemas
 
@@ -145,26 +161,27 @@ Estado: **completo** (2026-11-21), salvo la verificación manual del instalador 
 
 Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
 
-| ID    | Observación                                                                                                                                                                          | Estado    |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
-| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera.                                   | pendiente |
-| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                                                    | pendiente |
-| DR-03 | El aviso de error de la fuente del documento aparece entre los botones "Elegir un PDF…" y "Usar texto de ejemplo". Colocarlo debajo del grupo de botones o junto a la caja de texto. | pendiente |
+| ID    | Observación                                                                                                                                                                          | Estado     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera.                                   | completada |
+| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                                                    | completada |
+| DR-03 | El aviso de error de la fuente del documento aparece entre los botones "Elegir un PDF…" y "Usar texto de ejemplo". Colocarlo debajo del grupo de botones o junto a la caja de texto. | completada |
+| DR-04 | El escudo de la bienvenida no tiene la animación de trazo del prototipo.                                                                                                             | pendiente  |
 
 ## Retoques de texto pendientes
 
 Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de publicar una versión estable.
 
-| ID    | Observación                                                                                                                                                                                                         | Estado    |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                 | pendiente |
-| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                              | pendiente |
-| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                          | pendiente |
-| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                               | pendiente |
-| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.            | pendiente |
-| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                               | pendiente |
-| TR-07 | Unificar el registro de tratamiento: la interfaz usa "tú" y las explicaciones de la IA usan "usted". Decisión de producto pendiente; afecta al prompt y exigiría subir `PROMPT_VERSION` y repetir una comprobación. | pendiente |
-| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                 | pendiente |
+| ID    | Observación                                                                                                                                                                                                         | Estado     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                 | completada |
+| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                              | completada |
+| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                          | completada |
+| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                               | completada |
+| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.            | completada |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                               | pendiente  |
+| TR-07 | Unificar el registro de tratamiento: la interfaz usa "tú" y las explicaciones de la IA usan "usted". Decisión de producto pendiente; afecta al prompt y exigiría subir `PROMPT_VERSION` y repetir una comprobación. | pendiente  |
+| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                 | pendiente  |
 
 ## B5 Cierre
 
