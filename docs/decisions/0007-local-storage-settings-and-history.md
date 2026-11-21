@@ -1,7 +1,7 @@
 # 0007. Almacenamiento local: ajustes e historial en JSON validado
 
 - Estado: aceptada
-- Fecha: 2026-11-22
+- Fecha: 2026-11-21
 
 ## Contexto
 

@@ -127,6 +127,21 @@ Contiene `settings.json` (ajustes, consentimiento e identificador aleatorio de l
 1. En la app: Historial → "Borrar todo el historial". Borra también las copias apartadas.
 2. Para borrar además los ajustes, el consentimiento y el identificador, cierra RiskLex y borra la carpeta de datos de tu sistema (tabla anterior). Al abrir de nuevo, la app empieza desde cero y vuelve a pedir el consentimiento.
 
+## Sin cuentas de usuario
+
+RiskLex ayuda a entender qué se acepta al usar un servicio digital, así que no pide registrarse con correo y contraseña. No hay cuentas:
+
+- **Menos datos personales:** no se pide nombre, correo ni contraseña, y el servicio de RiskLex en internet no guarda documentos ni resultados.
+- **Tus datos están en tu equipo:** ajustes, consentimiento e historial viven en la carpeta de datos (ver "Historial").
+- **Menos superficie de ataque:** no hay una base de personas, contraseñas ni recuperación de acceso que atacar.
+- **Uso inmediato:** se instala y se analiza.
+
+Qué sí se envía al analizar: el texto que decides analizar, un código aleatorio por instalación para limitar el abuso y la versión de la app. Como cualquier servicio en internet, el de RiskLex ve además la dirección de tu conexión. Nada de esto incluye tu nombre ni tu correo. El proveedor de IA puede conservar el texto unos días, como dice el aviso de privacidad.
+
+Cómo se controla el abuso sin cuentas: límites por instalación (3 análisis por minuto) y por conexión (5 por minuto), un tamaño máximo de documento, la clave de la IA guardada solo en el servicio y el límite mensual de gasto de la consola de Anthropic.
+
+Lo que no se puede hacer sin cuentas: sincronizar el historial entre equipos o dar cuotas individuales. Si hiciera falta más control, la opción simple es un código de acceso exigido por el servicio que no vaya dentro del instalador (MP-04 en `docs/tasks.md`). Añadir cuentas completas exigiría revisar antes el aviso y la política de privacidad. Los detalles están en `docs/decisions/0008-no-user-accounts.md`.
+
 ## Resultado de prueba (solo desarrollo)
 
 Para revisar la pantalla de resultados sin llamar al backend ni gastar:
