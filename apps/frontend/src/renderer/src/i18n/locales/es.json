@@ -313,6 +313,10 @@
       "clear": "Borrar el historial guardado",
       "cleared": "Historial borrado.",
       "clearFailed": "No pudimos borrar el historial. Inténtalo de nuevo."
+    },
+    "welcome": {
+      "legend": "Bienvenida",
+      "replay": "Ver la bienvenida"
     }
   },
   "history": {
@@ -350,5 +354,16 @@
       "accept": "Borrar todo",
       "cancel": "Cancelar"
     }
+  },
+  "welcome": {
+    "title": "Te damos la bienvenida a RiskLex",
+    "lead": "Entiende lo que aceptas antes de aceptarlo.",
+    "points": {
+      "read": "Leemos por ti los documentos largos",
+      "warn": "Te avisamos de lo que de verdad importa",
+      "plain": "Todo explicado en palabras simples"
+    },
+    "start": "Comenzar",
+    "skip": "Saltar"
   }
 }

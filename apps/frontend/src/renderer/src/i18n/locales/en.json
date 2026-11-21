@@ -313,6 +313,10 @@
       "clear": "Delete the saved history",
       "cleared": "History deleted.",
       "clearFailed": "We could not delete the history. Please try again."
+    },
+    "welcome": {
+      "legend": "Welcome",
+      "replay": "Show the welcome"
     }
   },
   "history": {
@@ -350,5 +354,16 @@
       "accept": "Delete all",
       "cancel": "Cancel"
     }
+  },
+  "welcome": {
+    "title": "Welcome to RiskLex",
+    "lead": "Understand what you accept before you accept it.",
+    "points": {
+      "read": "We read long documents for you",
+      "warn": "We point out what really matters",
+      "plain": "Everything explained in plain words"
+    },
+    "start": "Get started",
+    "skip": "Skip"
   }
 }
