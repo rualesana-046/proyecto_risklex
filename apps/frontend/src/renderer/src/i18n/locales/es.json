@@ -6,7 +6,8 @@
     "label": "Navegación principal",
     "analyze": "Analizar",
     "results": "Resultados",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "history": "Historial"
   },
   "legal": {
     "notice": "RiskLex es informativo y no reemplaza la asesoría de un abogado."
@@ -19,7 +20,8 @@
     "advice": "No pegues información que no quieras compartir, como contraseñas o datos de salud.",
     "session": "Recordaremos tu respuesta en este equipo. Si este aviso cambia, te lo volveremos a preguntar.",
     "accept": "Aceptar y analizar",
-    "dismiss": "Cancelar"
+    "dismiss": "Cancelar",
+    "history": "Si el historial está activado, el resultado, con sus citas del documento, se guarda en este equipo. Puedes borrarlo en Historial o desactivar el historial en Ajustes."
   },
   "analyze": {
     "input": {
@@ -170,6 +172,10 @@
       "truncated": "El documento tiene más puntos relevantes de los que mostramos aquí. Este análisis no es completo: lee también el documento original.",
       "fixture": "Resultado de prueba, no es un análisis real.",
       "discarded": "Quitamos {{discarded}} de {{total}} puntos porque no pudimos comprobar su texto original en tu documento."
+    },
+    "origin": {
+      "saved": "Análisis guardado el {{date}}.",
+      "saveFailed": "No pudimos guardar este análisis en el historial de este equipo. El resultado sigue aquí."
     }
   },
   "categories": {
@@ -295,6 +301,51 @@
       "large": "Grande",
       "larger": "Muy grande"
     },
-    "saveFailed": "No pudimos guardar el cambio en este equipo. Se aplicará hasta que cierres RiskLex."
+    "saveFailed": "No pudimos guardar el cambio en este equipo. Se aplicará hasta que cierres RiskLex.",
+    "history": {
+      "legend": "Historial",
+      "hint": "Se guardan los resultados con sus citas del documento, nunca el documento completo.",
+      "toggle": "Guardar el historial en este equipo",
+      "offerClear": "Los análisis nuevos ya no se guardarán. ¿Quieres borrar también los que ya están guardados?",
+      "clear": "Borrar el historial guardado",
+      "cleared": "Historial borrado.",
+      "clearFailed": "No pudimos borrar el historial. Inténtalo de nuevo."
+    }
+  },
+  "history": {
+    "title": "Historial",
+    "lead": "Los análisis se guardan solo en este equipo. Cada uno se queda en el idioma en que se analizó. Los contadores corresponden al perfil de versión gratuita.",
+    "off": "El historial está desactivado en Ajustes: los análisis nuevos no se guardan.",
+    "loading": "Cargando el historial…",
+    "loadFailed": "No pudimos leer el historial de este equipo.",
+    "empty": "Todavía no hay análisis guardados.",
+    "source": {
+      "pasted": "Texto pegado",
+      "pdf": "PDF: {{name}}",
+      "link": "Enlace: {{name}}"
+    },
+    "language": {
+      "es": "Español",
+      "en": "Inglés"
+    },
+    "characters": "{{count}} caracteres",
+    "countsLabel": "Puntos por nivel",
+    "open": "Abrir",
+    "openLabel": "Abrir el análisis de {{source}}",
+    "delete": "Borrar",
+    "deleteLabel": "Borrar el análisis de {{source}}",
+    "clearAll": "Borrar todo el historial",
+    "actions": {
+      "deleted": "Análisis borrado.",
+      "cleared": "Historial borrado.",
+      "actionFailed": "No pudimos completar la acción. Inténtalo de nuevo.",
+      "openFailed": "No pudimos abrir ese análisis. Puede que ya no exista."
+    },
+    "confirm": {
+      "title": "¿Borrar todo el historial?",
+      "body": "Se borrarán todos los análisis guardados en este equipo, también las copias apartadas por estar dañadas. No se puede deshacer.",
+      "accept": "Borrar todo",
+      "cancel": "Cancelar"
+    }
   }
 }

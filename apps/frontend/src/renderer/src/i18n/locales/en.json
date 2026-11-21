@@ -6,7 +6,8 @@
     "label": "Main navigation",
     "analyze": "Analyze",
     "results": "Results",
-    "settings": "Settings"
+    "settings": "Settings",
+    "history": "History"
   },
   "legal": {
     "notice": "RiskLex is informational and does not replace advice from a lawyer."
@@ -19,7 +20,8 @@
     "advice": "Do not paste information you do not want to share, such as passwords or health data.",
     "session": "We will remember your answer on this computer. If this notice changes, we will ask you again.",
     "accept": "Accept and analyze",
-    "dismiss": "Cancel"
+    "dismiss": "Cancel",
+    "history": "If the history is on, the result, with its quotes from the document, is saved on this computer. You can delete it in History or turn the history off in Settings."
   },
   "analyze": {
     "input": {
@@ -170,6 +172,10 @@
       "truncated": "The document has more relevant points than we show here. This analysis is not complete: read the original document too.",
       "fixture": "Test result, not a real analysis.",
       "discarded": "We removed {{discarded}} of {{total}} points because we could not confirm their original text in your document."
+    },
+    "origin": {
+      "saved": "Analysis saved on {{date}}.",
+      "saveFailed": "We could not save this analysis to the history on this computer. The result is still here."
     }
   },
   "categories": {
@@ -295,6 +301,51 @@
       "large": "Large",
       "larger": "Extra large"
     },
-    "saveFailed": "We could not save the change on this computer. It will apply until you close RiskLex."
+    "saveFailed": "We could not save the change on this computer. It will apply until you close RiskLex.",
+    "history": {
+      "legend": "History",
+      "hint": "Results are saved with their quotes from the document, never the full document.",
+      "toggle": "Save the history on this computer",
+      "offerClear": "New analyses will no longer be saved. Do you also want to delete the ones already saved?",
+      "clear": "Delete the saved history",
+      "cleared": "History deleted.",
+      "clearFailed": "We could not delete the history. Please try again."
+    }
+  },
+  "history": {
+    "title": "History",
+    "lead": "Analyses are kept only on this computer. Each one stays in the language it was analyzed in. The counts are for the free version profile.",
+    "off": "The history is turned off in Settings: new analyses are not saved.",
+    "loading": "Loading the history…",
+    "loadFailed": "We could not read the history on this computer.",
+    "empty": "There are no saved analyses yet.",
+    "source": {
+      "pasted": "Pasted text",
+      "pdf": "PDF: {{name}}",
+      "link": "Link: {{name}}"
+    },
+    "language": {
+      "es": "Spanish",
+      "en": "English"
+    },
+    "characters": "{{count}} characters",
+    "countsLabel": "Points by level",
+    "open": "Open",
+    "openLabel": "Open the analysis of {{source}}",
+    "delete": "Delete",
+    "deleteLabel": "Delete the analysis of {{source}}",
+    "clearAll": "Delete the whole history",
+    "actions": {
+      "deleted": "Analysis deleted.",
+      "cleared": "History deleted.",
+      "actionFailed": "We could not complete the action. Please try again.",
+      "openFailed": "We could not open that analysis. It may no longer exist."
+    },
+    "confirm": {
+      "title": "Delete the whole history?",
+      "body": "All analyses saved on this computer will be deleted, including copies set aside because they were damaged. This cannot be undone.",
+      "accept": "Delete all",
+      "cancel": "Cancel"
+    }
   }
 }
