@@ -1,4 +1,5 @@
 import { SEVERITIES, type Severity } from '@risklex/shared';
+import type { AddressReport } from './live-check-address.ts';
 import type { LiveEvaluation } from './live-check-evaluation.ts';
 
 export interface CriteriaCheck {
@@ -26,4 +27,8 @@ export function checkCriteria(result: LiveEvaluation): CriteriaCheck {
       result.ambiguousFound === result.ambiguousReal && result.ambiguousFalsePositives <= 1,
     forbiddenPass: result.forbidden === 0,
   };
+}
+
+export function addressPass(report: AddressReport): boolean {
+  return !report.applies || report.counted.length === 0;
 }

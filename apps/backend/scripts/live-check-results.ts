@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analysisResponseSchema, USER_PROFILES, type AnalysisResponse } from '@risklex/shared';
 import { z } from 'zod';
-import { checkCriteria } from './live-check-criteria.ts';
+import { formalAddressReport, type AddressReport } from './live-check-address.ts';
+import { addressPass, checkCriteria } from './live-check-criteria.ts';
 import {
   describeClauses,
   evaluate,
@@ -110,6 +111,20 @@ function printUnplanted(details: readonly ClauseDetail[]): void {
   }
 }
 
+function printAddress(report: AddressReport): void {
+  if (!report.applies) {
+    return;
+  }
+  const lines = [
+    `Formal address outside quotes (counted): ${String(report.counted.length)}`,
+    ...report.counted.map((occurrence) => `    ${occurrence.field}: ${occurrence.context}`),
+    `Formal address inside quotes (reported only): ${String(report.quoted.length)}`,
+    ...report.quoted.map((occurrence) => `    ${occurrence.field}: ${occurrence.context}`),
+    `Criteria · no usted or ustedes outside quotes in the explanations: ${passFail(addressPass(report))}`,
+  ];
+  console.log(lines.join('\n'));
+}
+
 export function reportResponse(
   response: AnalysisResponse,
   document: { readonly text: string; readonly expected: Expected },
@@ -119,6 +134,7 @@ export function reportResponse(
     evaluate(response, document.text, document.expected),
     response.meta.moreClausesLikely,
   );
+  printAddress(formalAddressReport(response, document.expected.language));
   const clauseDetails = describeClauses(response, document.text, document.expected);
   printUnplanted(clauseDetails);
   if (details) {
