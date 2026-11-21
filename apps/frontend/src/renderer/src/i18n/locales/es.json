@@ -5,7 +5,8 @@
   "nav": {
     "label": "Navegación principal",
     "analyze": "Analizar",
-    "results": "Resultados"
+    "results": "Resultados",
+    "settings": "Ajustes"
   },
   "legal": {
     "notice": "RiskLex es informativo y no reemplaza la asesoría de un abogado."
@@ -275,5 +276,25 @@
       "message": "El sitio tuvo un problema al responder.",
       "next": "Vuelve a intentarlo más tarde o pega el texto."
     }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": {
+      "legend": "Idioma",
+      "hint": "Cambia la interfaz y el idioma de los próximos análisis. Los análisis que ya hiciste se quedan en su idioma."
+    },
+    "theme": {
+      "legend": "Tema",
+      "system": "Como el sistema",
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
+    "textSize": {
+      "legend": "Tamaño del texto",
+      "normal": "Normal",
+      "large": "Grande",
+      "larger": "Muy grande"
+    },
+    "saveFailed": "No pudimos guardar el cambio en este equipo. Se aplicará hasta que cierres RiskLex."
   }
 }

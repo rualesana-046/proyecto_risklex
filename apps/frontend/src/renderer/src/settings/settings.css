@@ -1,0 +1,78 @@
+.settings-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 720px;
+}
+
+.settings-screen h1 {
+  font-size: 2rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.settings-group legend {
+  margin-bottom: 4px;
+  font: 700 1.125rem var(--font-head);
+}
+
+.settings-hint {
+  margin: 0;
+  color: var(--muted);
+}
+
+.settings-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--chip);
+  width: fit-content;
+}
+
+.settings-choice {
+  position: relative;
+}
+
+.settings-choice input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.settings-choice span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.settings-choice input:checked + span {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: var(--on-primary);
+  font-weight: 700;
+}
+
+.settings-choice input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.settings-status {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--hi);
+}
