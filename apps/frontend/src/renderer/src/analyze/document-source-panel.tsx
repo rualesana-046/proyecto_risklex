@@ -1,5 +1,5 @@
 import { MAX_DOCUMENT_CHARACTERS } from '@risklex/shared';
-import { useRef, useState, type Ref } from 'react';
+import { useRef, useState, type ReactNode, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PDF_MAX_BYTES, PDF_MAX_PAGES } from '../../../common/document-sources.ts';
 import { LinkForm } from './link-form.tsx';
@@ -13,6 +13,7 @@ interface DocumentSourcePanelProps {
   readonly onPickPdf: () => void;
   readonly onReadLink: (url: string) => void;
   readonly onCancel: () => void;
+  readonly children?: ReactNode;
 }
 
 function DocumentReadError({ error }: { readonly error: DocumentReadFailure }) {
@@ -146,6 +147,7 @@ export function DocumentSourcePanel({
   onPickPdf,
   onReadLink,
   onCancel,
+  children,
 }: DocumentSourcePanelProps) {
   const { linkOpen, toggleRef, toggle, close } = useLinkToggle();
   const locked = busy || state.status === 'reading';
@@ -164,6 +166,7 @@ export function DocumentSourcePanel({
       {linkOpen ? (
         <LinkForm busy={locked} inputRef={linkInputRef} onSubmit={onReadLink} onClose={close} />
       ) : null}
+      {children}
       {state.status === 'loaded' ? (
         <SourceStatus name={state.source.name} characters={state.characters} />
       ) : null}

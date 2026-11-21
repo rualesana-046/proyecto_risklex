@@ -35,6 +35,10 @@ describe('pdf source on the analyze screen (simulated preload bridge)', () => {
     await user.click(screen.getByRole('button', { name: 'Elegir un PDF…' }));
     expect((textArea as HTMLTextAreaElement).value).toBe('Texto que ya estaba');
     expect(screen.getByRole('alert').textContent).toContain('imagen escaneada');
+    const sample = screen.getByRole('button', { name: 'Usar texto de ejemplo' });
+    expect(
+      sample.compareDocumentPosition(screen.getByRole('alert')) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Elegir un PDF…' }));
   });
 

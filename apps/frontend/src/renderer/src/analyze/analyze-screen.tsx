@@ -168,8 +168,9 @@ export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
           onPickPdf={() => void pdf.pickPdf()}
           onReadLink={(url) => void pdf.readLink(url)}
           onCancel={pdf.cancel}
-        />
-        <SampleDocumentButton disabled={running || reading} onUse={setText} />
+        >
+          <SampleDocumentButton disabled={running || reading} onUse={setText} />
+        </DocumentSourcePanel>
         <DocumentInput value={text} disabled={running || reading} onChange={setText} />
         <AnalyzeActions
           buttonRef={buttonRef}
