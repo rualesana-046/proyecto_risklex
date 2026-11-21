@@ -6,6 +6,7 @@ import { AnalysisNotices } from './analysis-notices.tsx';
 import { CategoryFilter } from './category-filter.tsx';
 import { ClauseCard } from './clause-card.tsx';
 import { Essentials } from './essentials.tsx';
+import { Glossary } from './glossary.tsx';
 import { ProfileSelector } from './profile-selector.tsx';
 import { ResultsOriginNotice, type ResultsOrigin } from './results-origin.tsx';
 import {
@@ -63,6 +64,7 @@ export function ResultsScreen({ analysis, origin }: ResultsScreenProps) {
       <AnalysisNotices analysis={analysis} />
       <Essentials clauses={analysis.clauses} profile={profile} />
       <ClauseList analysis={analysis} profile={profile} />
+      <Glossary terms={analysis.glossary} />
     </>
   );
 }

@@ -176,6 +176,9 @@
     "origin": {
       "saved": "Analysis saved on {{date}}.",
       "saveFailed": "We could not save this analysis to the history on this computer. The result is still here."
+    },
+    "glossary": {
+      "title": "Words worth understanding"
     }
   },
   "categories": {

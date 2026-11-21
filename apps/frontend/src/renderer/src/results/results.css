@@ -345,3 +345,30 @@
   background: var(--wa-bg);
   color: var(--wa);
 }
+
+.glossary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.glossary-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.glossary-item {
+  padding: 14px 18px;
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+
+.glossary-item dt {
+  font: 700 1.0625rem var(--font-head);
+}
+
+.glossary-item dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+}

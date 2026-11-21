@@ -176,6 +176,9 @@
     "origin": {
       "saved": "Análisis guardado el {{date}}.",
       "saveFailed": "No pudimos guardar este análisis en el historial de este equipo. El resultado sigue aquí."
+    },
+    "glossary": {
+      "title": "Palabras que conviene entender"
     }
   },
   "categories": {
