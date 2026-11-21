@@ -142,6 +142,20 @@ describe('focus on custom controls', () => {
   );
 });
 
+describe('sidebar navigation', () => {
+  const shell = readRenderer('shell/shell.css');
+
+  it('draws a single 2 px focus ring with space around it', () => {
+    expect(shell).toContain(
+      '.sidebar-nav button:focus-visible {\n  outline: 2px solid var(--focus);\n  outline-offset: 3px;',
+    );
+  });
+
+  it('keeps every item at least 44 px high', () => {
+    expect(shell).toMatch(/\.sidebar-nav button \{\n {2}min-height: 44px;/u);
+  });
+});
+
 describe('glass with an opaque fallback', () => {
   it.each([
     ['shell/shell.css', '.sidebar'],

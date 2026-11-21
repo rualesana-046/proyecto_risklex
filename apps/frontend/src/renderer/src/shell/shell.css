@@ -55,12 +55,12 @@
 
 .sidebar-nav button {
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 12px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: transparent;
   color: var(--text);
-  font: 500 1rem var(--font-body);
+  font: 500 0.9375rem var(--font-body);
   text-align: left;
   cursor: pointer;
   transition: background var(--duration) var(--ease);
@@ -71,9 +71,15 @@
 }
 
 .sidebar-nav button[aria-current='page'] {
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: var(--on-primary);
-  font-weight: 700;
+  background: var(--surface-alt);
+  box-shadow: inset 3px 0 0 var(--primary);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.sidebar-nav button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .sidebar-nav button:disabled {
