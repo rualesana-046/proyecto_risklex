@@ -10,22 +10,13 @@ import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { App } from './app.tsx';
 import { initializeConsent } from './consent/use-consent.ts';
-import {
-  applyAppearance,
-  DEFAULT_SETTINGS,
-  systemPrefersDark,
-  watchSystemTheme,
-} from './settings/appearance.ts';
+import { DEFAULT_SETTINGS } from './settings/appearance.ts';
+import { initializeSettings } from './settings/settings-store.ts';
 import { i18n } from './i18n/i18n.ts';
 
 function start(container: HTMLElement): void {
   const settings = window.risklex.initialSettings ?? DEFAULT_SETTINGS;
-  const root = document.documentElement;
-  applyAppearance(root, settings, systemPrefersDark());
-  watchSystemTheme((prefersDark) => {
-    applyAppearance(root, settings, prefersDark);
-  });
-  void i18n.changeLanguage(settings.language);
+  initializeSettings(settings, window.risklex);
   initializeConsent(settings.consentGranted, () =>
     window.risklex.updateSettings({ consent: 'granted' }),
   );
