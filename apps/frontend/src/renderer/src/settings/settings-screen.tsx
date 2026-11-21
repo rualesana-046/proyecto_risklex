@@ -74,9 +74,22 @@ function AppearanceSettings({ save }: { readonly save: (change: Change) => void 
 
 interface SettingsScreenProps {
   readonly bridge: Pick<Window['risklex'], 'clearHistory'>;
+  readonly onShowWelcome: () => void;
 }
 
-export function SettingsScreen({ bridge }: SettingsScreenProps) {
+function WelcomeSetting({ onShow }: { readonly onShow: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <fieldset className="settings-group">
+      <legend>{t('settings.welcome.legend')}</legend>
+      <button type="button" className="button-secondary settings-action" onClick={onShow}>
+        {t('settings.welcome.replay')}
+      </button>
+    </fieldset>
+  );
+}
+
+export function SettingsScreen({ bridge, onShowWelcome }: SettingsScreenProps) {
   const { t } = useTranslation();
   const settings = useSettings();
   const { saveFailed, save } = useSave();
@@ -91,6 +104,7 @@ export function SettingsScreen({ bridge }: SettingsScreenProps) {
         }}
         clearHistory={() => bridge.clearHistory()}
       />
+      <WelcomeSetting onShow={onShowWelcome} />
       <SaveStatus failed={saveFailed} />
     </section>
   );

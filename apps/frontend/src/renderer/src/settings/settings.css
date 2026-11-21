@@ -102,3 +102,7 @@
 .settings-offer p {
   margin: 0;
 }
+
+.settings-action {
+  align-self: flex-start;
+}

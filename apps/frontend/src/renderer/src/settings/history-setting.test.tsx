@@ -37,7 +37,7 @@ function renderScreen(clearHistory = vi.fn(() => Promise.resolve())) {
   act(() => {
     initializeSettings(DEFAULT_SETTINGS, { updateSettings });
   });
-  render(<SettingsScreen bridge={{ clearHistory }} />);
+  render(<SettingsScreen bridge={{ clearHistory }} onShowWelcome={() => undefined} />);
   return { updateSettings, clearHistory };
 }
 

@@ -76,4 +76,15 @@ describe('welcome screen (simulated preload bridge)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(shell?.hasAttribute('inert')).toBe(false);
   });
+
+  it('can be shown again from the settings and gives the focus back to its button', async () => {
+    const { updateSettings, user } = start(true);
+    await user.click(screen.getByRole('button', { name: 'Ajustes' }));
+    const replay = screen.getByRole('button', { name: 'Ver la bienvenida' });
+    await user.click(replay);
+    expect(screen.getByRole('dialog', { name: 'Te damos la bienvenida a RiskLex' })).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Comenzar' }));
+    expect(document.activeElement).toBe(replay);
+    expect(updateSettings).not.toHaveBeenCalledWith({ welcomeSeen: true });
+  });
 });

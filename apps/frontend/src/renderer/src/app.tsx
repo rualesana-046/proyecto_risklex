@@ -60,7 +60,7 @@ export function App() {
         ) : null}
         {view === 'settings' ? (
           <div className="app-view">
-            <SettingsScreen bridge={window.risklex} />
+            <SettingsScreen bridge={window.risklex} onShowWelcome={welcome.show} />
           </div>
         ) : null}
       </AppShell>

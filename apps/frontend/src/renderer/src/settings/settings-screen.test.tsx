@@ -27,7 +27,12 @@ function renderScreen(update?: (change: SettingsUpdate) => Promise<PublicSetting
   act(() => {
     initializeSettings(DEFAULT_SETTINGS, { updateSettings });
   });
-  render(<SettingsScreen bridge={{ clearHistory: () => Promise.resolve() }} />);
+  render(
+    <SettingsScreen
+      bridge={{ clearHistory: () => Promise.resolve() }}
+      onShowWelcome={() => undefined}
+    />,
+  );
   return { updateSettings };
 }
 
