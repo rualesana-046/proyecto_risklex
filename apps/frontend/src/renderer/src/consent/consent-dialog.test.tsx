@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import '../i18n/i18n.ts';
 import { ConsentDialog } from './consent-dialog.tsx';
-import { resetConsentForTests, useConsent } from './use-consent.ts';
+import { initializeConsent, resetConsentForTests, useConsent } from './use-consent.ts';
 
 function simulateNativeDialog(): void {
   HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
@@ -89,12 +89,32 @@ describe('ConsentDialog (simulated native dialog)', () => {
 });
 
 describe('useConsent', () => {
-  it('keeps the consent in memory for the current run', () => {
+  it('starts from the saved answer', () => {
+    initializeConsent(true, () => Promise.resolve());
+    const { result } = renderHook(() => useConsent());
+    expect(result.current.granted).toBe(true);
+  });
+
+  it('saves the consent once when it is granted', () => {
+    const save = vi.fn(() => Promise.resolve());
+    initializeConsent(false, save);
     const { result } = renderHook(() => useConsent());
     expect(result.current.granted).toBe(false);
     act(() => {
       result.current.grant();
+      result.current.grant();
     });
+    expect(result.current.granted).toBe(true);
+    expect(save).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the consent for this run when saving it fails', async () => {
+    initializeConsent(false, () => Promise.reject(new Error('disk full')));
+    const { result } = renderHook(() => useConsent());
+    act(() => {
+      result.current.grant();
+    });
+    await Promise.resolve();
     expect(result.current.granted).toBe(true);
   });
 });

@@ -9,17 +9,25 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { App } from './app.tsx';
+import { initializeConsent } from './consent/use-consent.ts';
 import { i18n } from './i18n/i18n.ts';
+
+async function start(container: HTMLElement): Promise<void> {
+  const settings = await window.risklex.getSettings().catch(() => null);
+  initializeConsent(settings?.consentGranted ?? false, () =>
+    window.risklex.updateSettings({ consent: 'granted' }),
+  );
+  createRoot(container).render(
+    <StrictMode>
+      <I18nextProvider i18n={i18n}>
+        <App />
+      </I18nextProvider>
+    </StrictMode>,
+  );
+}
 
 const container = document.getElementById('root');
 if (container === null) {
   throw new Error('The root element is missing');
 }
-
-createRoot(container).render(
-  <StrictMode>
-    <I18nextProvider i18n={i18n}>
-      <App />
-    </I18nextProvider>
-  </StrictMode>,
-);
+void start(container);
