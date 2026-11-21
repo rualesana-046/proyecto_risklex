@@ -27,7 +27,7 @@ function renderScreen(update?: (change: SettingsUpdate) => Promise<PublicSetting
   act(() => {
     initializeSettings(DEFAULT_SETTINGS, { updateSettings });
   });
-  render(<SettingsScreen />);
+  render(<SettingsScreen bridge={{ clearHistory: () => Promise.resolve() }} />);
   return { updateSettings };
 }
 
@@ -66,9 +66,7 @@ describe('SettingsScreen (simulated bridge)', () => {
     const user = userEvent.setup();
     renderScreen(() => Promise.reject(new Error('disk full')));
     await user.click(screen.getByRole('radio', { name: 'Muy grande' }));
-    expect((await screen.findByRole('status')).textContent).toContain(
-      'No pudimos guardar el cambio',
-    );
+    expect(await screen.findByText(/No pudimos guardar el cambio/u)).toBeTruthy();
     expect(document.documentElement.dataset['textSize']).toBe('larger');
   });
 });

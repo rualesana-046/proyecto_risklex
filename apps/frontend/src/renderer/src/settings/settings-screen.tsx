@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TEXT_SIZES, THEMES } from '../../../common/settings-vocabulary.ts';
 import { ChoiceGroup } from './choice-group.tsx';
+import { HistorySetting } from './history-setting.tsx';
 import { changeSettings, useSettings } from './settings-store.ts';
 import './settings.css';
 
@@ -34,13 +35,11 @@ function SaveStatus({ failed }: { readonly failed: boolean }) {
   );
 }
 
-export function SettingsScreen() {
+function AppearanceSettings({ save }: { readonly save: (change: Change) => void }) {
   const { t } = useTranslation();
   const settings = useSettings();
-  const { saveFailed, save } = useSave();
   return (
-    <section className="settings-screen" aria-labelledby="settings-title">
-      <h1 id="settings-title">{t('settings.title')}</h1>
+    <>
       <ChoiceGroup
         name="language"
         legend={t('settings.language.legend')}
@@ -68,6 +67,29 @@ export function SettingsScreen() {
         onChange={(textSize) => {
           save({ textSize });
         }}
+      />
+    </>
+  );
+}
+
+interface SettingsScreenProps {
+  readonly bridge: Pick<Window['risklex'], 'clearHistory'>;
+}
+
+export function SettingsScreen({ bridge }: SettingsScreenProps) {
+  const { t } = useTranslation();
+  const settings = useSettings();
+  const { saveFailed, save } = useSave();
+  return (
+    <section className="settings-screen" aria-labelledby="settings-title">
+      <h1 id="settings-title">{t('settings.title')}</h1>
+      <AppearanceSettings save={save} />
+      <HistorySetting
+        enabled={settings.historyEnabled}
+        onChange={(historyEnabled) => {
+          save({ historyEnabled });
+        }}
+        clearHistory={() => bridge.clearHistory()}
       />
       <SaveStatus failed={saveFailed} />
     </section>
