@@ -6,6 +6,7 @@ import {
   type QuoteSpan,
   type ReliabilityLevel,
 } from '@risklex/shared';
+import type { HistorySaveStatus } from './history-vocabulary.ts';
 
 export const CLIENT_ONLY_ERROR_CODES = [
   'network_unavailable',
@@ -47,7 +48,11 @@ export interface VerifiedAnalysis {
 }
 
 export type AnalysisOutcome =
-  | { readonly ok: true; readonly analysis: VerifiedAnalysis }
+  | {
+      readonly ok: true;
+      readonly analysis: VerifiedAnalysis;
+      readonly history?: HistorySaveStatus;
+    }
   | {
       readonly ok: false;
       readonly error: {

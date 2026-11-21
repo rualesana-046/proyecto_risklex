@@ -7,12 +7,19 @@ import {
   RELIABILITY_LEVELS,
 } from '@risklex/shared';
 import * as z from 'zod';
+import { DOCUMENT_SOURCE_KINDS, MAX_SOURCE_NAME_CHARACTERS } from './document-sources.ts';
 
 export const MAX_IPC_TEXT_CHARACTERS = MAX_DOCUMENT_CHARACTERS * 2;
 
 export const analyzeInputSchema = z.strictObject({
   text: z.string().max(MAX_IPC_TEXT_CHARACTERS),
   language: z.enum(ANALYSIS_LANGUAGES),
+  source: z
+    .strictObject({
+      kind: z.enum(DOCUMENT_SOURCE_KINDS),
+      name: z.string().min(1).max(MAX_SOURCE_NAME_CHARACTERS),
+    })
+    .optional(),
 });
 
 export type AnalyzeInput = z.infer<typeof analyzeInputSchema>;

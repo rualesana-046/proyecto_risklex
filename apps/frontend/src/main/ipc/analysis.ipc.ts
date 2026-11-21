@@ -1,7 +1,16 @@
 import type { IpcMain, IpcMainInvokeEvent } from 'electron';
-import type { AnalysisErrorCode, AnalysisOutcome } from '../../common/analysis-vocabulary.ts';
+import type {
+  AnalysisErrorCode,
+  AnalysisOutcome,
+  VerifiedAnalysis,
+} from '../../common/analysis-vocabulary.ts';
+import type { HistorySaveStatus, HistorySource } from '../../common/history-vocabulary.ts';
 import { IPC_CHANNELS } from '../../common/ipc-channels.ts';
-import { analyzeInputSchema, verifiedAnalysisSchema } from '../../common/ipc-schemas.ts';
+import {
+  analyzeInputSchema,
+  verifiedAnalysisSchema,
+  type AnalyzeInput,
+} from '../../common/ipc-schemas.ts';
 import { isAppUrl } from '../app/window-security.ts';
 import { runAnalysis } from '../modules/analysis/application/run-analysis.use-case.ts';
 import { ClientAnalysisError } from '../modules/analysis/domain/client-analysis-error.ts';
@@ -11,6 +20,39 @@ export interface AnalysisIpcDependencies {
   readonly ipc: Pick<IpcMain, 'handle' | 'on'>;
   readonly appUrl: string;
   readonly client: AnalysisClient | null;
+  readonly recordAnalysis?: (record: AnalysisRecord) => Promise<HistorySaveStatus>;
+}
+
+export interface AnalysisRecord {
+  readonly text: string;
+  readonly language: AnalyzeInput['language'];
+  readonly source: HistorySource;
+  readonly analysis: VerifiedAnalysis;
+}
+
+function historySource(input: AnalyzeInput): HistorySource {
+  return input.source ?? { kind: 'pasted', name: null };
+}
+
+async function record(
+  dependencies: AnalysisIpcDependencies,
+  input: AnalyzeInput,
+  analysis: VerifiedAnalysis,
+): Promise<HistorySaveStatus> {
+  if (dependencies.recordAnalysis === undefined) {
+    return 'off';
+  }
+  try {
+    const { text, language } = input;
+    return await dependencies.recordAnalysis({
+      text,
+      language,
+      source: historySource(input),
+      analysis,
+    });
+  } catch {
+    return 'failed';
+  }
 }
 
 interface SenderFrameEvent {
@@ -29,6 +71,22 @@ function toFailure(error: unknown): AnalysisOutcome {
     return failure(error.code, error.retryAfterSeconds);
   }
   return failure('unexpected');
+}
+
+async function succeed(
+  dependencies: AnalysisIpcDependencies,
+  input: AnalyzeInput,
+  analysis: unknown,
+): Promise<AnalysisOutcome> {
+  const checked = verifiedAnalysisSchema.safeParse(analysis);
+  if (!checked.success) {
+    return failure('unexpected');
+  }
+  return {
+    ok: true,
+    analysis: checked.data,
+    history: await record(dependencies, input, checked.data),
+  };
 }
 
 interface AnalysisState {
@@ -53,7 +111,7 @@ async function analyzeTrusted(
   try {
     const analysis = await runAnalysis(
       dependencies.client,
-      input.data,
+      { text: input.data.text, language: input.data.language },
       controller.signal,
       (stage) => {
         if (!event.sender.isDestroyed()) {
@@ -61,8 +119,7 @@ async function analyzeTrusted(
         }
       },
     );
-    const checked = verifiedAnalysisSchema.safeParse(analysis);
-    return checked.success ? { ok: true, analysis: checked.data } : failure('unexpected');
+    return await succeed(dependencies, input.data, analysis);
   } catch (error) {
     return toFailure(error);
   } finally {
