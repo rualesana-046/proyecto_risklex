@@ -109,24 +109,37 @@ Estado: **listo para la verificación con llamadas reales** (2026-11-16). Se cer
 - Llamada real con un PDF desde la aplicación instalada: PDF sintético de 2.221 caracteres, 10 tarjetas, sin avisos de citas descartadas y un coste de unos 0,06 USD. Pendiente: la llamada real con un enlace.
 - Cuenta de POST pagados: 1 de 3 en el Hito 3 y 3 de 5 en el proyecto.
 
+## Hito 4: instaladores de Windows y Linux con GitHub Actions
+
+Estado: **completo** (2026-11-21), salvo la verificación manual del instalador de Windows y la apertura del AppImage en un escritorio Linux.
+
+- El flujo `.github/workflows/ci.yml` valida en macOS 15, Windows y Ubuntu 26.04, y genera el `.dmg` arm64, el instalador NSIS x64 y el AppImage x64 (ADR 0006).
+- Cada paquete supera una prueba de humo: el lector de PDF dentro del `app.asar` lee cuatro PDF sintéticos con el resultado esperado.
+- Primera ejecución en verde de los seis trabajos (`validate` y `package` en los tres sistemas): ejecución 44930410296, tras el commit c3550ef.
+- Fallos de CI corregidos, cada uno con un solo intento fallido: imagen `macos-14` retirada, rutas de Windows en una prueba y en los avisos de licencias, identidad de Git en la prueba del script de commits, AppArmor en Ubuntu (causa inferida por contraste) y nombre del ejecutable de Linux.
+- Artefactos solo en ejecuciones manuales, con un día de retención. La entrada `backend: real` usa la variable `RISKLEX_API_URL`; no se ha ejecutado.
+- Ningún POST pagado en este hito. Acumulado del proyecto: 3 de 5.
+- Commits: 1e2e140, 2cd3530, 111501e, b8e9d0d, 91500d4, 8a38a2c, 93d24cc, 1c92a84, f5bb3b3, 2d61746, 0ef4c63, 9dfb226, 99e3ca3, bc60674, bbcf792, c3550ef y e74993b.
+- Pendiente: instalar y probar a mano el instalador de Windows con la versión definitiva; abrir el AppImage en un escritorio Linux.
+
 ## Mejoras pendientes
 
 | ID    | Mejora                                                                                                                                                                                                               | Estado    |
 | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | MP-01 | Límite de 150.000 caracteres, opción B: en lugar de rechazar, ofrecer usar los primeros 150.000 caracteres con un aviso persistente en Resultados ("Analizamos solo los primeros 150.000 caracteres del documento"). | pendiente |
+| MP-02 | Tope de gasto diario en el backend. Hoy solo frenan los límites de ráfaga (3 por minuto por instalación y 5 por IP), y cualquiera con un instalador generado con la dirección real puede consumir saldo.             | pendiente |
 
 ## Hitos siguientes
 
-| Hito   | Contenido                                                                                                                                                             | Prioridad | Motivo                                                                                            |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| Hito 4 | Instaladores de Windows y Linux generados por CI (GitHub Actions con macOS, Windows y Ubuntu; `--publish never`; dirección del backend como variable del repositorio) | alta      | Soporte multiplataforma: la aplicación debe poder instalarse en Windows y Linux, además de macOS. |
-| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas                                                                                          | media     | Requisitos del producto; cambia los textos TR-03 y TR-04.                                         |
+| Hito   | Contenido                                                                    | Prioridad | Motivo                                                    |
+| ------ | ---------------------------------------------------------------------------- | --------- | --------------------------------------------------------- |
+| Hito 5 | Historial local, ajustes persistentes (incluido el consentimiento) e idiomas | media     | Requisitos del producto; cambia los textos TR-03 y TR-04. |
 
 ## Verificaciones pendientes en otros sistemas
 
-| ID    | Verificación                                                                                                                                                        | Estado    |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| VP-01 | El vigilante de memoria del lector de PDF (`app.getAppMetrics()` cada 100 ms, límite de 512 MB) debe comprobarse en Windows y Linux, igual que en macOS (ADR 0005). | pendiente |
+| ID    | Verificación                                                                                                                                                        | Estado                                                                                                        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| VP-01 | El vigilante de memoria del lector de PDF (`app.getAppMetrics()` cada 100 ms, límite de 512 MB) debe comprobarse en Windows y Linux, igual que en macOS (ADR 0005). | completada: las pruebas con Electron real pasan en Windows y Ubuntu en cada ejecución de CI desde 44927568823 |
 
 ## Retoques de diseño pendientes
 
@@ -155,13 +168,13 @@ Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas
 
 ## B5 Cierre
 
-| ID    | Tarea                                                                           | Requisitos | Estado    |
-| ----- | ------------------------------------------------------------------------------- | ---------- | --------- |
-| B5-01 | Integración, regresión y evaluación documentada de la IA                        | R05, R06   | pendiente |
-| B5-02 | Empaquetado con electron-builder e icono de la aplicación                       | R22        | pendiente |
-| B5-03 | CI en Ubuntu, Windows y macOS                                                   | R26        | pendiente |
-| B5-04 | Publicación en GitHub Releases e instalación limpia verificada en Mac y Windows | R22, R23   | pendiente |
-| B5-05 | Documentación final, `npm audit` y revisión de licencias                        | R26        | pendiente |
+| ID    | Tarea                                                                           | Requisitos | Estado     |
+| ----- | ------------------------------------------------------------------------------- | ---------- | ---------- |
+| B5-01 | Integración, regresión y evaluación documentada de la IA                        | R05, R06   | pendiente  |
+| B5-02 | Empaquetado con electron-builder e icono de la aplicación                       | R22        | pendiente  |
+| B5-03 | CI en Ubuntu, Windows y macOS                                                   | R26        | completada |
+| B5-04 | Publicación en GitHub Releases e instalación limpia verificada en Mac y Windows | R22, R23   | pendiente  |
+| B5-05 | Documentación final, `npm audit` y revisión de licencias                        | R26        | pendiente  |
 
 ## Decisiones tomadas
 

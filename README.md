@@ -10,7 +10,7 @@ No es un resumidor: identifica riesgos, explica consecuencias, muestra la cláus
 
 Proyecto académico en desarrollo. La aplicación de escritorio analiza texto pegado, PDF y enlaces de punta a punta contra el backend desplegado; el avance real está en `docs/tasks.md`.
 
-Hay un instalador de prueba solo para macOS con Apple Silicon (ver "Instalar en macOS"). Los de Windows y Linux llegarán con la integración continua.
+Hay instaladores de prueba sin firmar para macOS con Apple Silicon, Windows x64 y Linux x64. GitHub Actions los genera y comprueba en cada cambio (ver "Generar los instaladores con GitHub Actions").
 
 ## Qué hará
 
@@ -78,7 +78,7 @@ npm run dev -w @risklex/frontend
 | `npm run test`         | Ejecuta las pruebas con Vitest.                                  |
 | `npm run validate`     | Ejecuta las cuatro comprobaciones anteriores en orden.           |
 
-Comandos de la app de escritorio, con `-w @risklex/frontend`: `dev` (desarrollo), `build` y `preview` (compilación de producción) y `dist:mac` (instalador de macOS).
+Comandos de la app de escritorio, con `-w @risklex/frontend`: `dev` (desarrollo), `build` y `preview` (compilación de producción) y `dist:mac`, `dist:win` y `dist:linux` (instaladores de cada sistema, cada uno en su propio sistema).
 
 ## Leer un PDF o un enlace
 
@@ -122,9 +122,44 @@ npm run dist:mac -w @risklex/frontend
 
 El instalador queda en `apps/frontend/release/RiskLex-0.1.0-arm64.dmg`. La carpeta `release/` está ignorada por Git y ningún artefacto entra en un commit.
 
+## Generar los instaladores con GitHub Actions
+
+El flujo `.github/workflows/ci.yml` valida el proyecto en macOS, Windows y Linux en cada `push` a `main` y en cada pull request. Después genera los tres instaladores y comprueba el lector de PDF dentro de cada paquete con PDF sintéticos. No usa secretos y no publica nada.
+
+Para descargar los instaladores:
+
+1. En GitHub, abre la pestaña Actions, elige el flujo CI y pulsa "Run workflow" en la rama `main`.
+2. En `backend`, deja `example` para probar la instalación sin gasto: el análisis responderá "No pudimos conectar". `real` usa la variable del repositorio `RISKLEX_API_URL` (Settings → Secrets and variables → Actions → Variables); si falta o no es válida, la compilación falla sin mostrar el valor.
+3. Al terminar, descarga `RiskLex-windows-…`, `RiskLex-linux-…` o `RiskLex-macos-…` desde la página de la ejecución.
+
+Los artefactos solo se suben en ejecuciones manuales y duran un día. En un repositorio público cualquiera puede descargarlos mientras existan, y un instalador generado con `real` lleva dentro la dirección del backend. Después de descargarlo, bórralo desde la página de la ejecución con el icono de la papelera.
+
+## Instalar en Windows (versión de prueba sin firma)
+
+1. Descomprime el artefacto y ejecuta `RiskLex-Setup-0.1.0-x64.exe`. Se instala solo para tu usuario, sin permisos de administrador.
+2. Como el instalador no está firmado, Microsoft Defender SmartScreen puede mostrar una advertencia porque no reconoce la aplicación. Continúa solo si el archivo viene de este repositorio. Las opciones del diálogo ("Más información" y "Ejecutar de todas formas") aparecen en el propio aviso, pero la página oficial de Microsoft no las describe: https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/
+
+El instalador de Windows se compila y supera la prueba de humo en GitHub Actions; la instalación y el uso se verifican a mano en un equipo con Windows.
+
+## Instalar en Linux (versión de prueba sin firma)
+
+1. Descomprime el artefacto, da permiso de ejecución y abre la aplicación:
+
+   ```bash
+   chmod +x RiskLex-0.1.0-x86_64.AppImage
+   ```
+
+   ```bash
+   ./RiskLex-0.1.0-x86_64.AppImage
+   ```
+
+2. Los AppImage necesitan FUSE 2. Si no abre, instala `libfuse2` (en Ubuntu 24.04 y posteriores se llama `libfuse2t64`) o ejecútalo sin FUSE con `./RiskLex-0.1.0-x86_64.AppImage --appimage-extract-and-run`. Guías oficiales: https://docs.appimage.org/introduction/quickstart.html y https://docs.appimage.org/user-guide/troubleshooting/fuse.html
+
+El AppImage se compila y supera la prueba de humo en GitHub Actions, pero todavía no se ha abierto en un escritorio Linux.
+
 ## Instalar en macOS (versión de prueba sin firma)
 
-**Solo para Mac con Apple Silicon (M1 o posterior). No funciona en Mac con procesador Intel ni en Windows.**
+**Solo para Mac con Apple Silicon (M1 o posterior). No funciona en Mac con procesador Intel.**
 
 Es una versión de prueba firmada de forma local (ad hoc), sin firma de desarrollador de Apple ni notarización:
 
