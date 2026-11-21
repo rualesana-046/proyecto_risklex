@@ -43,9 +43,12 @@ describe('ConsentDialog (simulated native dialog)', () => {
     const dialog = screen.getByRole('dialog', { name: 'Antes de analizar' });
     expect(dialog.textContent).toContain('el texto del documento');
     expect(dialog.textContent).toContain('backend de RiskLex');
-    expect(dialog.textContent).toContain('proveedor de inteligencia artificial');
+    expect(dialog.textContent).toContain('Anthropic, su proveedor de inteligencia artificial');
+    expect(dialog.textContent).toContain('identificador aleatorio de esta instalación');
+    expect(dialog.textContent).toContain('la versión de la app');
     expect(dialog.textContent).toContain('hasta 30 días');
-    expect(dialog.textContent).toContain('RiskLex no guarda el documento');
+    expect(dialog.textContent).toContain('RiskLex no guarda copias en sus servidores');
+    expect(dialog.textContent).toContain('Recordaremos tu respuesta en este equipo');
     expect(dialog.textContent).toContain('la página se descargó desde tu equipo');
     expect(dialog.textContent).toContain('dirección IP');
     expect(dialog.textContent).toContain('A la IA solo se envía el texto');

@@ -12,11 +12,11 @@
   },
   "consent": {
     "title": "Before analyzing",
-    "what": "To analyze it, RiskLex will send the text of the document you pasted to the RiskLex backend, which passes it to its artificial intelligence provider.",
-    "retention": "The artificial intelligence provider may keep the data temporarily: up to 30 days, or longer if some content is flagged for review. RiskLex does not store the document or the result.",
+    "what": "To analyze it, RiskLex will send the text of the document to the RiskLex backend, which passes it to Anthropic, its artificial intelligence provider. A random identifier for this installation and the app version are sent with the text, with no personal data.",
+    "retention": "Anthropic may keep the data temporarily: up to 30 days, or longer if some content is flagged for review. RiskLex does not keep copies on its servers.",
     "link": "If you read a link, the page was downloaded from your computer and the site could see your IP address. Only the text is sent to the AI, not the link address or the file name.",
     "advice": "Do not paste information you do not want to share, such as passwords or health data.",
-    "session": "We will ask you again the next time you open RiskLex.",
+    "session": "We will remember your answer on this computer. If this notice changes, we will ask you again.",
     "accept": "Accept and analyze",
     "dismiss": "Cancel"
   },
