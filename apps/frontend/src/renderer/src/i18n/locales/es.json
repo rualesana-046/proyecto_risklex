@@ -48,7 +48,7 @@
     "lead": "Pega el texto de los términos o de la política de privacidad. Te contamos, en palabras simples, qué podría pasar si aceptas.",
     "submit": "Analizar documento",
     "cancel": "Cancelar análisis",
-    "emptyHint": "Pega el texto del documento para poder analizarlo.",
+    "emptyHint": "Pega el texto del documento, elige un PDF o lee un enlace para poder analizarlo.",
     "sources": {
       "label": "Cómo añadir el documento",
       "pdf": "Elegir un PDF…",

@@ -66,3 +66,13 @@ describe('AnalyzeScreen (simulated preload bridge and native dialog)', () => {
     expect(document.activeElement).toBe(analyzeButton);
   });
 });
+
+describe('empty text area hint', () => {
+  it('tells every way to add the document', () => {
+    const { analyzeButton } = setup();
+    const hint = document.getElementById(analyzeButton.getAttribute('aria-describedby') ?? '');
+    expect(hint?.textContent).toBe(
+      'Pega el texto del documento, elige un PDF o lee un enlace para poder analizarlo.',
+    );
+  });
+});

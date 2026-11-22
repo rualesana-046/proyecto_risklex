@@ -48,7 +48,7 @@
     "lead": "Paste the text of the terms or the privacy policy. We tell you, in plain words, what could happen if you accept.",
     "submit": "Analyze document",
     "cancel": "Cancel analysis",
-    "emptyHint": "Paste the document text to analyze it.",
+    "emptyHint": "Paste the document text, choose a PDF or read a link to analyze it.",
     "sources": {
       "label": "How to add the document",
       "pdf": "Choose a PDF…",
