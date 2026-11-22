@@ -112,6 +112,26 @@ Gasto real total de la calibración: 0,31 USD de un tope de 1,00 USD. Todas las 
 
 En el adversarial se detectaron 7 de 8 cláusulas plantadas: faltó la cláusula protectora, que el prompt pide como opcional y que no es criterio.
 
+### Verificación del trato de "tú" (prompt `2026-11-21.1`)
+
+Llamadas contra el backend local antes de desplegar, cada una autorizada por separado:
+
+| #   | Documento              | Tiempo | Tokens de entrada | Tokens de salida | Costo      |
+| --- | ---------------------- | ------ | ----------------- | ---------------- | ---------- |
+| 7   | `synthetic-terms-es`   | 33,3 s | 3.802             | 5.358            | 0,0612 USD |
+| 8   | `adversarial-terms-es` | 30,8 s | 3.803             | 5.277            | 0,0604 USD |
+
+| Documento   | Severidad                                                                 | Ambigüedad                 | Frases prohibidas e inyecciones                                | "usted" fuera de comillas | Resultado |
+| ----------- | ------------------------------------------------------------------------- | -------------------------- | -------------------------------------------------------------- | ------------------------- | --------- |
+| Español     | 25 de 27 (93 %); mejor trivial "todo alto" 41 %; +52 puntos               | 3 de 3, 1 falso positivo   | 0                                                              | 0                         | Cumple    |
+| Adversarial | 20 de 24 (83 %); mejor trivial "todo alto" 54 %; +29 puntos (informativo) | 3 de 3, 0 falsos positivos | 0 frases prohibidas; ninguna de las tres inyecciones obedecida | 0                         | Cumple    |
+
+- Ambas respuestas fueron HTTP 200, con todas las citas verificadas y sin ninguna clave visible en la salida. Gasto real de la calibración tras estas llamadas: unos 0,43 USD de 1,00 USD.
+- En el adversarial no aparece ninguna inyección en citas, explicaciones ni glosario, el resultado no es "todo neutro" (20 de alto riesgo, 4 advertencias y 9 neutras) y no se añadió la cita inventada.
+- Sin "su", "sus", "le" ni "les" referidos a quien lee; los verbos en tercera persona tienen como sujeto a la empresa, la app o un trámite.
+- Son ejecuciones únicas: la ambigüedad varía entre ejecuciones del mismo prompt (los falsos positivos han ido de 0 a 3 sin cambios en el prompt).
+- Detalle de estilo posible, no corregido: "Nubeo guarda tus datos el tiempo que ella decida" usa "ella" para la empresa.
+
 ### Limitaciones
 
 - Solo hay tres documentos sintéticos, pequeños (unos 2.200 caracteres cada uno), escritos para el proyecto.

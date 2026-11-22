@@ -139,13 +139,13 @@ Estado: **completo en código y CI**; pendiente la verificación en la app empaq
 
 ## Presupuesto de POST pagados del proyecto
 
-El tope pasa de 5 a 8. El límite mensual de gasto de la consola de Anthropic sigue siendo el tope real.
+El tope pasa de 5 a 8. Usados: 5 de 8. El límite mensual de gasto de la consola de Anthropic sigue siendo el tope real.
 
 | Nº  | Uso                                                                                                         | Estado    |
 | --- | ----------------------------------------------------------------------------------------------------------- | --------- |
 | 1–3 | Hitos 1 a 3                                                                                                 | usados    |
-| 4   | TR-07, comprobación en español                                                                              | pendiente |
-| 5   | TR-07, comprobación adversarial                                                                             | pendiente |
+| 4   | TR-07, comprobación en español                                                                              | usado     |
+| 5   | TR-07, comprobación adversarial                                                                             | usado     |
 | 6   | Cierre: instalador de macOS con un documento en inglés, el historial activado y el glosario a la vista      | pendiente |
 | 7–8 | Reserva: como máximo una repetición por fallo externo o un ajuste del prompt, siempre con permiso explícito | reserva   |
 
@@ -185,16 +185,16 @@ Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se apl
 
 Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de publicar una versión estable.
 
-| ID    | Observación                                                                                                                                                                                                                          | Estado     |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                                  | completada |
-| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                                               | completada |
-| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                                           | completada |
-| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                                                | completada |
-| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.                             | completada |
-| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                                                | pendiente  |
-| TR-07 | Las explicaciones de la IA deben tratar de "tú", como la interfaz. Hecho en el prompt (versión 2026-11-21.1) y medido en la comprobación real; falta verificarlo con una llamada en español y otra adversarial antes de desplegarlo. | en curso   |
-| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                                  | pendiente  |
+| ID    | Observación                                                                                                                                                                                                                               | Estado     |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                                       | completada |
+| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                                                    | completada |
+| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                                                | completada |
+| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                                                     | completada |
+| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.                                  | completada |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                                                     | pendiente  |
+| TR-07 | Las explicaciones de la IA tratan de "tú", como la interfaz: prompt `2026-11-21.1`, medido en la comprobación real y verificado con una llamada en español y otra adversarial (docs/ai-analysis.md). Backend desplegado con esta versión. | completada |
+| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías.                                                                                                       | pendiente  |
 
 ## B5 Cierre
 
