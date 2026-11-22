@@ -10,7 +10,6 @@ import { AnalysisErrorMessage } from './analysis-error-message.tsx';
 import { AnalysisProgress } from './analysis-progress.tsx';
 import { DocumentInput, isAnalyzable } from './document-input.tsx';
 import { DocumentSourcePanel } from './document-source-panel.tsx';
-import { SampleDocumentButton } from './sample-document-button.tsx';
 import { useAnalysis, type RisklexBridge } from './use-analysis.ts';
 import { useDocumentSource, type DocumentSourceBridge } from './use-document-source.ts';
 import './analyze.css';
@@ -168,9 +167,7 @@ export function AnalyzeScreen({ bridge, onAnalysis }: AnalyzeScreenProps) {
           onPickPdf={() => void pdf.pickPdf()}
           onReadLink={(url) => void pdf.readLink(url)}
           onCancel={pdf.cancel}
-        >
-          <SampleDocumentButton disabled={running || reading} onUse={setText} />
-        </DocumentSourcePanel>
+        />
         <DocumentInput value={text} disabled={running || reading} onChange={setText} />
         <AnalyzeActions
           buttonRef={buttonRef}
