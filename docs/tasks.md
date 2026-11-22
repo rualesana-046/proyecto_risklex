@@ -17,7 +17,6 @@ Completado:
 Pendiente:
 
 - Abrir el AppImage en un escritorio Linux.
-- TR-06: volver a comprobar la política de retención del proveedor en su fuente oficial.
 - Decidir la licencia del proyecto.
 
 Mejoras futuras, fuera de esta versión: MP-01 a MP-04, DR-04 y TR-08 (ver "Mejoras futuras").
@@ -74,13 +73,13 @@ R01 queda cubierto con el contrato del análisis de B2-01.
 
 ## B4 Interfaz
 
-| ID    | Tarea                                                                                   | Requisitos    | Estado     |
-| ----- | --------------------------------------------------------------------------------------- | ------------- | ---------- |
-| B4-01 | Pantalla Analizar completa, con progreso por etapas (el ejemplo grabado se retiró)      | R02, R03, R20 | completada |
-| B4-02 | Pantalla Resultados: perfiles, "Lo esencial", filtros, tarjetas, glosario y aviso legal | R07–R10, R15  | completada |
-| B4-03 | Pantallas Historial y Ajustes completas                                                 | R11, R13, R19 | completada |
-| B4-04 | Bienvenida sin cierre automático, con opción de saltar y de volver a verla              | R14           | completada |
-| B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | completada |
+| ID    | Tarea                                                                                   | Requisitos    | Estado                                                                                        |
+| ----- | --------------------------------------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------- |
+| B4-01 | Pantalla Analizar completa, con progreso por etapas (el ejemplo grabado se retiró)      | R02, R03, R20 | completada                                                                                    |
+| B4-02 | Pantalla Resultados: perfiles, "Lo esencial", filtros, tarjetas, glosario y aviso legal | R07–R10, R15  | completada                                                                                    |
+| B4-03 | Pantallas Historial y Ajustes completas                                                 | R11, R13, R19 | completada                                                                                    |
+| B4-04 | Bienvenida sin cierre automático, con opción de saltar y de volver a verla              | R14           | completada                                                                                    |
+| B4-05 | Errores humanos con siguiente paso y revisión de accesibilidad                          | R20, R25      | verificada con pruebas automáticas (contraste, foco visible, teclado) y sin auditoría externa |
 
 B4-05 se apoya en los mensajes con siguiente paso de cada error, la prueba de contraste WCAG AA, el foco visible y las pruebas de teclado de los diálogos; no hubo una auditoría de accesibilidad externa.
 
@@ -207,16 +206,16 @@ Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se apl
 
 Observaciones de la revisión manual de la pantalla Analizar. Quedan registradas y se aplican antes de publicar una versión estable.
 
-| ID    | Observación                                                                                                                                                                                                                               | Estado     |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                                       | completada |
-| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                                                    | completada |
-| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                                                | completada |
-| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                                                     | completada |
-| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.                                  | completada |
-| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable.                                                                                                                     | pendiente  |
-| TR-07 | Las explicaciones de la IA tratan de "tú", como la interfaz: prompt `2026-11-21.1`, medido en la comprobación real y verificado con una llamada en español y otra adversarial (docs/ai-analysis.md). Backend desplegado con esta versión. | completada |
-| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías. Mejora futura.                                                                                        | pendiente  |
+| ID    | Observación                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Estado     |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| TR-01 | Nombrar al proveedor de IA (Anthropic) en el diálogo de privacidad.                                                                                                                                                                                                                                                                                                                                                                                                               | completada |
+| TR-02 | Mencionar en el diálogo de privacidad que también se envían un identificador aleatorio de la instalación y la versión de la app, sin datos personales.                                                                                                                                                                                                                                                                                                                            | completada |
+| TR-03 | La frase "RiskLex no guarda el documento ni el resultado" dejará de ser exacta cuando exista el historial local. Cambiarla a "RiskLex no guarda copias en sus servidores".                                                                                                                                                                                                                                                                                                        | completada |
+| TR-04 | La frase "Te lo volveremos a preguntar la próxima vez que abras RiskLex" cambia cuando se persista el consentimiento.                                                                                                                                                                                                                                                                                                                                                             | completada |
+| TR-05 | Mensaje de `configuration_missing` para la persona usuaria: "Esta copia de RiskLex no está bien instalada. Descarga el instalador de nuevo". La instrucción del README queda solo para quien desarrolla.                                                                                                                                                                                                                                                                          | completada |
+| TR-06 | Volver a comprobar la política de retención del proveedor en su fuente oficial antes de publicar una versión estable. Comprobado en la página oficial (https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data): las entradas y salidas de la API se borran en un máximo de 30 días; si los sistemas automáticos marcan el contenido por violar la política de uso, se conservan hasta 2 años. Coincide con el diálogo, el README y ADR 0008. | completada |
+| TR-07 | Las explicaciones de la IA tratan de "tú", como la interfaz: prompt `2026-11-21.1`, medido en la comprobación real y verificado con una llamada en español y otra adversarial (docs/ai-analysis.md). Backend desplegado con esta versión.                                                                                                                                                                                                                                         | completada |
+| TR-08 | La cláusula de cambios en los términos se clasifica como Costos ocultos aunque no es un costo. Afecta al prompt y a las categorías. Mejora futura.                                                                                                                                                                                                                                                                                                                                | pendiente  |
 
 ## B5 Cierre
 

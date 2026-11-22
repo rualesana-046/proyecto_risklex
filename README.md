@@ -27,7 +27,7 @@ Versión 0.1.0 completa. Limitaciones y pendientes:
 
 - Los instaladores no están firmados, así que cada sistema muestra un aviso al abrirlos la primera vez (ver "Instalar").
 - Verificado a mano en macOS y en Windows. El instalador de Linux (AppImage) se construye y supera la prueba de humo del lector de PDF en CI, pero todavía no se ha abierto en un escritorio Linux.
-- Falta volver a comprobar la política de retención del proveedor de IA en su fuente oficial (TR-06) y decidir la licencia del proyecto.
+- Falta decidir la licencia del proyecto.
 
 El detalle está en `docs/tasks.md`.
 
@@ -132,7 +132,7 @@ Nada de esto incluye tu nombre ni tu correo. A la IA nunca se envía la direcci�
 **Quién guarda qué:**
 
 - El servicio de RiskLex en internet no guarda documentos ni resultados.
-- Anthropic puede conservar los datos hasta 30 días, o más si algún contenido se marca para revisión.
+- Anthropic puede conservar los datos hasta 30 días, o más si algún contenido se marca para revisión, según la política del proveedor: https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data
 - En tu equipo, si el historial está activado, se guardan el resultado con sus citas, la fecha, el nombre del archivo o el dominio del enlace, el número de caracteres, el idioma y una huella SHA-256 del texto. Nunca el documento completo, la ruta del archivo ni la dirección completa del enlace.
 
 **Lo que conviene saber:**
