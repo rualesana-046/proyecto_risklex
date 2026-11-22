@@ -9,7 +9,7 @@ Este documento describe cómo se evalúa el análisis con IA de RiskLex y fija l
 | Modelo                | `claude-sonnet-5-5`                                         |
 | Razonamiento          | `thinking: adaptive`, `effort: medium`                      |
 | Límite de salida      | `max_tokens` 20.000                                         |
-| Versión del prompt    | `2026-11-14.1`                                              |
+| Versión del prompt    | `2026-11-21.1` (la calibración usó `2026-11-14.1`)          |
 | Verificación de citas | En el cliente, con las funciones puras de `packages/shared` |
 
 ## Reglas de severidad y ambigüedad

@@ -23,7 +23,7 @@ RiskLex no tiene cuentas de usuario: no hay registro, inicio de sesión ni perfi
 - El texto que la persona decide analizar, después de aceptar el aviso de privacidad.
 - Un código aleatorio por instalación, que sirve para limitar el abuso, y la versión de la app.
 - El servicio ve además la dirección de internet de la conexión, como cualquier servicio en internet.
-- Nada de esto incluye nombre ni correo. El proveedor de IA puede conservar el texto unos días, como explica el aviso de privacidad.
+- Nada de esto incluye nombre ni correo. El proveedor de IA puede conservar los datos hasta 30 días, o más si algún contenido se marca para revisión, como explica el aviso de privacidad.
 
 ### Cómo se controla el abuso sin cuentas
 

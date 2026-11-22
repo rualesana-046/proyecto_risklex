@@ -27,9 +27,9 @@ Se aplicaron tres cambios, medidos en local antes y después en la misma máquin
 | Con el esquema JSON generado fuera del Worker | 496,0 KiB                        | 17,5 a 19,0 ms                       | —                             |
 | Con `import * as z from 'zod'`                | 133,0 KiB (42,8 KiB comprimido)  | 16,4 a 17,1 ms                       | 11 ms                         |
 
-El cambio de importación eliminó casi todos los idiomas de Zod (de 364 KiB a 2,7 KiB). Las 303 pruebas siguen pasando. Frente a la mediana medida el mismo día sin cambios (20,2 ms), la mejora del arranque local es de un 19 %, y el rango se volvió mucho más estable.
+El cambio de importación eliminó casi todos los idiomas de Zod (de 364 KiB a 2,7 KiB). Las pruebas de entonces siguieron pasando. Frente a la mediana medida el mismo día sin cambios (20,2 ms), la mejora del arranque local es de un 19 %, y el rango se volvió mucho más estable.
 
-**Medición del panel de Cloudflare tras este despliegue** (versión 465d65b3, 24 h, 25 invocaciones, 2 subpeticiones, 0 errores): tiempo mediano de CPU de **1,49 ms**, frente a 19,3 ms y 37,67 ms con la versión anterior. Hubo un máximo de unos 10 ms justo después del despliegue, probablemente el primer arranque. Con tan pocas ejecuciones los percentiles no son concluyentes. TD-003 queda mitigada y en observación, sin contratar el plan de pago; se revisará de nuevo antes de la presentación.
+**Medición del panel de Cloudflare tras este despliegue** (versión 465d65b3, 24 h, 25 invocaciones, 2 subpeticiones, 0 errores): tiempo mediano de CPU de **1,49 ms**, frente a 19,3 ms y 37,67 ms con la versión anterior. Hubo un máximo de unos 10 ms justo después del despliegue, probablemente el primer arranque. Con tan pocas ejecuciones los percentiles no son concluyentes. TD-003 queda mitigada y en observación, sin contratar el plan de pago; se revisará de nuevo si el uso crece.
 
 Tras el despliegue, una llamada de verificación en producción respondió 200 en 33,8 s, por 0,0618 USD. Las severidades coincidieron exactamente con la llamada anterior en producción (85 %, +44 puntos), pero la ambigüedad tuvo 3 falsos positivos. Como el prompt, el esquema y la petición enviada al modelo no cambiaron, se atribuye a la variación del modelo entre ejecuciones, no al despliegue.
 
@@ -45,5 +45,7 @@ Llamadas desde la app de escritorio (cifras de la consola de Anthropic, que redo
 | ---------- | ------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------- | ------------- | --------- |
 | 2026-11-15 | `npm run dev`, Hito 1, texto de ejemplo                 | 10 tarjetas, sin reintento visible                     | 1                                                    | unos 0,05 USD | 0,48 USD  |
 | 2026-11-15 | App instalada desde el `.dmg`, Hito 2, texto de ejemplo | 3 puntos en "Lo esencial", perfiles y filtro correctos | 1 (inferido por el costo, sin confirmar en el panel) | unos 0,06 USD | 0,54 USD  |
+| 2026-11-16 | App instalada, Hito 3, PDF sintético                    | 10 tarjetas, sin citas descartadas                     | 1                                                    | unos 0,06 USD | —         |
+| —          | App instalada, cierre, documento en inglés              | Usada; sin más detalles registrados                    | 1                                                    | unos 0,06 USD | —         |
 
-Presupuesto de POST de la app: 2 usados de los 5 del Hito 1 y el Hito 2.
+Las dos llamadas de TR-07 se hicieron con la comprobación real y están en `docs/ai-analysis.md`. El presupuesto de POST del proyecto (6 de 8 usados) está en `docs/tasks.md`.
