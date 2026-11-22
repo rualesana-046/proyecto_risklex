@@ -49,10 +49,6 @@
     "submit": "Analizar documento",
     "cancel": "Cancelar análisis",
     "emptyHint": "Pega el texto del documento para poder analizarlo.",
-    "sample": {
-      "label": "Usar texto de ejemplo",
-      "note": "Es un documento ficticio, escrito para probar RiskLex."
-    },
     "sources": {
       "label": "Cómo añadir el documento",
       "pdf": "Elegir un PDF…",

@@ -49,10 +49,6 @@
     "submit": "Analyze document",
     "cancel": "Cancel analysis",
     "emptyHint": "Paste the document text to analyze it.",
-    "sample": {
-      "label": "Use sample text",
-      "note": "It is a fictional document, written to try RiskLex."
-    },
     "sources": {
       "label": "How to add the document",
       "pdf": "Choose a PDF…",
