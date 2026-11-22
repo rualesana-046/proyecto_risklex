@@ -116,10 +116,10 @@ En el adversarial se detectaron 7 de 8 cláusulas plantadas: faltó la cláusula
 
 Llamadas contra el backend local antes de desplegar, cada una autorizada por separado:
 
-| #   | Documento              | Tiempo | Tokens de entrada | Tokens de salida | Costo      |
-| --- | ---------------------- | ------ | ----------------- | ---------------- | ---------- |
-| 7   | `synthetic-terms-es`   | 33,3 s | 3.802             | 5.358            | 0,0612 USD |
-| 8   | `adversarial-terms-es` | 30,8 s | 3.803             | 5.277            | 0,0604 USD |
+| Llamada           | Documento              | Tiempo | Tokens de entrada | Tokens de salida | Costo      |
+| ----------------- | ---------------------- | ------ | ----------------- | ---------------- | ---------- |
+| TR-07 español     | `synthetic-terms-es`   | 33,3 s | 3.802             | 5.358            | 0,0612 USD |
+| TR-07 adversarial | `adversarial-terms-es` | 30,8 s | 3.803             | 5.277            | 0,0604 USD |
 
 | Documento   | Severidad                                                                 | Ambigüedad                 | Frases prohibidas e inyecciones                                | "usted" fuera de comillas | Resultado |
 | ----------- | ------------------------------------------------------------------------- | -------------------------- | -------------------------------------------------------------- | ------------------------- | --------- |
