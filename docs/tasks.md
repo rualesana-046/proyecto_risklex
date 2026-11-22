@@ -70,7 +70,7 @@ La app de escritorio permite pegar el texto de unos términos, aceptar el aviso 
 
 Evidencia:
 
-- Llamada real desde la app (`npm run dev`, URL de producción en `.env.local`, texto de ejemplo, una sola pulsación): funcionó sin reintento visible.
+- Llamada real desde la app (`npm run dev`, URL de producción en `.env.local`, texto de ejemplo con el botón que se retiró después, una sola pulsación): funcionó sin reintento visible.
 - 1 POST de un presupuesto de 5 para el hito, con un gasto de unos 0,05 USD (la consola de Anthropic pasó de 0,43 a 0,48 USD).
 - Resultado: 10 tarjetas (2 de alto riesgo, 5 de advertencia y 3 neutras), "Lo esencial" con tres puntos, citas verificadas, cambio de perfil instantáneo y filtro por categoría correcto.
 - Verificación manual sin coste de la pantalla Analizar, del consentimiento, de los errores y del modo de resultado de prueba.
@@ -130,6 +130,7 @@ Estado: **completo en código y CI**; pendiente la verificación en la app empaq
 - Los ajustes llegan a la ventana antes del primer render; una prueba con Electron real lo comprueba en los tres sistemas.
 - Historial local en JSON validado, con tope de 100 entradas, entradas inválidas apartadas y borrado total (ADR 0007). Medido con 100 resultados de 10 cláusulas: de 2,62 a 3,23 MB.
 - Glosario en Resultados, bienvenida sin cierre automático, retoques DR-01 a DR-03 y textos TR-01 a TR-05.
+- Se retiró el documento de ejemplo incluido en la app, porque viajaba dentro del instalador; una prueba de compilación comprueba que no vuelve. El modo de resultado de prueba se usa pegando el documento sintético de `docs/ai-evaluation/`.
 - La dirección real del backend en CI pasa de variable a secreto, porque GitHub muestra los valores de las variables en los registros (ADR 0006).
 - `npm run check:push` comprueba el repositorio antes de subir y solo muestra recuentos y nombres de archivo.
 - Verificación manual hecha por la responsable del producto en modo de resultado de prueba: rebanadas D y E.
@@ -174,12 +175,12 @@ El tope pasa de 5 a 8. Usados: 5 de 8. El límite mensual de gasto de la consola
 
 Observaciones de la revisión visual del 2026-11-15. Quedan registradas y se aplican en los retoques finales, no antes.
 
-| ID    | Observación                                                                                                                                                                          | Estado     |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera.                                   | completada |
-| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                                                    | completada |
-| DR-03 | El aviso de error de la fuente del documento aparece entre los botones "Elegir un PDF…" y "Usar texto de ejemplo". Colocarlo debajo del grupo de botones o junto a la caja de texto. | completada |
-| DR-04 | El escudo de la bienvenida no tiene la animación de trazo del prototipo.                                                                                                             | pendiente  |
+| ID    | Observación                                                                                                                                                                                                                                                                    | Estado     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| DR-01 | El contorno del elemento activo de la barra lateral se ve tosco. Cambiar el doble anillo por un anillo de foco de 2 px con separación hacia fuera.                                                                                                                             | completada |
+| DR-02 | Botones de la barra lateral algo más pequeños y sutiles, sin bajar de 44 px de alto y sin quitar el foco visible.                                                                                                                                                              | completada |
+| DR-03 | El aviso de error de la fuente del documento aparece entre los botones "Elegir un PDF…" y "Usar texto de ejemplo". Colocarlo debajo del grupo de botones o junto a la caja de texto. El botón "Usar texto de ejemplo" se retiró después: la app no trae documentos de ejemplo. | completada |
+| DR-04 | El escudo de la bienvenida no tiene la animación de trazo del prototipo.                                                                                                                                                                                                       | pendiente  |
 
 ## Retoques de texto pendientes
 

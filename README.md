@@ -90,13 +90,30 @@ En la pantalla Analizar, "Elegir un PDF…" y "Leer un enlace" rellenan la caja 
 - **Privacidad:** a la IA solo viaja el texto, nunca la dirección del enlace ni el nombre del archivo. El sitio del enlace sí ve la dirección IP de quien lo lee, y la app lo avisa antes de descargar.
 - **Límite:** un texto de más de 150.000 caracteres se rechaza; hay que pegar solo la parte de términos o de privacidad.
 
-Para probarlo sin contenido de terceros, este comando escribe PDF sintéticos (normal, sin texto, protegido y dañado) en una carpeta temporal fuera del repositorio e imprime su ruta:
+Para probar la lectura de PDF sin contenido de terceros, este comando escribe PDF sintéticos (normal, sin texto, protegido y dañado) en una carpeta temporal fuera del repositorio e imprime su ruta:
 
 ```bash
 node apps/frontend/scripts/write-sample-pdfs.ts
 ```
 
 Las decisiones de seguridad están en `docs/decisions/0005-isolated-document-reading.md`. Las licencias del software de terceros incluido en la app están en `apps/frontend/THIRD-PARTY-NOTICES.txt`, que también viaja dentro del paquete.
+
+## Qué documentos funcionan mejor
+
+- **Páginas web con el texto en la propia página**, como la mayoría de páginas de términos y de privacidad.
+- **PDF con texto**, es decir, que permiten seleccionar y copiar las palabras.
+- **Copiar y pegar** el texto en la caja, que funciona siempre.
+
+Cuando no se puede leer, RiskLex lo explica con un mensaje y un siguiente paso:
+
+| Caso                                             | Mensaje                                                                            |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Página que carga su texto con JavaScript         | "Esta página solo muestra su texto cuando se abre en un navegador."                |
+| PDF escaneado, sin texto                         | "Este PDF parece una imagen escaneada: no tiene texto que podamos leer."           |
+| PDF protegido con contraseña                     | "Este PDF está protegido con contraseña."                                          |
+| Enlace a una dirección interna de casa o empresa | "Por seguridad, RiskLex no lee direcciones internas de una casa o de una empresa." |
+
+En todos los casos se puede abrir el documento, copiar el texto y pegarlo. Leer un PDF o un enlace no cuesta nada; **cada análisis consume saldo de la cuenta de IA del titular del servicio**.
 
 ## Ajustes
 
@@ -152,7 +169,13 @@ MAIN_VITE_RISKLEX_FIXTURE=sample npm run dev -w @risklex/frontend
 
 - Solo funciona con `npm run dev`. En `build` y `preview` el simulador no se incluye, y una prueba lo comprueba compilando de verdad.
 - No hace ninguna petición de red. Construye el resultado con las frases del documento sintético de `docs/ai-evaluation/`.
-- Usa la verificación de citas real: con el texto de ejemplo todo se verifica; con otro texto, las citas se descartan como en un análisis real.
+- La app no trae documentos de ejemplo. Para probarlo, copia el documento sintético y pégalo en la caja de texto:
+
+  ```bash
+  pbcopy < docs/ai-evaluation/synthetic-terms-es.md
+  ```
+
+- Usa la verificación de citas real: con el documento sintético todo se verifica; con otro texto, las citas se descartan como en un análisis real.
 - La pantalla muestra siempre el aviso "Resultado de prueba, no es un análisis real".
 - El resultado se guarda en el historial de la carpeta `RiskLex Dev`, con el mismo aviso al abrirlo, para poder revisar el historial sin gastar.
 
